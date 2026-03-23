@@ -1,0 +1,8 @@
+opencv-python
+easyocr
+mss
+pydirectinput
+customtkinter
+requests
+numpy
+Pillow
