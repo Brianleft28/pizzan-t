@@ -37,7 +37,7 @@ SØREN is a high-performance automated bot for Pokémon shiny hunting. It specia
 - **Horde Mode**: 
     - Have a Pokémon with "Sweet Scent" or the Ocarina item.
     - Place the Ocarina/Move in your hotbar (default is key `3`).
-    - (Recommended) Carry **Leppa Berries** (Zanamas) if you are not using a PC-nearby strategy.
+    - Carry **Leppa Berries** (Zanamas) if you are using the horde mode. 
 - **Single Mode**: 
     - Stand in a patch of grass or a cave where wild encounters occur.
     - The bot will move your character left and right automatically.
