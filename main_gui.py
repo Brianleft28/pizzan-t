@@ -14,7 +14,7 @@ class ShinyHunterGUI(ctk.CTk):
         super().__init__()
 
         self.title("🇦🇷 SØREN - Shiny Hunter Bot")
-        self.geometry("600x750")
+        self.geometry("600x800")
         self.attributes("-topmost", True)
 
         self.bot = None
@@ -79,9 +79,17 @@ class ShinyHunterGUI(ctk.CTk):
         self.btn_combat.pack(fill="x", padx=15, pady=5)
 
         # 4. Logger Frame
-        self.log_box = ctk.CTkTextbox(self, font=ctk.CTkFont(family="Consolas", size=12))
-        self.log_box.grid(row=4, column=0, padx=20, pady=10, sticky="nsew")
+        self.log_container = ctk.CTkFrame(self)
+        self.log_container.grid(row=4, column=0, padx=20, pady=10, sticky="nsew")
+        self.log_container.grid_columnconfigure(0, weight=1)
+        self.log_container.grid_rowconfigure(0, weight=1)
+
+        self.log_box = ctk.CTkTextbox(self.log_container, font=ctk.CTkFont(family="Consolas", size=12))
+        self.log_box.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.log_box.insert("0.0", "--- SYSTEM INITIALIZED ---\n")
+        
+        self.clear_log_btn = ctk.CTkButton(self.log_container, text="CLEAR LOGS", fg_color="#5a5a5a", height=25, command=self.clear_logs)
+        self.clear_log_btn.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="e")
 
         # 5. Start Button
         self.start_btn = ctk.CTkButton(self, text="START AUTOMATED HUNT", height=70, 
@@ -113,6 +121,10 @@ class ShinyHunterGUI(ctk.CTk):
     def add_log(self, msg):
         self.log_box.insert("end", f"{msg}\n")
         self.log_box.see("end")
+
+    def clear_logs(self):
+        self.log_box.delete("0.0", "end")
+        self.add_log("--- LOGS CLEARED ---")
 
     def run_calib(self, mode):
         threading.Thread(target=selector.run_calibration, args=(mode, self.add_log), daemon=True).start()
