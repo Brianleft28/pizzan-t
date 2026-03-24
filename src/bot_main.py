@@ -187,7 +187,8 @@ class ShinyBot:
                         continue
                     
                     slp = self.is_asleep(f_bat); low, hp_p = self.is_hp_low(f_bat); low = low or is_swiped
-                    pot, h_hp = self.read_hunter_hp(f_bat); if pot: needs_pot = True
+                    pot, h_hp = self.read_hunter_hp(f_bat)
+                    if pot: needs_pot = True
                     
                     self.log_callback(f"┌─ TURN {turn:02d} ────────────────────────┐")
                     self.log_callback(f"│ Target: {hp_p:.1%} HP | {'[SLP]' if slp else '[AWK]'} | My HP: {h_hp}")
