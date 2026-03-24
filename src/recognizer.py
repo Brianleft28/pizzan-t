@@ -11,12 +11,23 @@ class PokéRecognizer:
         
         # Template de estrella por si el OCR no lee bien el texto "Shiny"
         self.shiny_star_tpl = self._load_template("shiny_star.png")
+        # Template de estado Dormido
+        self.sleep_icon_tpl = self._load_template("status_sleep.png")
 
     def _load_template(self, name):
         path = os.path.join(self.assets_path, name)
         if os.path.exists(path):
             return cv2.imread(path, 0)
         return None
+
+    def check_status_sleep(self, img):
+        """Compara el recorte con el icono de dormir guardado"""
+        if self.sleep_icon_tpl is None:
+            return False
+        
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        res = cv2.matchTemplate(gray, self.sleep_icon_tpl, cv2.TM_CCOEFF_NORMED)
+        return np.max(res) > 0.8
 
     def analyze_slot(self, slot_img):
         """

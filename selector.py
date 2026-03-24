@@ -41,8 +41,8 @@ class TkSelector:
         
         # Number of rectangles based on mode
         if mode == "hud": self.max_rects = 5
-        elif mode == "combat": self.max_rects = 1
-        elif mode == "single_slot": self.max_rects = 1
+        elif mode == "pp_slots": self.max_rects = 4
+        elif mode in ["combat", "single_slot", "hp_bar", "status_slot", "sleep_icon", "battle_msg"]: self.max_rects = 1
         else: self.max_rects = 2
         
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
@@ -92,6 +92,35 @@ class TkSelector:
                 r = self.rects[0]
                 config["button_run"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
                 self.log_func(f"✅ SUCCESS: 'Run' button zone saved.")
+
+            elif self.mode == "hp_bar":
+                r = self.rects[0]
+                config["hp_bar_region"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                self.log_func(f"✅ SUCCESS: HP Bar region saved.")
+
+            elif self.mode == "status_slot":
+                r = self.rects[0]
+                config["status_slot_region"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                self.log_func(f"✅ SUCCESS: Status slot region saved.")
+
+            elif self.mode == "sleep_icon":
+                asset_dir = "assets"
+                if not os.path.exists(asset_dir): os.makedirs(asset_dir)
+                r = self.rects[0]
+                icon = self.img.crop((r[0], r[1], r[2], r[3]))
+                icon.save(os.path.join(asset_dir, "status_sleep.png"))
+                self.log_func(f"✅ SUCCESS: Sleep icon asset saved.")
+
+            elif self.mode == "pp_slots":
+                config["pp_slots"] = {}
+                for i, r in enumerate(self.rects):
+                    config["pp_slots"][f"slot_{i+1}"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                self.log_func(f"✅ SUCCESS: 4 PP slots calibrated.")
+
+            elif self.mode == "battle_msg":
+                r = self.rects[0]
+                config["battle_msg_region"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                self.log_func(f"✅ SUCCESS: Battle message region saved.")
 
             elif self.mode == "assets":
                 asset_dir = "assets"

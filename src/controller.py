@@ -19,16 +19,24 @@ class PokéController:
     def _human_wait(self, min_s, max_s):
         time.sleep(random.uniform(min_s, max_s))
 
+    def key_down(self, key):
+        """Holds a key down without releasing it"""
+        pydirectinput.keyDown(key)
+
+    def key_up(self, key):
+        """Releases a held key"""
+        pydirectinput.keyUp(key)
+
     def _press(self, key, duration=None):
-        """Presses a key with logs and precise timing"""
-        # We don't log every single key press to avoid cluttering the ASCII art
+        """Presses a key with precise timing and a mandatory human-like pause"""
         pydirectinput.keyDown(key)
         if duration:
             time.sleep(duration)
         else:
             time.sleep(random.uniform(0.12, 0.22))
         pydirectinput.keyUp(key)
-        time.sleep(random.uniform(0.25, 0.45))
+        # Trailing sleep to avoid "robo-speed" in menus
+        time.sleep(random.uniform(0.2, 0.35))
 
     def use_sweet_scent(self):
         key = self.controls.get("sweet_scent_key", "3")
@@ -37,16 +45,95 @@ class PokéController:
         self._press(key)
 
     def search_movement(self):
-        """High-speed humanoid movement to trigger encounters (Fast Step Zig-Zag)"""
+        """Fluid long-press movement for realistic patrolling"""
         direction = random.choice(['left', 'right'])
-        opposite = 'right' if direction == 'left' else 'left'
+        # Long duration to cross multiple tiles fluidly (Human-like)
+        duration = random.uniform(1.5, 3.5)
+        self.log(f"Patrolling {direction.upper()} for {duration:.1f}s")
+        self._press(direction, duration=duration)
+        # Human pause before next action
+        time.sleep(random.uniform(0.2, 0.5))
+
+    def ditto_search_movement(self, direction):
+        """Linear patrol using long continuous presses"""
+        # Duration is handled by the main loop timer, but we ensure the press is solid
+        duration = random.uniform(0.8, 1.5) 
+        self._press(direction, duration=duration)
+        # Minimal pause to maintain momentum but avoid rigid patterns
+        time.sleep(random.uniform(0.05, 0.15))
+
+    def open_fight_menu(self):
+        """Press Z to enter the fight/move selection menu"""
+        self.log("Opening Fight Menu (Z)")
+        self._press('z')
+        time.sleep(random.uniform(0.4, 0.6))
+
+    def execute_move(self, slot):
+        """Navigates a 2x2 grid: 1=TL, 2=TR, 3=BL, 4=BR"""
+        self.open_fight_menu()
+        self.navigate_and_confirm_move(slot)
+
+    def navigate_and_confirm_move(self, slot):
+        """Navigates 2x2 grid and confirms (Z). Assumes already in Fight Menu."""
+        slot = str(slot)
+        self.log(f"Navigating to Slot: {slot}")
+
+        # Reset cursor to Top-Left
+        pydirectinput.press('up')
+        pydirectinput.press('left')
+        time.sleep(0.2)
+
+        if slot == '2': pydirectinput.press('right')
+        elif slot == '3': pydirectinput.press('down')
+        elif slot == '4': 
+            pydirectinput.press('right')
+            pydirectinput.press('down')
         
-        steps = random.randint(2, 4)
-        for i in range(steps):
-            current_dir = direction if i < (steps // 2) else opposite
-            duration = random.uniform(0.18, 0.28) 
-            self._press(current_dir, duration=duration)
-            time.sleep(random.uniform(0.02, 0.05))
+        time.sleep(0.2)
+        self.log("Confirming Move (Z)")
+        self._press('z')
+        time.sleep(random.uniform(0.5, 1.0))
+
+    def use_ball(self, key):
+        """Use the quick-access ball (Hotkey)"""
+        self.log(f"Using Pokeball Hotkey (Key {key})")
+        self._press(key)
+        time.sleep(random.uniform(0.5, 1.0))
+
+    def use_leppa_sequence(self, key):
+        """Sequence to use Leppa Berries on slots 1, 2 and 4 (legacy/counter-based)"""
+        for slot in ['1', '2', '4']:
+            self.use_leppa_sequence_single(key, slot)
+
+    def use_leppa_sequence_single(self, key, slot):
+        """Restores PP for a specific slot using a Leppa Berry with longer duration"""
+        self.log(f"Restoring PP for Slot {slot} using Leppa (Key {key})")
+        # 1. Use Leppa Hotkey (Longer press for global hotkeys)
+        pydirectinput.keyDown(key)
+        time.sleep(0.4)
+        pydirectinput.keyUp(key)
+        time.sleep(1.0)
+        
+        # 2. Select first Pokemon (Z)
+        self._press('z')
+        time.sleep(1.0)
+        
+        # 3. Navigate to Move and Confirm
+        pydirectinput.press('up')
+        pydirectinput.press('left')
+        time.sleep(0.4)
+        
+        slot = str(slot)
+        if slot == '2': pydirectinput.press('right')
+        elif slot == '3': pydirectinput.press('down')
+        elif slot == '4': 
+            pydirectinput.press('right')
+            pydirectinput.press('down')
+        
+        time.sleep(0.4)
+        self._press('z') # Confirm on move
+        time.sleep(2.0) # Animation delay
+        self.log(f"Slot {slot} restored (Leppa applied).")
 
     def run_away(self):
         """Navigates to the 'RUN' button with detailed logs"""
