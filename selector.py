@@ -42,7 +42,7 @@ class TkSelector:
         # Number of rectangles based on mode
         if mode == "hud": self.max_rects = 5
         elif mode == "pp_slots": self.max_rects = 4
-        elif mode in ["combat", "single_slot", "hp_bar", "status_slot", "sleep_icon", "battle_msg"]: self.max_rects = 1
+        elif mode in ["combat", "single_slot", "hp_bar", "status_slot", "sleep_icon", "battle_msg", "hunter_hp"]: self.max_rects = 1
         else: self.max_rects = 2
         
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
@@ -121,6 +121,11 @@ class TkSelector:
                 r = self.rects[0]
                 config["battle_msg_region"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
                 self.log_func(f"✅ SUCCESS: Battle message region saved.")
+
+            elif self.mode == "hunter_hp":
+                r = self.rects[0]
+                config["hunter_hp_region"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                self.log_func(f"✅ SUCCESS: Hunter HP region saved.")
 
             elif self.mode == "assets":
                 asset_dir = "assets"

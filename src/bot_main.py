@@ -60,7 +60,7 @@ class ShinyBot:
             crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
             _, thresh = cv2.threshold(gray, 230, 255, cv2.THRESH_BINARY)
-            if cv2.countNonZero(thresh) > 80: return True
+            if cv2.countNonZero(thresh) > 80: pass
         r_single = self.config.get("slot_single")
         if not r_single and slots: r_single = list(slots.values())[0]
         if r_single:
@@ -71,7 +71,7 @@ class ShinyBot:
         return False
 
     def is_hp_low(self, frame):
-        """Strict HP detection to ignore gold backgrounds."""
+        """Strict HP detection."""
         r = self.config.get("hp_bar_region")
         if not r: return False
         crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
@@ -80,8 +80,24 @@ class ShinyBot:
         mask_yellow = cv2.inRange(hsv, np.array([20, 100, 100]), np.array([35, 255, 255]))
         total_px = crop.shape[0] * crop.shape[1]
         health_px = cv2.countNonZero(mask_green) + cv2.countNonZero(mask_yellow)
-        percent = (health_px / total_px)
-        return percent < 0.05
+        return (health_px / total_px) < 0.05
+
+    def read_hunter_hp(self, frame):
+        """Reads hunter's HP and flags if healing is needed (Missing >= 60)."""
+        r = self.config.get("hunter_hp_region")
+        if not r: return False
+        crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        upscaled = cv2.resize(gray, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        res = self.recognizer.reader.readtext(upscaled)
+        txt = " ".join([rm[1] for rm in res]).upper()
+        clean_txt = txt.replace('O', '0').replace('I', '1')
+        nums = re.findall(r'(\d+)', clean_txt)
+        if len(nums) >= 2:
+            curr, total = int(nums[0]), int(nums[1])
+            diff = total - curr
+            return diff >= 60
+        return False
 
     def is_asleep(self, frame):
         """Detects sleep icon (Bilingual)."""
@@ -101,7 +117,7 @@ class ShinyBot:
         gray = cv2.cvtColor(menu_zone, cv2.COLOR_BGR2GRAY)
         _, thresh = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)
         px = cv2.countNonZero(thresh)
-        if px > 100:
+        if px > 80:
             res = self.recognizer.reader.readtext(cv2.convertScaleAbs(gray, alpha=1.2))
             txt = " ".join([rm[1].lower() for rm in res])
             keywords = ["huid", "huir", "run", "ida", "ata", "bat", "bol", "fight", "luc", "pkmn", "poke", "bag"]
@@ -124,11 +140,11 @@ class ShinyBot:
         if len(nums) >= 2:
             curr, total = int(nums[0]), int(nums[1])
             diff = total - curr
-            self.log(f"{move_name} -> {curr}/{total} (Gap: {diff})")
+            self.log(f"{move_name} -> {curr}/{total}")
             return curr, (diff >= 10)
         elif len(nums) == 1:
             curr = int(nums[0])
-            self.log(f"{move_name} -> {curr}/?? (Partial read)")
+            self.log(f"{move_name} -> {curr}/??")
             return curr, (curr <= 2)
         return 99, False
 
@@ -150,10 +166,9 @@ class ShinyBot:
         mode = self.config.get("mode", "horda")
         ocr_retries_config = int(self.config.get("ocr_retries", 6))
         ditto_ocr_retries = int(self.config.get("ditto_ocr_retries", 1))
-        self.log_callback(f"\n╔══════════════════════════════════════════╗")
-        self.log_callback(f"║  STARTING HUNT IN {mode.upper()} MODE   ║")
-        self.log_callback(f"╚══════════════════════════════════════════╝\n")
-        ditto_dir = 'right'; patrol_duration = float(self.config.get("ditto_patrol_time", 2.5))
+        self.log_callback(f"\n╔══════════════════════════════════════════╗\n║  STARTING HUNT IN {mode.upper()} MODE   ║\n╚══════════════════════════════════════════╝\n")
+        ditto_dir = random.choice(['left', 'right'])
+        patrol_duration = float(self.config.get("ditto_patrol_time", 2.5))
 
         while self.running:
             frame = self.observer.capture_frame()
@@ -161,12 +176,12 @@ class ShinyBot:
 
             # --- 1. STATE: MAP ---
             if not self.is_ui_present(frame):
+                if random.random() > 0.7: ditto_dir = random.choice(['left', 'right'])
                 self.log(f"Starting Fluid Patrol: {ditto_dir.upper()}", "MAP")
                 self.controller.key_down(ditto_dir)
                 patrol_start = time.time(); encounter_found = False
                 while (time.time() - patrol_start) < patrol_duration:
-                    if not self.running: break
-                    if self.is_ui_present(self.observer.capture_frame()):
+                    if not self.running or self.is_ui_present(self.observer.capture_frame()):
                         encounter_found = True; break
                     time.sleep(0.05)
                 self.controller.key_up(ditto_dir)
@@ -186,7 +201,7 @@ class ShinyBot:
             for i in range(30): 
                 if self.is_menu_present(self.observer.capture_frame()): menu_ready = True; break
                 time.sleep(0.15)
-            if menu_ready: time.sleep(1.2)
+            if menu_ready: time.sleep(1.0)
 
             # --- 3. STATE: ANALYSIS ---
             shiny_found = False; is_horde_detected = False
@@ -209,15 +224,15 @@ class ShinyBot:
                 
                 if not shiny_found and is_ditto:
                     # --- CATCHING SEQUENCE ---
-                    is_soaked = False; has_swiped = False; turn_count = 1; slots_needing_leppa = set()
+                    is_soaked = False; has_swiped = False; turn_count = 1; slots_needing_leppa = set(); needs_potion = False
                     while self.running:
                         frame_battle = self.observer.capture_frame()
                         if not self.is_menu_present(frame_battle):
-                            msg = self.analyze_message(frame_battle)
-                            if msg == "SUCCESS": self.log("CAPTURE CONFIRMED!", "SUCCESS"); break
+                            if self.check_capture_success(frame_battle): break
                             time.sleep(0.5); continue
 
                         asleep = self.is_asleep(frame_battle); low_hp = self.is_hp_low(frame_battle) or has_swiped
+                        if turn_count % 3 == 0 and self.read_hunter_hp(frame_battle): needs_potion = True
                         self.log_callback(f"  [ TURN {turn_count} ] HP:{'[LOW]' if low_hp else '[HI]'} ST:{'[SLP]' if asleep else '[AWK]'}")
                         
                         target_slot = None; target_name = ""
@@ -230,43 +245,43 @@ class ShinyBot:
                         
                         if target_slot:
                             self.controller.open_fight_menu(); time.sleep(0.6)
-                            pp_curr, needs_restore = self.read_pp(self.observer.capture_frame(), target_slot, target_name)
-                            if needs_restore: slots_needing_leppa.add(target_slot)
+                            _, needs_res = self.read_pp(self.observer.capture_frame(), target_slot, target_name)
+                            if needs_res: slots_needing_leppa.add((target_slot, True))
                             self.controller.navigate_and_confirm_move(target_slot)
-                            if not has_swiped and target_name == self.config.get("ditto_name_attack", "Swipe"): has_swiped = True
-                            if not is_soaked and target_name == self.config.get("ditto_name_soak", "Soak"): is_soaked = True
+                            if target_name == self.config.get("ditto_name_attack", "Swipe"): has_swiped = True
+                            if target_name == self.config.get("ditto_name_soak", "Soak"): is_soaked = True
+                            time.sleep(4.5)
                         else:
                             self.controller.use_ball(self.config.get("ditto_key_ball", "5"))
                             success_detected = False
-                            for _ in range(35): 
+                            for _ in range(40): 
                                 fm = self.observer.capture_frame()
                                 m = self.analyze_message(fm)
                                 if m == "SUCCESS": self.log("CAPTURE CONFIRMED!", "SUCCESS"); success_detected = True; break
-                                elif m == "FAILURE": self.log("Capture failed. Resuming cycle.", "INFO"); break
+                                elif m == "FAILURE": self.log("Broke free! Resuming turn.", "INFO"); break
                                 if not self.is_ui_present(fm) and not self.is_menu_present(fm):
                                     time.sleep(1.0)
                                     if not self.is_ui_present(self.observer.capture_frame()): success_detected = True; break
                                 time.sleep(0.2)
-                            if success_detected: 
-                                self.log("Capture confirmed! Clearing post-capture menus...", "SUCCESS")
-                                # Spam 'X' to close nickname prompts, summaries and PC notifications
-                                for _ in range(6):
-                                    self.controller._press('x')
-                                    time.sleep(0.8)
-                                break
-                        time.sleep(6.5); turn_count += 1
+                            if success_detected: break
+                        turn_count += 1
                     
                     self.encounters += 1; self.save_progress()
-                    if slots_needing_leppa:
-                        # Safety: Double confirm we are out of combat
-                        time.sleep(2.5)
+                    # POST-BATTLE MAINTENANCE
+                    self.log("Final cleanup before map...", "ACTION")
+                    for _ in range(6): self.controller._press('x'); time.sleep(0.6)
+                    
+                    if slots_needing_leppa or needs_potion:
+                        time.sleep(2.0)
                         if not self.is_ui_present(self.observer.capture_frame()):
-                            leppa_key = self.config.get("ditto_key_leppa", "4")
-                            potion_key = self.config.get("ditto_key_potion", "6")
                             self.log("Restoring HP/PP out of combat...", "ACTION")
-                            self.controller._press(potion_key, duration=0.4) # Heal hunter
-                            time.sleep(1.5)
-                            for s in slots_needing_leppa: self.controller.use_leppa_sequence_single(leppa_key, s)
+                            if needs_potion:
+                                pot_key = self.config.get("ditto_key_potion", "6")
+                                self.controller.use_potion_sequence(pot_key, full_heal=True)
+                                time.sleep(1.0)
+                            l_key = self.config.get("ditto_key_leppa", "4")
+                            for s_info in slots_needing_leppa: 
+                                self.controller.use_leppa_sequence_single(l_key, s_info[0], full_restore=s_info[1])
                     continue 
                 elif not shiny_found: self.log("Not Ditto.", "INFO")
 
@@ -308,9 +323,7 @@ class ShinyBot:
                     if map_stable >= 2: escape_success = True; break
                 if escape_success: break
             if escape_success:
-                self.encounters += 1
-                self.log_callback(f"  📊 TOTAL ENCOUNTERS: [ {self.encounters} ]")
-                self.save_progress()
+                self.encounters += 1; self.log_callback(f"  📊 TOTAL ENCOUNTERS: [ {self.encounters} ]"); self.save_progress()
 
     def send_discord_alert(self, slot, name, img_path):
         url = self.config.get("discord_webhook")

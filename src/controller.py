@@ -105,10 +105,11 @@ class PokéController:
         for slot in ['1', '2', '4']:
             self.use_leppa_sequence_single(key, slot)
 
-    def use_leppa_sequence_single(self, key, slot):
-        """Restores PP for a specific slot using a Leppa Berry with longer duration"""
-        self.log(f"Restoring PP for Slot {slot} using Leppa (Key {key})")
-        # 1. Use Leppa Hotkey (Longer press for global hotkeys)
+    def use_leppa_sequence_single(self, key, slot, full_restore=False):
+        """Restores PP for a specific slot using Leppa with smart navigation"""
+        self.log(f"Restoring PP for Slot {slot} (Full: {full_restore})")
+        
+        # 1. Use Leppa Hotkey
         pydirectinput.keyDown(key)
         time.sleep(0.4)
         pydirectinput.keyUp(key)
@@ -118,10 +119,11 @@ class PokéController:
         self._press('z')
         time.sleep(1.0)
         
-        # 3. Navigate to Move and Confirm
+        # 3. Navigate to Move Slot (1-4)
+        # Reset cursor to top-left of the move list
         pydirectinput.press('up')
         pydirectinput.press('left')
-        time.sleep(0.4)
+        time.sleep(0.3)
         
         slot = str(slot)
         if slot == '2': pydirectinput.press('right')
@@ -129,11 +131,64 @@ class PokéController:
         elif slot == '4': 
             pydirectinput.press('right')
             pydirectinput.press('down')
+        time.sleep(0.3)
         
-        time.sleep(0.4)
-        self._press('z') # Confirm on move
+        # 4. Confirm Move Selection
+        self._press('z')
+        time.sleep(0.8)
+
+        # 5. Handle Quantity Submenu
+        if full_restore:
+            # Navigate to 'Max'
+            pydirectinput.press('up')
+            time.sleep(0.2)
+            pydirectinput.press('right')
+            time.sleep(0.2)
+            self._press('z') # Select Max
+            time.sleep(0.4)
+            # Navigate to 'Use' and confirm
+            pydirectinput.press('down')
+            time.sleep(0.2)
+            self._press('z')
+        else:
+            # Just one more Z for single berry
+            self._press('z')
+            
         time.sleep(2.0) # Animation delay
-        self.log(f"Slot {slot} restored (Leppa applied).")
+        self.log(f"Slot {slot} restoration complete.")
+
+    def use_potion_sequence(self, key, full_heal=False):
+        """Heals the hunter using a Potion hotkey and optional 'Max' navigation"""
+        self.log(f"Healing Hunter (Full: {full_heal}) using Key {key}")
+        # 1. Use Potion Hotkey
+        pydirectinput.keyDown(key)
+        time.sleep(0.4)
+        pydirectinput.keyUp(key)
+        time.sleep(1.0)
+        
+        # 2. Select first Pokemon (Z)
+        self._press('z')
+        time.sleep(0.8)
+        
+        if full_heal:
+            # 3. Navigate to 'Max'
+            pydirectinput.press('up')
+            time.sleep(0.3)
+            pydirectinput.press('right')
+            time.sleep(0.3)
+            self._press('z') # Confirm MAX
+            time.sleep(0.5)
+            # 4. Navigate down to 'Use' and confirm
+            pydirectinput.press('down')
+            time.sleep(0.3)
+            self._press('z')
+            time.sleep(1.5)
+        else:
+            # Just confirm once for single potion
+            self._press('z')
+            time.sleep(1.5)
+            
+        self.log("Healing complete.")
 
     def run_away(self):
         """Navigates to the 'RUN' button with detailed logs"""
