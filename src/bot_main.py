@@ -135,7 +135,7 @@ class ShinyBot:
         mode = self.config.get("mode", "horda").lower()
         self.start_time = datetime.now()
         self.last_action_time = time.time()
-        self.log_callback(f"\n╔══════════════════════════════════════════╗\n║  SENTINEL v5.6: {mode.upper()} READY  ║\n╚══════════════════════════════════════════╝\n")
+        self.log_callback(f"\n╔══════════════════════════════════════════╗\n║  SENTINEL v5.6: {mode.upper()} READY  \n╚══════════════════════════════════════════╝\n")
         
         while self.running:
             frame = self.observer.capture_frame()
