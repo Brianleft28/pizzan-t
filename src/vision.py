@@ -1,28 +1,31 @@
 import cv2
 import mss
 import numpy as np
+import pygetwindow as gw
 
 class PokéObserver:
     def __init__(self, region=None):
-        self._sct = None
-        # Si no hay región, usamos la pantalla completa por defecto
-        self.region = region if region else {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
-
-    @property
-    def sct(self):
-        # Inicialización perezosa: se crea en el hilo que lo llame
-        if self._sct is None:
-            self._sct = mss.mss()
-        return self._sct
+        self._sct = mss.mss()
+        self.region = region
 
     def capture_frame(self):
-        """Captura un frame y lo convierte a formato OpenCV (BGR)"""
+        """Captura la pantalla de forma robusta para evitar pantallas blancas en laptops."""
         try:
-            screenshot = self.sct.grab(self.region)
-            frame = np.array(screenshot)
+            # Si no hay región, usamos la pantalla completa
+            if self.region:
+                monitor = {
+                    "top": self.region.get('y1', 0),
+                    "left": self.region.get('x1', 0),
+                    "width": self.region.get('x2', 1920) - self.region.get('x1', 0),
+                    "height": self.region.get('y2', 1080) - self.region.get('y1', 0)
+                }
+            else:
+                monitor = self._sct.monitors[1]
+
+            sct_img = self._sct.grab(monitor)
+            frame = np.array(sct_img)
             # Convertir de BGRA a BGR
             return cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
         except Exception as e:
-            # Si falla (por ejemplo, al cambiar de hilo), reiniciamos el capturador
-            self._sct = None
+            print(f"Capture Error: {e}")
             return None

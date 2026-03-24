@@ -149,10 +149,11 @@ class ShinyHunterGUI(ctk.CTk):
         # Row 3: Advanced
         self.btns_row3 = ctk.CTkFrame(self.calib_frame, fg_color="transparent")
         self.btns_row3.pack(fill="x", padx=10, pady=2)
-        ctk.CTkButton(self.btns_row3, text="SLEEP ASSET", fg_color="#8d8d1f", width=100, command=lambda: self.run_calib("sleep_icon")).pack(side="left", padx=2, expand=True, fill="x")
-        ctk.CTkButton(self.btns_row3, text="PP SLOTS (4)", fg_color="#5a1f8d", width=100, command=lambda: self.run_calib("pp_slots")).pack(side="left", padx=2, expand=True, fill="x")
-        ctk.CTkButton(self.btns_row3, text="BATTLE MSG", fg_color="#1f8d5a", width=100, command=lambda: self.run_calib("battle_msg")).pack(side="left", padx=2, expand=True, fill="x")
-        ctk.CTkButton(self.btns_row3, text="HUNTER HP", fg_color="#8d1f5a", width=100, command=lambda: self.run_calib("hunter_hp")).pack(side="left", padx=2, expand=True, fill="x")
+        ctk.CTkButton(self.btns_row3, text="SLEEP ASSET", fg_color="#8d8d1f", width=80, command=lambda: self.run_calib("sleep_icon")).pack(side="left", padx=2, expand=True, fill="x")
+        ctk.CTkButton(self.btns_row3, text="PP SLOTS", fg_color="#5a1f8d", width=80, command=lambda: self.run_calib("pp_slots")).pack(side="left", padx=2, expand=True, fill="x")
+        ctk.CTkButton(self.btns_row3, text="BATTLE MSG", fg_color="#1f8d5a", width=80, command=lambda: self.run_calib("battle_msg")).pack(side="left", padx=2, expand=True, fill="x")
+        ctk.CTkButton(self.btns_row3, text="HUNTER HP", fg_color="#8d1f5a", width=80, command=lambda: self.run_calib("hunter_hp")).pack(side="left", padx=2, expand=True, fill="x")
+        ctk.CTkButton(self.btns_row3, text="DEBUG FRAME", fg_color="#2c3e50", width=80, command=self.save_debug).pack(side="left", padx=2, expand=True, fill="x")
 
         # 4. Logger Frame (Hidden when Settings visible)
         self.log_container = ctk.CTkFrame(self)
@@ -181,21 +182,16 @@ class ShinyHunterGUI(ctk.CTk):
             if os.path.exists("config.json"):
                 with open("config.json", "r") as f: config = json.load(f)
             else: config = {}
-            
-            # General
             config["discord_webhook"] = self.web_entry.get(); config["total_encounters"] = int(self.count_entry.get())
             config["mode"] = self.mode_switch.get().lower(); config["ocr_retries"] = int(self.ocr_entry.get())
-            
-            # Ditto
             config["ditto_patrol_time"] = float(self.ditto_path_entry.get()); config["hunter_pokemon_name"] = self.ditto_hunter_entry.get()
             config["ditto_key_attack"] = self.ditto_atk_entry.get(); config["ditto_name_attack"] = self.ditto_atk_name.get()
             config["ditto_key_sleep"] = self.ditto_slp_entry.get(); config["ditto_name_sleep"] = self.ditto_slp_name.get()
             config["ditto_key_soak"] = self.ditto_soak_entry.get(); config["ditto_name_soak"] = self.ditto_soak_name.get()
             config["ditto_key_ball"] = self.ditto_ball_entry.get(); config["ditto_ocr_retries"] = int(self.ditto_ocr_entry.get())
             config["ditto_key_leppa"] = self.leppa_key_entry.get(); config["ditto_key_potion"] = self.potion_key_entry.get()
-
             with open("config.json", "w") as f: json.dump(config, f, indent=4)
-            self.add_log(f"✅ Configuration saved. (Mode: {config['mode']})")
+            self.add_log(f"✅ Configuration saved.")
         except Exception as e: self.add_log(f"❌ Error saving: {e}")
 
     def add_log(self, msg):
@@ -203,6 +199,10 @@ class ShinyHunterGUI(ctk.CTk):
 
     def run_calib(self, mode):
         threading.Thread(target=selector.run_calibration, args=(mode, self.add_log), daemon=True).start()
+
+    def save_debug(self):
+        temp_bot = ShinyBot(log_callback=self.add_log)
+        temp_bot.save_debug_frame()
 
     def toggle_settings(self):
         if self.settings_visible:
