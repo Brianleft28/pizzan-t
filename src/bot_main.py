@@ -32,7 +32,11 @@ class ShinyBot:
             self.observer = PokéObserver()
             self.recognizer = PokéRecognizer()
             self.controller = PokéController(self.config, log_callback=self.log_callback)
+            
+            # Métricas
             self.encounters = int(self.config.get("total_encounters", 0))
+            self.session_encounters = 0
+            self.session_dittos = 0
             
             self.mode_instance = self._initialize_mode()
             

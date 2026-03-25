@@ -7,27 +7,26 @@ Este documento es la **Única Fuente de Verdad**.
 1.  **SANTIDAD DE LAS COORDENADAS**: 
     - **SIEMPRE** recorta la imagen usando las coordenadas de `config.json` antes de analizarla. 
 
-2.  **LOG DESCRIPTIVO TOTAL (OBLIGATORIO)**:
-    - **NUNCA** loguear solo "Battle Detected". 
-    - **SIEMPRE** incluir el Nombre y Nivel de cada Pokémon detectado (ej: `[⚔️] Detected: Whismur Nv. 45`).
-    - En Hordas, listar los 5 Pokémon detectados antes de decidir el escape.
+2.  **LECTURA OBLIGATORIA DE PP (DITTO MODE)**:
+    - Antes de navegar hacia un movimiento, el bot **DEBE** abrir el menú de Fight, leer los PP del slot correspondiente y devolverlos al Logger.
+    - El log debe incluir el nombre del movimiento (ej: `[🔍] False Swipe PP: 14/40`).
 
-3.  **OBSERVADOR DE HP POR TURNO**:
-    - La vida del enemigo y del cazador debe verificarse al **inicio de cada turno**.
-    - No usar porcentajes si no son exactos. Usar estados claros: `[Enemy: LOW HP]` o `[Enemy: HIGH HP]`.
-    - Si el Hunter HP no se puede leer, reportar `[Hunter HP: UNKNOWN]` y activar alerta visual.
+3.  **MÉTRICAS DE SESIÓN**:
+    - Se debe llevar un conteo de "Dittos por Sesión" que se resetee al presionar START.
+    - Se debe calcular y mostrar el Tiempo de Sesión acumulado en cada reporte de captura.
 
-4.  **ESTRUCTURA MODULAR (v6.5)**:
-    - Lógica independiente en `src/modes/`. `bot_main.py` es solo el orquestador.
+4.  **LOG DESCRIPTIVO TOTAL**:
+    - Incluir Nombre y Nivel de cada Pokémon detectado.
+    - Informe de HP al inicio de cada turno: `[Enemy: LOW/HIGH HP]` | `[Hunter: OK/CRITICAL]`.
 
-5.  **FILOSOFÍA DE CAMINATA HUMANOIDE**:
-    - Pulsaciones variables basadas en `walk_stamina` y `jitter` aleatorio.
+5.  **ESTRUCTURA MODULAR (v6.5)**:
+    - Lógica independiente en `src/modes/`. No añadir lógica de combate en `bot_main.py`.
 
 6.  **CAPTURA DITTO REACTIVA**:
     - Prioridad: `Swipe -> Soak -> Sleep (Status Monitor) -> Balls`.
-    - El Soak es **OBLIGATORIO** en el Turno 2. El Sleep es **OBLIGATORIO** en el Turno 3.
+    - Monitor de Estado activo desde el primer intento de dormir.
 
 ## 🏗️ Registro de Refactorización (Marzo 2026)
 - **Modularización**: Separación de bucles en clases heredadas de `HuntingMode`.
 - **Logger**: Implementación de prefijos ASCII y marcas de tiempo automáticas.
-- **HP/PP Segregados**: Curación de vida y restauración de PP son checkpoints independientes.
+- **Session Tracking**: Implementación de cronómetro y contador de sesión independiente del histórico.

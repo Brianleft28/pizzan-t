@@ -11,12 +11,10 @@ class DittoMode(HuntingMode):
         self.monitoring_active = False
 
     def execute(self, frame):
-        # 1. Observador Universal
         if not self.bot.check_any_name_visible(frame) and not self.bot.is_menu_ready(frame):
             self._human_patrol()
             return
 
-        # 2. Batalla Detectada - Log Obligatorio (MANDATO 2)
         if not self.bot.is_menu_ready(frame):
             if not self._wait_for_menu(): return
 
@@ -29,7 +27,7 @@ class DittoMode(HuntingMode):
 
         is_target = False
         if res_s['is_shiny']:
-            self.log(f"✨ SHINY DETECTED: {target_name.upper()} ✨", "SUCCESS")
+            self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("SINGLE", f"SHINY {target_name}!", "shiny_detected.png")
             is_target = True
@@ -42,15 +40,14 @@ class DittoMode(HuntingMode):
             self.controller.run_away()
             self._wait_for_map()
             self.bot.encounters += 1
+            self.bot.session_encounters += 1
             return
 
-        # 4. Lógica de Captura por Turnos con Observer de HP (MANDATO 3)
         self._capture_sequence(target_name)
 
     def _human_patrol(self):
         base_time = float(self.config.get("ditto_patrol_time", 2.5))
         duration = (base_time * self.walk_stamina) * random.uniform(0.6, 1.4)
-        
         self.controller.key_down(self.direction)
         start_walk = time.time()
         while (time.time() - start_walk) < duration:
@@ -58,11 +55,9 @@ class DittoMode(HuntingMode):
             if self.bot.check_any_name_visible(self.observer.capture_frame()): break
             time.sleep(0.05)
         self.controller.key_up(self.direction)
-        
         time.sleep(random.uniform(0.15, 0.45))
         self.walk_stamina = random.uniform(0.8, 1.2)
-        if random.random() > 0.6:
-            self.direction = 'left' if self.direction == 'right' else 'right'
+        if random.random() > 0.6: self.direction = 'left' if self.direction == 'right' else 'right'
 
     def _capture_sequence(self, target_name):
         self.log(f"INITIATING CAPTURE: {target_name.upper()}", "ACTION")
@@ -73,61 +68,67 @@ class DittoMode(HuntingMode):
         while self.bot.running:
             if not self._wait_for_menu(): break
             
-            # --- TURNO INICIADO: HP OBSERVER (MANDATO 3) ---
             f_act = self.observer.capture_frame()
             is_slp = self.bot.is_asleep(f_act)
             is_low, hp_p = self.bot.is_hp_low(f_act)
-            
-            # Hunter HP check
             pot_n, h_hp, hp_g = self.bot.read_hunter_hp(f_act)
-            h_status = "CRITICAL" if pot_n else "OK"
             if pot_n: needs_pot = True
             
-            # Reporte de Estado Detallado
-            enemy_hp_status = "LOW" if (is_low or swiped) else "HIGH"
-            self.log(f"[T-{turn:02d}] Enemy: {enemy_hp_status} | Status: {'SLP' if is_slp else 'AWK'} | Hunter: {h_hp} ({h_status})", "DEBUG")
+            h_status = "CRITICAL" if pot_n else "OK"
+            self.log(f"[T-{turn:02d}] Enemy: {'LOW' if (is_low or swiped) else 'HIGH'} | Status: {'SLP' if is_slp else 'AWK'} | Hunter: {h_hp} ({h_status})", "DEBUG")
 
-            # Decidir Movimiento
             mv_s = None; mv_n = ""
-
             if turn == 1:
                 mv_s = self.config.get("ditto_key_attack", "2")
                 mv_n = self.config.get("ditto_name_attack", "Swipe")
-            elif not soaked: # Turno 2 o reintento de Soak
+            elif not soaked:
                 mv_s = self.config.get("ditto_key_soak", "4")
                 mv_n = self.config.get("ditto_name_soak", "Soak")
-            elif not is_slp: # Turno 3 o reintento de Sleep
+            elif not is_slp:
                 mv_s = self.config.get("ditto_key_sleep", "1")
                 mv_n = self.config.get("ditto_name_sleep", "Sleep")
                 if not self.monitoring_active:
-                    self.log("Status Monitor Activated: Keeping target asleep.", "DEBUG")
+                    self.log("Status Monitor Activated: Target will be kept asleep.", "DEBUG")
                     self.monitoring_active = True
             else:
                 mv_n = "Ball"
 
             if mv_s:
+                # MANDATO 2: Lectura obligatoria de PP
                 self.controller.open_fight_menu(); time.sleep(0.6)
                 pp_curr, nr = self.bot.read_pp(self.observer.capture_frame(), mv_s, mv_n)
-                if nr: leppas.add((mv_s, True))
+                self.log(f"Move: {mv_n} | PP Check: {pp_curr}/??", "DEBUG")
+                if nr: 
+                    leppas.add((mv_s, True))
+                    self.log(f"PP for {mv_n} is low. Scheduled for restoration.", "WARN")
                 
                 self.controller.navigate_and_confirm_move(mv_s)
                 if mv_n == self.config.get("ditto_name_soak", "Soak"): soaked = True
+                elif mv_n == self.config.get("ditto_name_attack", "Swipe"): swiped = True
                 
                 time.sleep(2.0)
-                while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running:
-                    time.sleep(0.5)
+                while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running: time.sleep(0.5)
             else:
                 self.controller.use_ball(self.config.get("ditto_key_ball", "5"))
                 if self._check_capture_result(): break
             
             turn += 1
 
+        # Reporte Final de Captura
         self.bot.encounters += 1
+        self.bot.session_encounters += 1
+        self.bot.session_dittos += 1
         self.bot.save_progress()
         
-        # Checkpoints de Curación SEGREGADOS
+        self.log("---------------------------------------", "SUCCESS")
+        self.log(f"CAPTURE SUCCESSFUL: {target_name.upper()}", "SUCCESS")
+        self.log(f"Session Time: {self.bot.get_elapsed_time()}", "INFO")
+        self.log(f"Session Dittos: {self.bot.session_dittos}", "INFO")
+        self.log(f"Total Encounters: {self.bot.encounters}", "INFO")
+        self.log("---------------------------------------", "SUCCESS")
+        
         if needs_pot and self.config.get("auto_heal_hp", True):
-            self.log("Healing Hunter HP...", "HEAL")
+            self.log("Restoring Hunter HP...", "HEAL")
             self.controller.use_potion_sequence(self.config.get("ditto_key_potion", "6"), True)
 
         if leppas and self.config.get("auto_heal_pp", True):
