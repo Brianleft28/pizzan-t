@@ -11,19 +11,15 @@ class DittoMode(HuntingMode):
         self.monitoring_active = False
 
     def execute(self, frame):
-        # 1. Observador Universal
+        # Reset activity during patrol
         if not self.bot.check_any_name_visible(frame) and not self.bot.is_menu_ready(frame):
-            base_t = float(self.config.get("ditto_patrol_time", 2.5))
-            self._human_patrol(self.direction, base_t, self.walk_stamina)
-            self.walk_stamina = random.uniform(0.8, 1.2)
-            if random.random() > 0.65: self.direction = 'left' if self.direction == 'right' else 'right'
+            self._human_patrol()
             return
 
-        # 2. Batalla Detectada
         if not self.bot.is_menu_ready(frame):
             if not self._wait_for_menu(): return
 
-        # 3. Escaneo Universal
+        # Escaneo Universal (resetea el timer de actividad automáticamente)
         f_bat = self.observer.capture_frame()
         shiny_found, target_name, all_names, slot_id = self.bot.scan_all_potential_targets(f_bat)
         
@@ -49,7 +45,6 @@ class DittoMode(HuntingMode):
             self.bot.session_encounters += 1
             return
 
-        # 4. CAPTURA REACTIVA (MANDATO 5)
         self._capture_sequence(target_name)
 
     def _capture_sequence(self, target_name):
@@ -59,43 +54,39 @@ class DittoMode(HuntingMode):
         swiped = False; needs_pot = False; leppas = set()
 
         while self.bot.running:
+            self.bot.reset_activity_timer() # Actividad en cada turno de captura
             if not self._wait_for_menu(): break
             
-            # --- MONITOR DE ESTADO Y HP (MANDATO 2) ---
             f_act = self.observer.capture_frame()
             is_slp = self.bot.is_asleep(f_act)
             is_low, _ = self.bot.is_hp_low(f_act)
-            pot_n, h_hp, _ = self.bot.read_hunter_hp()
-            if pot_n: needs_pot = True
             
-            self.log(f"[T-{turn:02d}] Enemy: {'LOW' if (is_low or swiped) else 'HIGH'} | Status: {'SLP' if is_slp else 'AWK'} | Hunter: {h_hp}", "DEBUG")
+            pot_n, h_hp, _ = self.bot.read_hunter_hp()
+            if pot_n: 
+                needs_pot = True
+                self.log(f"Hunter HP Critical ({h_hp}). Adding Potion to queue.", "HEAL")
+            
+            h_status = "CRITICAL" if pot_n else "OK"
+            self.log(f"[T-{turn:02d}] Enemy: {'LOW' if (is_low or swiped) else 'HIGH'} | Status: {'SLP' if is_slp else 'AWK'} | Hunter: {h_hp} ({h_status})", "DEBUG")
 
             mv_s = None; mv_n = ""
-
-            # LÓGICA DE TURNOS v7.0
-            # Turno 1: Swipe (si no tiene poca vida)
-            if turn == 1 and not is_low:
-                mv_s = self.config.get("ditto_key_attack", "2")
-                mv_n = self.config.get("ditto_name_attack", "Swipe")
-            
-            # Turno 2+: Monitor de Sueño
+            if turn == 1:
+                mv_s = self.config.get("ditto_key_attack", "2"); mv_n = self.config.get("ditto_name_attack", "Swipe")
             elif not is_slp:
-                mv_s = self.config.get("ditto_key_sleep", "1")
-                mv_n = self.config.get("ditto_name_sleep", "Sleep")
+                mv_s = self.config.get("ditto_key_sleep", "1"); mv_n = self.config.get("ditto_name_sleep", "Sleep")
                 if not self.monitoring_active:
-                    self.log("Status Monitor Activated: Keeping target asleep.", "DEBUG")
+                    self.log("Status Monitor Activated: Target will be kept asleep.", "DEBUG")
                     self.monitoring_active = True
-            
-            # Todo listo -> Balls
             else:
                 mv_n = "Ball"
 
             if mv_s:
                 self.controller.open_fight_menu(); time.sleep(0.6)
-                # PP Check PERSISTENTE (MANDATO 6)
                 pp_curr, nr = self.bot.read_pp(mv_s, mv_n)
                 self.log(f"Move: {mv_n} | PP Check: {pp_curr}", "DEBUG")
-                if nr: leppas.add((mv_s, True))
+                if nr: 
+                    leppas.add((mv_s, True))
+                    self.log(f"PP for {mv_n} is {pp_curr}. Adding Leppa to queue.", "HEAL")
                 
                 self.controller.navigate_and_confirm_move(mv_s)
                 if mv_n == self.config.get("ditto_name_attack", "Swipe"): swiped = True
@@ -115,12 +106,15 @@ class DittoMode(HuntingMode):
         
         self.log(f"CAPTURE SUCCESSFUL: {target_name.upper()} (Session: {self.bot.session_dittos})", "SUCCESS")
         
+        # Procesar colas de curación
         if needs_pot and self.config.get("auto_heal_hp", True):
+            self.bot.reset_activity_timer()
             self.log("Restoring Hunter HP...", "HEAL")
             self.controller.use_potion_sequence(self.config.get("ditto_key_potion", "6"), True)
 
         if leppas and self.config.get("auto_heal_pp", True):
-            self.log("Restoring PP...", "HEAL")
+            self.bot.reset_activity_timer()
+            self.log("Restoring PPs from queue...", "HEAL")
             for s in leppas:
                 self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), s[0], s[1])
 

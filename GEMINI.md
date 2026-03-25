@@ -7,26 +7,26 @@ Este documento es la **Única Fuente de Verdad**.
 1.  **SANTIDAD DE LAS COORDENADAS**: 
     - Nunca analizar fuera de las regiones recortadas según `config.json`.
 
-2.  **MONITOR DE ESTADO CONTINUO (DITTO MODE)**:
-    - A partir del **Turno 2**, el bot **DEBE** verificar el estado del objetivo (`is_asleep`) al inicio de cada turno.
-    - Si el objetivo no está dormido, la prioridad absoluta es usar **Espora**.
-    - El bot debe informar en el logger cuando se activa este monitoreo por primera vez.
+2.  **VISIBILIDAD DE CURACIÓN (OBLIGATORIO)**:
+    - El bot **DEBE** loguear explícitamente cuándo detecta la necesidad de curar y cuándo se añade a la cola (queue).
+    - Ejemplo: `[💊] PP for Spore is 0. Adding to restoration queue.`
 
-3.  **REACCIÓN INMEDIATA AL TOP HUD**:
+3.  **COMPORTAMIENTO DEL GUARDIÁN (WATCHDOG)**:
+    - El timer de inactividad debe resetearse en cada acción real: detección de nombres, lectura exitosa de PP/HP o pulsación de tecla.
+    - El Guardián **NO DEBE** interrumpir secuencias activas de combate o curación.
+
+4.  **MONITOR DE ESTADO CONTINUO (DITTO MODE)**:
+    - A partir del Turno 2, verificar `is_asleep` al inicio de cada turno. Prioridad absoluta: Espora.
+
+5.  **REACCIÓN INMEDIATA AL TOP HUD**:
     - Detener patrullaje al ver el nombre de cualquier Pokémon arriba.
 
-4.  **JERARQUÍA DE ESCANEO UNIVERSAL**:
+6.  **JERARQUÍA DE ESCANEO UNIVERSAL**:
     - Escaneo Horda -> Single Combat obligatorio en todos los modos.
 
-5.  **DITTO MODE STRICT TURN LOGIC (v7.0)**:
-    - Turno 1: Swipe (Falso Tortazo).
-    - Turno 2+: Bucle de `Check Sleep -> Spore (si AWK) -> Ball (si SLP)`.
-    - El movimiento "Soak" ha sido eliminado por completo de la lógica y la UI.
-
-6.  **LECTURA PERSISTENTE DE PP/HP**:
-    - 4 reintentos con RAW OCR en DEBUG para valores críticos.
+7.  **DITTO MODE STRICT TURN LOGIC (v7.0)**:
+    - Turno 1: Swipe | Turno 2+: Bucle de `Check Sleep -> Spore (si AWK) -> Ball (si SLP)`.
 
 ## 🏗️ Mapa del Proyecto
-- `src/bot_main.py`: Orquestador de Visión.
-- `src/modes/ditto.py`: Lógica reactiva de captura y Monitor de Estado.
-- `docs/config.md`: Manual de botones (Actualizado).
+- `src/bot_main.py`: Orquestador y Guardián.
+- `src/modes/ditto.py`: Lógica de captura y gestión de colas de curación.
