@@ -16,40 +16,35 @@ class HordeMode(HuntingMode):
 
         # 2. Batalla
         if not self.bot.is_menu_ready(frame):
-            self.log("Waiting for battle menu...", "BRAIN")
             if not self._wait_for_menu(): return
 
-        # 3. Escaneo DESCRIPTIVO (MANDATO 2)
+        # 3. ESCANEO UNIVERSAL (MANDATO 2)
         f_bat = self.observer.capture_frame()
-        shiny_found = False; target_name = "Unknown"
+        shiny_found, target_name, all_names, slot_id = self.bot.scan_all_potential_targets(f_bat)
         
-        self.log("SCANNIG HORDE SLOTS...", "BATTLE")
-        h_slots = self.config.get("slots", {})
-        for s_id, r in h_slots.items():
-            res = self.bot.get_slot_data(f_bat, r)
-            name = res['name'] if res['name'] else "Empty/Unknown"
-            # LOG OBLIGATORIO DE CADA SLOT
-            self.log(f"Detected Slot {s_id[-1]}: {name}", "BATTLE")
-            
-            if res['is_shiny']:
-                shiny_found = True; target_name = name
+        self.log(f"BATTLEFIELD SCAN: {len(all_names)} targets found.", "BATTLE")
+        for i, name in enumerate(all_names):
+            self.log(f"Target {i+1}: {name.upper()}", "BATTLE")
 
         if shiny_found:
-            self.log(f"SHINY DETECTED: {target_name.upper()}", "SUCCESS")
-            cv2.imwrite("shiny_detected.png", self.observer.capture_frame())
+            self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
+            cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("HORDE", f"SHINY {target_name}!", "shiny_detected.png")
-            self.log("SHINY IN HORDE! STOPPING...", "FATAL")
-            self.bot.running = False; return
+            self.log("SHINY IN BATTLEFIELD! STOPPING...", "FATAL")
+            self.bot.running = False
+            return
 
         # 4. Escape
-        self.log("Not shiny. Escaping...", "ACTION")
+        self.log("No shiny in battlefield. Escaping...", "ACTION")
         self.controller.run_away()
-        
-        start_esc = time.time()
-        while self.bot.check_any_name_visible(self.observer.capture_frame()) and self.bot.running:
-            if (time.time() - start_esc) > 5.0: break
-            time.sleep(0.5)
-        
-        self.bot.encounters += 5 # En hordas sumamos de a 5
+        self._wait_for_map()
+        self.bot.encounters += 5
         self.bot.save_progress()
         time.sleep(1.5)
+
+    def _wait_for_map(self):
+        esc_start = time.time()
+        while self.bot.check_any_name_visible(self.observer.capture_frame()) and self.bot.running:
+            if time.time() - esc_start > 5.0: break
+            time.sleep(0.5)
+        time.sleep(1.0)

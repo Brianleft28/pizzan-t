@@ -7,25 +7,27 @@ Este documento es la **Única Fuente de Verdad**.
 1.  **SANTIDAD DE LAS COORDENADAS**: 
     - **SIEMPRE** recorta la imagen usando las coordenadas de `config.json` antes de analizarla. 
 
-2.  **LECTURA PERSISTENTE Y ROBUSTA (PP/HP)**:
-    - Si una lectura de PP o Vida devuelve un valor inválido (99, ?? o vacio), el bot **DEBE** reintentar la captura y lectura hasta **4 veces** antes de continuar.
-    - Esto previene errores por parpadeos de la UI o animaciones de texto.
+2.  **REACCIÓN INMEDIATA AL TOP HUD (NAME SLOTS)**:
+    - El patrullaje **DEBE** detenerse en el milisegundo en que los nombres de los Pokémon sean visibles arriba.
+    - No esperar al menú de batalla (botones de abajo) para soltar las teclas.
+    - La detección de nombres es la prioridad #1 durante la caminata.
 
-3.  **TRANSPARENCIA DE DEBUG (RAW OCR)**:
-    - En cada lectura de PP o Vida, el bot debe informar el **Texto Crudo (Raw)** leído por el OCR en la categoría DEBUG (ej: `[🔍] RAW OCR: '14/4O'`).
+3.  **GUARDIÁN DE INACTIVIDAD (ANTI-STUCK)**:
+    - Watchdog de 30s con validación de 9s antes de ejecutar limpieza ('X' + Escape).
 
-4.  **LOG DESCRIPTIVO TOTAL**:
-    - Informe de cada turno: `[Enemy: LOW/HIGH HP]` | `[Hunter: OK/CRITICAL]`.
-    - Reporte detallado de PP antes de navegar a un movimiento.
+4.  **JERARQUÍA DE ESCANEO UNIVERSAL (ANTI-PÉRDIDA)**:
+    - Escanear SIEMPRE Horda -> Single en todos los modos.
 
-5.  **ESTRUCTURA MODULAR (v6.5)**:
+5.  **LECTURA PERSISTENTE Y ROBUSTA (PP/HP)**:
+    - Reintentar hasta 4 veces la lectura. Informar siempre RAW OCR en DEBUG.
+
+6.  **LOG DESCRIPTIVO TOTAL**:
+    - Informe detallado de cada turno, oponente y nivel. Ver la patrulla activa en el log.
+
+7.  **ESTRUCTURA MODULAR (v6.5)**:
     - Lógica independiente en `src/modes/`. No añadir lógica de combate en `bot_main.py`.
 
-6.  **MÉTRICAS DE SESIÓN**:
-    - Contador de sesión que se resetea al presionar START.
-    - Reporte ASCII tras cada captura con Tiempo de Sesión y Dittos atrapados.
-
 ## 🏗️ Registro de Refactorización (Marzo 2026)
-- **Modularización**: Separación de bucles en clases heredadas de `HuntingMode`.
-- **PokéLogger**: Clase independiente para gestión de mensajes y marcas de tiempo.
-- **Robustness**: Implementación de reintentos múltiples para OCR crítico.
+- **Modularización**: Separación de bucles en clases independientes.
+- **Interruptible Patrol**: Implementación de caminata que se corta instantáneamente al detectar el Top HUD.
+- **PokéLogger**: Gestión centralizada de mensajes con categorías y tiempos.

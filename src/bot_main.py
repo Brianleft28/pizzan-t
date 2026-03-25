@@ -22,7 +22,7 @@ class ShinyBot:
     def __init__(self, log_widget=None):
         self.running = False
         self.start_time = None
-        self.last_action_time = time.time()
+        self.last_activity_time = time.time()
         
         self.logger = PokéLogger(log_widget)
         self.log_callback = self.logger.log
@@ -40,10 +40,14 @@ class ShinyBot:
             self.mode_instance = self._initialize_mode()
             
             self.logger.log("---------------------------------------")
-            self.logger.log("  THE HUMANOID HUNTER v6.7 - ROBUST   ", "SUCCESS")
+            self.logger.log("  THE HUMANOID HUNTER v6.8 - GUARDIAN ", "SUCCESS")
             self.logger.log("---------------------------------------")
         except Exception as e: 
             self.logger.log(f"Bot initialization failed: {e}", "FATAL")
+
+    def reset_activity_timer(self):
+        """Llamar cada vez que el bot detecte progreso real"""
+        self.last_activity_time = time.time()
 
     def _initialize_mode(self):
         mode_name = self.config.get("mode", "horda").lower()
@@ -71,7 +75,7 @@ class ShinyBot:
     def log(self, message, category="INFO"):
         self.logger.log(message, category)
 
-    # --- Visión Robusta ---
+    # --- Visión Quirúrgica ---
     def is_menu_ready(self, frame):
         r = self.config.get("button_run")
         if not r or frame is None: return False
@@ -84,6 +88,34 @@ class ShinyBot:
     def get_slot_data(self, frame, region):
         crop = frame[region['y1']:region['y2'], region['x1']:region['x2']]
         return self.recognizer.analyze_slot(crop)
+
+    def scan_all_potential_targets(self, frame):
+        """Escanea Hordas y luego Single para asegurar que no perdemos ningún Shiny."""
+        all_results = []
+        shiny_detected = False
+        target_name = None
+        shiny_slot = None
+
+        h_slots = self.config.get("slots", {})
+        for s_id, r in h_slots.items():
+            res = self.get_slot_data(frame, r)
+            if res['name'] and len(res['name']) > 2:
+                all_results.append(res['name'])
+                if res['is_shiny']:
+                    shiny_detected = True; target_name = res['name']; shiny_slot = f"HORDE_{s_id[-1]}"
+
+        r_s = self.config.get("slot_single")
+        if r_s:
+            res_s = self.get_slot_data(frame, r_s)
+            if res_s['name'] and len(res_s['name']) > 2:
+                all_results.append(res_s['name'])
+                if res_s['is_shiny'] and not shiny_detected:
+                    shiny_detected = True; target_name = res_s['name']; shiny_slot = "SINGLE"
+                elif not target_name:
+                    target_name = res_s['name']
+
+        if all_results: self.reset_activity_timer() # Si vemos nombres, hay actividad
+        return shiny_detected, target_name, all_results, shiny_slot
 
     def check_any_name_visible(self, frame):
         if frame is None: return False
@@ -115,51 +147,41 @@ class ShinyBot:
         return self.recognizer.check_status_sleep(crop)
 
     def read_hunter_hp(self, frame_dummy=None):
-        """MANDATO 2 & 3: Lectura persistente con transparencia de RAW OCR"""
         r = self.config.get("hunter_hp_region")
         if not r: return False, "??/??", 0
-        
         for attempt in range(4):
             frame = self.observer.capture_frame()
             crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
             upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
-            
             res = self.recognizer.reader.readtext(upscaled)
             txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5')
             self.log(f"RAW HP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
-            
             nums = re.findall(r'(\d+)', txt)
             if len(nums) >= 2:
                 curr, total = int(nums[0]), int(nums[1])
                 return (total - curr >= 60), f"{curr}/{total}", (total - curr)
             time.sleep(0.3)
-            
         return False, "??/??", 0
 
     def read_pp(self, slot_idx, move_name="Move"):
-        """MANDATO 2 & 3: Lectura persistente con transparencia de RAW OCR"""
         pp_slots = self.config.get("pp_slots", {})
         slot_key = f"slot_{slot_idx}"
         if slot_key not in pp_slots: return 99, False
         r = pp_slots[slot_key]
-        
         for attempt in range(4):
             frame = self.observer.capture_frame()
             crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
             upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
-            
             res = self.recognizer.reader.readtext(upscaled)
             txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5').replace('B', '8')
             self.log(f"RAW PP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
-            
             nums = re.findall(r'(\d+)', txt)
             if len(nums) >= 2:
                 curr, total = int(nums[0]), int(nums[1])
                 return curr, (total - curr >= 10)
             time.sleep(0.3)
-            
         return 99, False
 
     def check_msg_area(self, frame):
@@ -181,23 +203,49 @@ class ShinyBot:
                     requests.post(url, data={"content": f"🏆 {category}: {message}"}, files={"file": f})
             except: pass
 
+    # --- El Guardián ---
+    def check_guardian(self, frame):
+        """MANDATO 2: Monitorea inactividad y ejecuta protocolo de limpieza"""
+        if time.time() - self.last_activity_time > 30:
+            self.log("GUARDIAN: Inactivity threshold exceeded (30s).", "WARN")
+            
+            # Verificamos si hay rastro de HUD
+            if self.check_any_name_visible(frame) or self.is_menu_ready(frame):
+                self.log("GUARDIAN: Battle HUD detected but stuck. Verifying for 9s...", "WARN")
+                
+                # Espera de 9s por animaciones (Mandato 2.2)
+                st = time.time(); stuck = True
+                while (time.time() - st) < 9.0:
+                    if not self.running: return
+                    # Si algo cambia (el menu se vuelve inaccesible o viceversa), quizás no está trabado
+                    time.sleep(1.0)
+                
+                if stuck:
+                    self.log("GUARDIAN: Still stuck. Executing Anti-Stuck Protocol...", "FATAL")
+                    # 'x' + Escape + Patrol (Mandato 2.3)
+                    self.controller._press('x')
+                    time.sleep(0.5)
+                    self.controller.run_away()
+                    self.log("GUARDIAN: Protocol executed. Resetting timer.", "SUCCESS")
+            
+            # Resetear siempre para no entrar en bucle si el mapa está vacío
+            self.reset_activity_timer()
+
     def loop(self):
         self.start_time = datetime.now()
         self.logger.clear_start_time()
-        self.last_action_time = time.time()
+        self.reset_activity_timer()
         
         while self.running:
             try:
                 frame = self.observer.capture_frame()
                 if frame is None: continue
 
-                if time.time() - self.last_action_time > 45:
-                    self.log("SENTINEL: Anti-stuck triggered!", "WARN")
-                    for _ in range(3): self.controller._press('x'); time.sleep(0.5)
-                    self.last_action_time = time.time()
+                # Lanzar el Guardián
+                self.check_guardian(frame)
 
+                # Delegar al modo activo
                 self.mode_instance.execute(frame)
-                self.last_action_time = time.time()
                 time.sleep(0.1)
             except Exception as e:
                 self.log(f"LOOP ERROR: {e}", "FATAL")
