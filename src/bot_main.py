@@ -5,6 +5,7 @@ import os
 import requests
 import random
 import numpy as np
+import re
 from datetime import datetime, timedelta
 from threading import Thread
 from src.vision import PokéObserver
@@ -23,9 +24,8 @@ class ShinyBot:
         self.start_time = None
         self.last_action_time = time.time()
         
-        # Clase Logger independiente
         self.logger = PokéLogger(log_widget)
-        self.log_callback = self.logger.log # Mantener compatibilidad si se usa como callback
+        self.log_callback = self.logger.log
         
         try:
             self.config = self.load_config()
@@ -33,7 +33,6 @@ class ShinyBot:
             self.recognizer = PokéRecognizer()
             self.controller = PokéController(self.config, log_callback=self.log_callback)
             
-            # Métricas
             self.encounters = int(self.config.get("total_encounters", 0))
             self.session_encounters = 0
             self.session_dittos = 0
@@ -41,7 +40,7 @@ class ShinyBot:
             self.mode_instance = self._initialize_mode()
             
             self.logger.log("---------------------------------------")
-            self.logger.log("  THE HUMANOID HUNTER v6.5 - PRO      ", "SUCCESS")
+            self.logger.log("  THE HUMANOID HUNTER v6.7 - ROBUST   ", "SUCCESS")
             self.logger.log("---------------------------------------")
         except Exception as e: 
             self.logger.log(f"Bot initialization failed: {e}", "FATAL")
@@ -67,14 +66,12 @@ class ShinyBot:
         except: pass
 
     def get_elapsed_time(self):
-        if not self.start_time: return "00:00:00"
-        elapsed = datetime.now() - self.start_time
-        return str(timedelta(seconds=int(elapsed.total_seconds())))
+        return self.logger.get_elapsed()
 
     def log(self, message, category="INFO"):
         self.logger.log(message, category)
 
-    # --- Visión ---
+    # --- Visión Robusta ---
     def is_menu_ready(self, frame):
         r = self.config.get("button_run")
         if not r or frame is None: return False
@@ -117,34 +114,52 @@ class ShinyBot:
         crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
         return self.recognizer.check_status_sleep(crop)
 
-    def read_hunter_hp(self, frame):
+    def read_hunter_hp(self, frame_dummy=None):
+        """MANDATO 2 & 3: Lectura persistente con transparencia de RAW OCR"""
         r = self.config.get("hunter_hp_region")
-        if not r or frame is None: return False, "??/??", 0
-        crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
-        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        res = self.recognizer.reader.readtext(gray)
-        txt = "".join([rm[1] for rm in res]).upper()
-        import re
-        nums = re.findall(r'(\d+)', txt)
-        if len(nums) >= 2:
-            curr, total = int(nums[0]), int(nums[1])
-            gap = total - curr
-            return (gap >= 60), f"{curr}/{total}", gap
+        if not r: return False, "??/??", 0
+        
+        for attempt in range(4):
+            frame = self.observer.capture_frame()
+            crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+            
+            res = self.recognizer.reader.readtext(upscaled)
+            txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5')
+            self.log(f"RAW HP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
+            
+            nums = re.findall(r'(\d+)', txt)
+            if len(nums) >= 2:
+                curr, total = int(nums[0]), int(nums[1])
+                return (total - curr >= 60), f"{curr}/{total}", (total - curr)
+            time.sleep(0.3)
+            
         return False, "??/??", 0
 
-    def read_pp(self, frame, slot_idx, move_name="Move"):
+    def read_pp(self, slot_idx, move_name="Move"):
+        """MANDATO 2 & 3: Lectura persistente con transparencia de RAW OCR"""
         pp_slots = self.config.get("pp_slots", {})
         slot_key = f"slot_{slot_idx}"
-        if slot_key not in pp_slots or frame is None: return 99, False
+        if slot_key not in pp_slots: return 99, False
         r = pp_slots[slot_key]
-        crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
-        res = self.recognizer.reader.readtext(crop)
-        txt = "".join([rm[1] for rm in res]).upper()
-        import re
-        nums = re.findall(r'(\d+)', txt)
-        if len(nums) >= 2:
-            curr, total = int(nums[0]), int(nums[1])
-            return curr, (total - curr >= 10)
+        
+        for attempt in range(4):
+            frame = self.observer.capture_frame()
+            crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+            
+            res = self.recognizer.reader.readtext(upscaled)
+            txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5').replace('B', '8')
+            self.log(f"RAW PP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
+            
+            nums = re.findall(r'(\d+)', txt)
+            if len(nums) >= 2:
+                curr, total = int(nums[0]), int(nums[1])
+                return curr, (total - curr >= 10)
+            time.sleep(0.3)
+            
         return 99, False
 
     def check_msg_area(self, frame):

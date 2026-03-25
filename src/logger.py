@@ -6,7 +6,6 @@ class PokéLogger:
         self.widget = text_widget
         self.start_time = datetime.now()
         
-        # Prefijos ASCII con estilo
         self.prefixes = {
             "INFO":    "[📝]",
             "ACTION":  "[🎮]",
@@ -26,13 +25,16 @@ class PokéLogger:
     def log(self, message, category="INFO"):
         timer = self.get_elapsed()
         prefix = self.prefixes.get(category, "[•]")
-        full_msg = f"[{timer}] {prefix} {message}"
+        
+        # Evitamos que se aniden los logs si el mensaje ya trae formato
+        clean_msg = str(message).strip()
+        full_line = f"[{timer}] {prefix} {clean_msg}"
         
         if self.widget:
-            self.widget.insert("end", f"{full_msg}\n")
+            self.widget.insert("end", f"{full_line}\n")
             self.widget.see("end")
         else:
-            print(full_msg)
+            print(full_line)
 
     def clear_start_time(self):
         self.start_time = datetime.now()

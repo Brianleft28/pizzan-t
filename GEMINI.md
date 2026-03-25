@@ -7,26 +7,25 @@ Este documento es la **Única Fuente de Verdad**.
 1.  **SANTIDAD DE LAS COORDENADAS**: 
     - **SIEMPRE** recorta la imagen usando las coordenadas de `config.json` antes de analizarla. 
 
-2.  **LECTURA OBLIGATORIA DE PP (DITTO MODE)**:
-    - Antes de navegar hacia un movimiento, el bot **DEBE** abrir el menú de Fight, leer los PP del slot correspondiente y devolverlos al Logger.
-    - El log debe incluir el nombre del movimiento (ej: `[🔍] False Swipe PP: 14/40`).
+2.  **LECTURA PERSISTENTE Y ROBUSTA (PP/HP)**:
+    - Si una lectura de PP o Vida devuelve un valor inválido (99, ?? o vacio), el bot **DEBE** reintentar la captura y lectura hasta **4 veces** antes de continuar.
+    - Esto previene errores por parpadeos de la UI o animaciones de texto.
 
-3.  **MÉTRICAS DE SESIÓN**:
-    - Se debe llevar un conteo de "Dittos por Sesión" que se resetee al presionar START.
-    - Se debe calcular y mostrar el Tiempo de Sesión acumulado en cada reporte de captura.
+3.  **TRANSPARENCIA DE DEBUG (RAW OCR)**:
+    - En cada lectura de PP o Vida, el bot debe informar el **Texto Crudo (Raw)** leído por el OCR en la categoría DEBUG (ej: `[🔍] RAW OCR: '14/4O'`).
 
 4.  **LOG DESCRIPTIVO TOTAL**:
-    - Incluir Nombre y Nivel de cada Pokémon detectado.
-    - Informe de HP al inicio de cada turno: `[Enemy: LOW/HIGH HP]` | `[Hunter: OK/CRITICAL]`.
+    - Informe de cada turno: `[Enemy: LOW/HIGH HP]` | `[Hunter: OK/CRITICAL]`.
+    - Reporte detallado de PP antes de navegar a un movimiento.
 
 5.  **ESTRUCTURA MODULAR (v6.5)**:
     - Lógica independiente en `src/modes/`. No añadir lógica de combate en `bot_main.py`.
 
-6.  **CAPTURA DITTO REACTIVA**:
-    - Prioridad: `Swipe -> Soak -> Sleep (Status Monitor) -> Balls`.
-    - Monitor de Estado activo desde el primer intento de dormir.
+6.  **MÉTRICAS DE SESIÓN**:
+    - Contador de sesión que se resetea al presionar START.
+    - Reporte ASCII tras cada captura con Tiempo de Sesión y Dittos atrapados.
 
 ## 🏗️ Registro de Refactorización (Marzo 2026)
 - **Modularización**: Separación de bucles en clases heredadas de `HuntingMode`.
-- **Logger**: Implementación de prefijos ASCII y marcas de tiempo automáticas.
-- **Session Tracking**: Implementación de cronómetro y contador de sesión independiente del histórico.
+- **PokéLogger**: Clase independiente para gestión de mensajes y marcas de tiempo.
+- **Robustness**: Implementación de reintentos múltiples para OCR crítico.
