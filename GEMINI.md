@@ -1,33 +1,32 @@
-# SØREN - Technical System Prompt & Project Map
+# SØREN - Master Technical System Prompt
 
-Este documento es la **Única Fuente de Verdad**. 
+Este documento es la **Única Fuente de Verdad**.
 
 ## 🔴 MANDATOS CRÍTICOS (Prohibido Revertir)
 
 1.  **SANTIDAD DE LAS COORDENADAS**: 
-    - **SIEMPRE** recorta la imagen usando las coordenadas de `config.json` antes de analizarla. 
+    - Nunca analizar fuera de las regiones recortadas según `config.json`.
 
-2.  **REACCIÓN INMEDIATA AL TOP HUD (NAME SLOTS)**:
-    - El patrullaje **DEBE** detenerse en el milisegundo en que los nombres de los Pokémon sean visibles arriba.
-    - No esperar al menú de batalla (botones de abajo) para soltar las teclas.
-    - La detección de nombres es la prioridad #1 durante la caminata.
+2.  **MONITOR DE ESTADO CONTINUO (DITTO MODE)**:
+    - A partir del **Turno 2**, el bot **DEBE** verificar el estado del objetivo (`is_asleep`) al inicio de cada turno.
+    - Si el objetivo no está dormido, la prioridad absoluta es usar **Espora**.
+    - El bot debe informar en el logger cuando se activa este monitoreo por primera vez.
 
-3.  **GUARDIÁN DE INACTIVIDAD (ANTI-STUCK)**:
-    - Watchdog de 30s con validación de 9s antes de ejecutar limpieza ('X' + Escape).
+3.  **REACCIÓN INMEDIATA AL TOP HUD**:
+    - Detener patrullaje al ver el nombre de cualquier Pokémon arriba.
 
-4.  **JERARQUÍA DE ESCANEO UNIVERSAL (ANTI-PÉRDIDA)**:
-    - Escanear SIEMPRE Horda -> Single en todos los modos.
+4.  **JERARQUÍA DE ESCANEO UNIVERSAL**:
+    - Escaneo Horda -> Single Combat obligatorio en todos los modos.
 
-5.  **LECTURA PERSISTENTE Y ROBUSTA (PP/HP)**:
-    - Reintentar hasta 4 veces la lectura. Informar siempre RAW OCR en DEBUG.
+5.  **DITTO MODE STRICT TURN LOGIC (v7.0)**:
+    - Turno 1: Swipe (Falso Tortazo).
+    - Turno 2+: Bucle de `Check Sleep -> Spore (si AWK) -> Ball (si SLP)`.
+    - El movimiento "Soak" ha sido eliminado por completo de la lógica y la UI.
 
-6.  **LOG DESCRIPTIVO TOTAL**:
-    - Informe detallado de cada turno, oponente y nivel. Ver la patrulla activa en el log.
+6.  **LECTURA PERSISTENTE DE PP/HP**:
+    - 4 reintentos con RAW OCR en DEBUG para valores críticos.
 
-7.  **ESTRUCTURA MODULAR (v6.5)**:
-    - Lógica independiente en `src/modes/`. No añadir lógica de combate en `bot_main.py`.
-
-## 🏗️ Registro de Refactorización (Marzo 2026)
-- **Modularización**: Separación de bucles en clases independientes.
-- **Interruptible Patrol**: Implementación de caminata que se corta instantáneamente al detectar el Top HUD.
-- **PokéLogger**: Gestión centralizada de mensajes con categorías y tiempos.
+## 🏗️ Mapa del Proyecto
+- `src/bot_main.py`: Orquestador de Visión.
+- `src/modes/ditto.py`: Lógica reactiva de captura y Monitor de Estado.
+- `docs/config.md`: Manual de botones (Actualizado).

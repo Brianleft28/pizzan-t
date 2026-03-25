@@ -1,48 +1,31 @@
-# SØREN - Automated Pokémon Shiny & Ditto Hunter (v2.2)
+# SØREN - The Humanoid Shiny Hunter
 
-SØREN is a high-performance, data-driven automated bot for Pokémon shiny hunting and mass Ditto catching. Version 2.2 introduces a fundamental shift in vision logic, prioritizing target identification over map environment details.
+**SØREN** es un asistente de automatización quirúrgica diseñado para PokéMMO, enfocado en la detección de Shinies y la captura optimizada de Dittos. Utiliza visión artificial no invasiva (OCR y análisis de píxeles) para operar de manera indetectable y eficiente.
 
-## 🌟 What's New in v2.2?
-- **Data-Driven Logic**: The bot no longer "looks" at the map. It monitors the Pokémon Name Slot directly. If text appears, it enters Analysis Mode.
-- **Verification State**: Identifies "Ditto" or "Shiny" *before* the battle menu even appears, preparing its next move instantly.
-- **Cyberpunk ASCII Terminal**: Redesigned logging interface with a session timer, turn-by-turn health monitoring, and ASCII art notifications.
-- **Patch-Stay Patrol**: Human-like movement bursts (0.6s-1.2s) with frequent direction changes to keep the character inside small grass patches.
-- **Thread-Safe Vision**: Robust screen capture system designed for multi-threaded performance on notebooks and high-end PCs.
+## 🚀 Características Principales
 
-## 🚀 Key Features
-- **Ditto Specialist**: Automated identification, transformation waiting, weakening (Swipe), soaking, sleeping, and catching.
-- **Universal Shiny Capture**: Automatically enters high-priority capture mode if a shiny is detected in any 1v1 encounter.
-- **Auto-Sustain**: 
-    - **Leppa Berry**: Intelligent PP restoration with "MAX" quantity navigation.
-    - **Potions**: Automatic hunter healing out of combat.
-- **Bilingual OCR**: Seamlessly understands English and Spanish game clients.
-- **Discord Alerts**: Real-time screenshots sent to your private webhook.
+- **Arquitectura Modular (v6.8)**: Lógica separada por modos (Hordas, Ditto, Single) para máxima estabilidad.
+- **Escaneo Universal Anti-Pérdida**: Sin importar el modo, el bot escanea todo el campo de batalla para asegurar que ningún Shiny sea ignorado.
+- **Caminata Humanoide**: Patrones de patrullaje con stamina variable, micro-pausas y respuesta instantánea al Top HUD.
+- **Sistema Guardián (Anti-Stuck)**: Vigilancia activa de 30 segundos con protocolos de recuperación automática.
+- **Captura Inteligente de Ditto**: Gestión estricta de turnos (Swipe, Soak, Sleep) con monitoreo dinámico de estado.
+- **Transparencia Total**: Logger estilizado en ASCII con reportes de PP, Vida y marcas de tiempo milimétricas.
+- **Notificaciones**: Integración nativa con Discord vía Webhooks para alertas remotas.
 
-## 🛠️ Installation
+## 🛠️ Requisitos e Instalación
 
-1. **Clone & Enter**:
-   ```bash
-   git clone https://github.com/Brianleft28/pizzan-t
-   cd pizzan-t
-   ```
-
-2. **Install Dependencies**:
+1. Tener Python 3.10+ instalado.
+2. Instalar dependencias:
    ```bash
    pip install -r requirements.txt
    ```
+3. Ejecutar el panel de control:
+   ```bash
+   python main_gui.py
+   ```
 
-## 📋 Configuration & Calibration
-Open the GUI (`python main_gui.py`) and use the **SCREENS CALIBRATION** panel:
-1. **HORDE/SINGLE SLOTS**: Mark the areas where Pokémon names appear.
-2. **RUN BUTTON**: Mark the "Run/Fight" button in the menu.
-3. **HP/STATUS/PP**: Mark these essential combat areas for full automation.
-4. **DEBUG FRAME**: Use this button to see a binary view of what the bot sees (helps with dark/light themes).
+## 📜 Manual de Operación
+Consulta el manual detallado de la interfaz y botones en [docs/config.md](docs/config.md). 
 
-## 🏗️ Project Architecture
-- `src/bot_main.py`: The data-driven state machine (Logic Engine).
-- `src/vision.py`: Robust, thread-safe screen capture.
-- `src/controller.py`: Human-like input simulation.
-- `src/recognizer.py`: OCR and Template Matching engine.
-
-## ⚠️ Disclaimer
-This software is for educational purposes. Use it at your own risk. The developers are not responsible for any in-game sanctions or account actions.
+## ⚖️ Mandatos de Desarrollo
+Las reglas críticas de comportamiento y seguridad están grabadas en [GEMINI.md](GEMINI.md).

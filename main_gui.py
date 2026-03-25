@@ -16,7 +16,7 @@ class ShinyHunterGUI(ctk.CTk):
         super().__init__()
 
         self.title("🇦🇷 SØREN - Shiny Hunter Bot")
-        self.geometry("700x950")
+        self.geometry("700x900")
         self.attributes("-topmost", True)
 
         self.bot = None
@@ -33,7 +33,7 @@ class ShinyHunterGUI(ctk.CTk):
                                      command=self.toggle_bot)
         self.start_btn.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
 
-        # 1. Main Configuration Frame (Mode & Counter)
+        # 1. Main Configuration Frame
         self.config_frame = ctk.CTkFrame(self)
         self.config_frame.grid(row=1, column=0, padx=20, pady=5, sticky="ew")
         
@@ -64,7 +64,7 @@ class ShinyHunterGUI(ctk.CTk):
         self.ocr_entry.grid(row=1, column=1, padx=10, pady=5, sticky="w")
         self.ocr_entry.insert(0, self.get_config_val("ocr_retries", "6"))
 
-        # --- Ditto Tab (TODOS LOS PARÁMETROS) ---
+        # --- Ditto Tab ---
         # Patrol Time
         ctk.CTkLabel(self.tab_ditto, text="Patrol Time (s):", font=ctk.CTkFont(weight="bold")).grid(row=0, column=0, padx=10, pady=5, sticky="w")
         self.ditto_path_entry = ctk.CTkEntry(self.tab_ditto, width=60); self.ditto_path_entry.grid(row=0, column=1, padx=10, pady=5, sticky="w")
@@ -77,46 +77,39 @@ class ShinyHunterGUI(ctk.CTk):
         self.ditto_atk_name = ctk.CTkEntry(self.tab_ditto, width=120); self.ditto_atk_name.grid(row=1, column=2, padx=10, pady=5, sticky="w")
         self.ditto_atk_name.insert(0, self.get_config_val("ditto_name_attack", "False Swipe"))
 
-        # Soak (Anegar)
-        ctk.CTkLabel(self.tab_ditto, text="2. Soak (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, padx=10, pady=5, sticky="w")
-        self.ditto_soak_entry = ctk.CTkEntry(self.tab_ditto, width=40); self.ditto_soak_entry.grid(row=2, column=1, padx=10, pady=5, sticky="w")
-        self.ditto_soak_entry.insert(0, self.get_config_val("ditto_key_soak", "4"))
-        self.ditto_soak_name = ctk.CTkEntry(self.tab_ditto, width=120); self.ditto_soak_name.grid(row=2, column=2, padx=10, pady=5, sticky="w")
-        self.ditto_soak_name.insert(0, self.get_config_val("ditto_name_soak", "Soak"))
-
-        # Sleep (Spora)
-        ctk.CTkLabel(self.tab_ditto, text="3. Sleep (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(row=3, column=0, padx=10, pady=5, sticky="w")
-        self.ditto_slp_entry = ctk.CTkEntry(self.tab_ditto, width=40); self.ditto_slp_entry.grid(row=3, column=1, padx=10, pady=5, sticky="w")
+        # Sleep (Spora) - AHORA TURNO 2
+        ctk.CTkLabel(self.tab_ditto, text="2. Sleep (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.ditto_slp_entry = ctk.CTkEntry(self.tab_ditto, width=40); self.ditto_slp_entry.grid(row=2, column=1, padx=10, pady=5, sticky="w")
         self.ditto_slp_entry.insert(0, self.get_config_val("ditto_key_sleep", "1"))
-        self.ditto_slp_name = ctk.CTkEntry(self.tab_ditto, width=120); self.ditto_slp_name.grid(row=3, column=2, padx=10, pady=5, sticky="w")
+        self.ditto_slp_name = ctk.CTkEntry(self.tab_ditto, width=120); self.ditto_slp_name.grid(row=2, column=2, padx=10, pady=5, sticky="w")
         self.ditto_slp_name.insert(0, self.get_config_val("ditto_name_sleep", "Spore"))
 
         # Balls & Utils
-        ctk.CTkLabel(self.tab_ditto, text="4. Ball Hotkey:", font=ctk.CTkFont(weight="bold")).grid(row=4, column=0, padx=10, pady=5, sticky="w")
-        self.ditto_ball_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.ditto_ball_entry.grid(row=4, column=1, padx=10, pady=5, sticky="w")
+        ctk.CTkLabel(self.tab_ditto, text="3. Ball Hotkey:", font=ctk.CTkFont(weight="bold")).grid(row=3, column=0, padx=10, pady=5, sticky="w")
+        self.ditto_ball_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.ditto_ball_entry.grid(row=3, column=1, padx=10, pady=5, sticky="w")
         self.ditto_ball_entry.insert(0, self.get_config_val("ditto_key_ball", "5"))
 
-        ctk.CTkLabel(self.tab_ditto, text="Potion Key:", font=ctk.CTkFont(weight="bold")).grid(row=5, column=0, padx=10, pady=5, sticky="w")
-        self.potion_key_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.potion_key_entry.grid(row=5, column=1, padx=10, pady=5, sticky="w")
+        ctk.CTkLabel(self.tab_ditto, text="Potion Key:", font=ctk.CTkFont(weight="bold")).grid(row=4, column=0, padx=10, pady=5, sticky="w")
+        self.potion_key_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.potion_key_entry.grid(row=4, column=1, padx=10, pady=5, sticky="w")
         self.potion_key_entry.insert(0, self.get_config_val("ditto_key_potion", "6"))
 
-        ctk.CTkLabel(self.tab_ditto, text="Leppa Key:", font=ctk.CTkFont(weight="bold")).grid(row=5, column=2, padx=10, pady=5, sticky="w")
-        self.leppa_key_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.leppa_key_entry.grid(row=5, column=3, padx=10, pady=5, sticky="w")
+        ctk.CTkLabel(self.tab_ditto, text="Leppa Key:", font=ctk.CTkFont(weight="bold")).grid(row=4, column=2, padx=10, pady=5, sticky="w")
+        self.leppa_key_entry = ctk.CTkEntry(self.tab_ditto, width=50); self.leppa_key_entry.grid(row=4, column=3, padx=10, pady=5, sticky="w")
         self.leppa_key_entry.insert(0, self.get_config_val("ditto_key_leppa", "4"))
 
-        # Checkpoints de Curación (DENTRO DE DITTO TAB)
+        # Checkpoints de Curación
         self.heal_hp_check = ctk.CTkCheckBox(self.tab_ditto, text="Auto-Heal HP", font=ctk.CTkFont(weight="bold"))
-        self.heal_hp_check.grid(row=6, column=0, padx=10, pady=5, sticky="w")
+        self.heal_hp_check.grid(row=5, column=0, padx=10, pady=5, sticky="w")
         if self.get_config_val("auto_heal_hp", "True") == "True": self.heal_hp_check.select()
 
         self.heal_pp_check = ctk.CTkCheckBox(self.tab_ditto, text="Auto-Restore PP", font=ctk.CTkFont(weight="bold"))
-        self.heal_pp_check.grid(row=6, column=2, padx=10, pady=5, sticky="w")
+        self.heal_pp_check.grid(row=5, column=2, padx=10, pady=5, sticky="w")
         if self.get_config_val("auto_heal_pp", "True") == "True": self.heal_pp_check.select()
 
         self.save_btn_tab = ctk.CTkButton(self.tab_ditto, text="SAVE DITTO CONFIG", fg_color="#1f538d", height=40, command=self.save_all)
-        self.save_btn_tab.grid(row=7, column=0, columnspan=4, padx=20, pady=10, sticky="ew")
+        self.save_btn_tab.grid(row=6, column=0, columnspan=4, padx=20, pady=10, sticky="ew")
 
-        # 3. Calibration Frame (TODOS LOS BOTONES RESTAURADOS)
+        # 3. Calibration Frame
         self.calib_frame = ctk.CTkFrame(self)
         self.calib_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
         ctk.CTkLabel(self.calib_frame, text="CALIBRATION TOOLS", font=ctk.CTkFont(size=14, weight="bold")).pack(pady=5)
@@ -152,9 +145,11 @@ class ShinyHunterGUI(ctk.CTk):
     def get_config_val(self, key, default=""):
         try:
             if os.path.exists("config.json"):
-                with open("config.json", "r") as f: return str(json.load(f).get(key, default))
+                with open("config.json", "r") as f:
+                    val = json.load(f).get(key, default)
+                    return str(val)
         except: pass
-        return default
+        return str(default)
 
     def save_all(self, _=None):
         try:
@@ -170,19 +165,17 @@ class ShinyHunterGUI(ctk.CTk):
             config["ditto_patrol_time"] = float(self.ditto_path_entry.get())
             config["ditto_key_attack"] = self.ditto_atk_entry.get()
             config["ditto_name_attack"] = self.ditto_atk_name.get()
-            config["ditto_key_soak"] = self.ditto_soak_entry.get()
-            config["ditto_name_soak"] = self.ditto_soak_name.get()
             config["ditto_key_sleep"] = self.ditto_slp_entry.get()
             config["ditto_name_sleep"] = self.ditto_slp_name.get()
             config["ditto_key_ball"] = self.ditto_ball_entry.get()
             config["ditto_key_potion"] = self.potion_key_entry.get()
             config["ditto_key_leppa"] = self.leppa_key_entry.get()
-            config["auto_heal_hp"] = self.heal_hp_check.get()
-            config["auto_heal_pp"] = self.heal_pp_check.get()
+            config["auto_heal_hp"] = bool(self.heal_hp_check.get())
+            config["auto_heal_pp"] = bool(self.heal_pp_check.get())
 
             with open("config.json", "w") as f: json.dump(config, f, indent=4)
-            self.add_log(f"✅ Configuration saved successfully.")
-        except Exception as e: self.add_log(f"❌ Error saving config: {e}")
+            self.add_log(f"✅ Configuration saved.")
+        except Exception as e: self.add_log(f"❌ Error saving: {e}")
 
     def add_log(self, msg):
         self.log_box.insert("end", f"{msg}\n"); self.log_box.see("end")
@@ -193,7 +186,9 @@ class ShinyHunterGUI(ctk.CTk):
     def save_debug(self):
         try:
             obs = PokéObserver(); frame = obs.capture_frame()
-            if frame is not None: cv2.imwrite("debug_view.png", frame); self.add_log("📸 Debug frame saved.")
+            if frame is None: return
+            cv2.imwrite("debug_view.png", frame)
+            self.add_log("📸 Debug frame saved.")
         except Exception as e: self.add_log(f"❌ Debug Error: {e}")
 
     def toggle_settings(self):
