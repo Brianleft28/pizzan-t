@@ -8,7 +8,7 @@
 - **Escaneo Universal Anti-Pérdida**: Sin importar el modo, el bot escanea todo el campo de batalla para asegurar que ningún Shiny sea ignorado.
 - **Caminata Humanoide**: Patrones de patrullaje con stamina variable, micro-pausas y respuesta instantánea al Top HUD.
 - **Sistema Guardián (Anti-Stuck)**: Vigilancia activa de 30 segundos con protocolos de recuperación automática.
-- **Captura Inteligente de Ditto**: Gestión estricta de turnos (Swipe, Soak, Sleep) con monitoreo dinámico de estado.
+- **Captura Inteligente de Ditto**: Gestión estricta de turnos (Swipe, Sleep) con monitoreo dinámico de estado.
 - **Transparencia Total**: Logger estilizado en ASCII con reportes de PP, Vida y marcas de tiempo milimétricas.
 - **Notificaciones**: Integración nativa con Discord vía Webhooks para alertas remotas.
 
