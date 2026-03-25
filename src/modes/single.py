@@ -12,8 +12,8 @@ class SingleMode(HuntingMode):
     def execute(self, frame):
         # 1. Observador Universal: Si no hay batalla, patrullar
         if not self.bot.check_any_name_visible(frame) and not self.bot.is_menu_ready(frame):
-            # Usamos el tiempo de patrulla de la UI (compartido con Ditto)
             base_t = float(self.config.get("ditto_patrol_time", 2.5))
+            # CORRECCIÓN: Pasar argumentos
             self._human_patrol(self.direction, base_t, self.walk_stamina)
             
             # Post-patrulla

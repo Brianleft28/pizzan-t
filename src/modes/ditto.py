@@ -11,9 +11,16 @@ class DittoMode(HuntingMode):
         self.monitoring_active = False
 
     def execute(self, frame):
-        # Reset activity during patrol
+        # 1. Observador Universal: Si no hay batalla, patrullar
         if not self.bot.check_any_name_visible(frame) and not self.bot.is_menu_ready(frame):
-            self._human_patrol()
+            base_t = float(self.config.get("ditto_patrol_time", 2.5))
+            # CORRECCIÓN: Pasar los argumentos requeridos
+            self._human_patrol(self.direction, base_t, self.walk_stamina)
+            
+            # Post-patrulla logic
+            self.walk_stamina = random.uniform(0.8, 1.2)
+            if random.random() > 0.65:
+                self.direction = 'left' if self.direction == 'right' else 'right'
             return
 
         if not self.bot.is_menu_ready(frame):
@@ -54,7 +61,7 @@ class DittoMode(HuntingMode):
         swiped = False; needs_pot = False; leppas = set()
 
         while self.bot.running:
-            self.bot.reset_activity_timer() # Actividad en cada turno de captura
+            self.bot.reset_activity_timer() 
             if not self._wait_for_menu(): break
             
             f_act = self.observer.capture_frame()
@@ -106,7 +113,6 @@ class DittoMode(HuntingMode):
         
         self.log(f"CAPTURE SUCCESSFUL: {target_name.upper()} (Session: {self.bot.session_dittos})", "SUCCESS")
         
-        # Procesar colas de curación
         if needs_pot and self.config.get("auto_heal_hp", True):
             self.bot.reset_activity_timer()
             self.log("Restoring Hunter HP...", "HEAL")
