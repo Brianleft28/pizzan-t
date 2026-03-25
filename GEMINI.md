@@ -1,36 +1,33 @@
 # SØREN - Technical System Prompt & Project Map
 
-Este documento es la **Única Fuente de Verdad**. Cualquier agente que trabaje en este código debe seguir estos mandatos o el sistema fallará.
+Este documento es la **Única Fuente de Verdad**. 
 
 ## 🔴 MANDATOS CRÍTICOS (Prohibido Revertir)
 
 1.  **SANTIDAD DE LAS COORDENADAS**: 
-    - **NUNCA** pases un frame completo (`frame`) a las funciones de OCR o Reconocimiento. 
     - **SIEMPRE** recorta la imagen usando las coordenadas de `config.json` antes de analizarla. 
-    - Si el usuario calibró una zona, es porque esa es la **única** zona donde está el dato. Leer fuera de ahí provoca falsos positivos (Shinies fantasma).
 
-2.  **BILINGÜISMO OBLIGATORIO**: 
-    - Todas las búsquedas de texto deben incluir términos en **Español e Inglés** (ej: "Caught" y "Atrapado"). No asumas el idioma del cliente.
+2.  **LOG DESCRIPTIVO TOTAL (OBLIGATORIO)**:
+    - **NUNCA** loguear solo "Battle Detected". 
+    - **SIEMPRE** incluir el Nombre y Nivel de cada Pokémon detectado (ej: `[⚔️] Detected: Whismur Nv. 45`).
+    - En Hordas, listar los 5 Pokémon detectados antes de decidir el escape.
 
-3.  **CERO LECTURA DE CHAT PARA DECISIONES**: 
-    - El chat es ruido. Usa el **Nombre del Pokémon** (arriba) para identificar y el **Menú de Batalla** (Huir/Luchar) para confirmar el turno. Solo usa el mensaje de batalla para confirmar el éxito de la Ball.
+3.  **OBSERVADOR DE HP POR TURNO**:
+    - La vida del enemigo y del cazador debe verificarse al **inicio de cada turno**.
+    - No usar porcentajes si no son exactos. Usar estados claros: `[Enemy: LOW HP]` o `[Enemy: HIGH HP]`.
+    - Si el Hunter HP no se puede leer, reportar `[Hunter HP: UNKNOWN]` y activar alerta visual.
 
-## 🏗️ Arquitectura de Visión (v2.6 Surgical)
+4.  **ESTRUCTURA MODULAR (v6.5)**:
+    - Lógica independiente en `src/modes/`. `bot_main.py` es solo el orquestador.
 
-### 1. Identificación Quirúrgica
-- El flujo de entrada es: `Detección de Letras en Slot` -> `Recorte Estricto` -> `OCR de Nombre` -> `Esperar Menú`.
-- Si el OCR se ejecuta sobre la pantalla completa, el bot detectará palabras como "Shiny" o "Ditto" dentro de su propio Logger o GUI, entrando en bucles infinitos de error.
+5.  **FILOSOFÍA DE CAMINATA HUMANOIDE**:
+    - Pulsaciones variables basadas en `walk_stamina` y `jitter` aleatorio.
 
-### 2. Monitor de Vida por Turno
-- La vida se lee en cada inicio de turno mediante el recorte de `hunter_hp_region`.
-- El bot debe informar: `Target HP %`, `Target Status` y `Hunter HP/Total`.
+6.  **CAPTURA DITTO REACTIVA**:
+    - Prioridad: `Swipe -> Soak -> Sleep (Status Monitor) -> Balls`.
+    - El Soak es **OBLIGATORIO** en el Turno 2. El Sleep es **OBLIGATORIO** en el Turno 3.
 
-## ⚙️ Esquema de Configuración (`config.json`)
-- `slot_single`: Región del nombre del enemigo.
-- `hp_bar_region`: Región de la barra de salud del enemigo.
-- `battle_msg_region`: Región de los mensajes de sistema (Caught/Broke free).
-- `hunter_hp_region`: Región de la vida numérica del cazador.
-
-## 🛠️ Diagnóstico (Botón Debug)
-- El botón **DEBUG FRAME** debe generar `debug_view.png` mostrando la pantalla procesada en blanco y negro (Threshold 160). 
-- **Propósito**: Si el usuario ve la imagen blanca o negra, debe ajustar el brillo del juego o el tema (Dark/Light).
+## 🏗️ Registro de Refactorización (Marzo 2026)
+- **Modularización**: Separación de bucles en clases heredadas de `HuntingMode`.
+- **Logger**: Implementación de prefijos ASCII y marcas de tiempo automáticas.
+- **HP/PP Segregados**: Curación de vida y restauración de PP son checkpoints independientes.
