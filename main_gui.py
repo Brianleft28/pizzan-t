@@ -74,6 +74,14 @@ class ShinyHunterGUI(ctk.CTk):
         self.save_btn_horde = ctk.CTkButton(self.tab_horde, text="SAVE HORDE CONFIG", fg_color="#1f538d", height=40, command=self.save_all)
         self.save_btn_horde.grid(row=1, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
 
+        ctk.CTkLabel(self.tab_horde, text="Alarm Testing:", font=ctk.CTkFont(weight="bold")).grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        row_alarm = ctk.CTkFrame(self.tab_horde, fg_color="transparent")
+        row_alarm.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+        self.test_alarm_btn = ctk.CTkButton(row_alarm, text="TEST ALARM", width=100, fg_color="#d35400", hover_color="#e67e22", command=self.test_alarm)
+        self.test_alarm_btn.pack(side="left", padx=5)
+        self.stop_alarm_btn = ctk.CTkButton(row_alarm, text="STOP ALARM", width=100, fg_color="#7f8c8d", command=self.stop_alarm)
+        self.stop_alarm_btn.pack(side="left", padx=5)
+
         # --- Ditto Tab ---
         # Patrol Time
         ctk.CTkLabel(self.tab_ditto, text="Patrol Time (s):", font=ctk.CTkFont(weight="bold")).grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -193,6 +201,16 @@ class ShinyHunterGUI(ctk.CTk):
 
     def run_calib(self, mode):
         threading.Thread(target=selector.run_calibration, args=(mode, self.add_log), daemon=True).start()
+
+    def test_alarm(self):
+        if not self.bot:
+            self.bot = ShinyBot(log_widget=self.log_box)
+        self.bot.play_shiny_alarm()
+        self.add_log("🎵 Testing alarm... Check assets/shiny_alarm.wav")
+
+    def stop_alarm(self):
+        if self.bot:
+            self.bot.stop_shiny_alarm()
 
     def save_debug(self):
         try:

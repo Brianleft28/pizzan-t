@@ -234,7 +234,40 @@ class ShinyBot:
         self.log("!!!   PANIC STOP: SHINY DETECTED    !!!", "FATAL")
         self.log("!!!    MANUAL INTERVENTION REQD     !!!", "FATAL")
         self.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "FATAL")
-        # No hacemos nada más. El bot se queda 'congelado' en el loop
+        self.play_shiny_alarm()
+
+    def play_shiny_alarm(self):
+        if self._alarm_active: return
+        self._alarm_active = True
+        
+        def _alarm_loop():
+            path = os.path.join("assets", "shiny_alarm.wav")
+            while self._alarm_active:
+                if not os.path.exists(path):
+                    self.log(f"⚠️ Alarm sound not found at {path}. Use .wav format.", "WARN")
+                    for _ in range(10): 
+                        if not self._alarm_active: break
+                        winsound.Beep(1000, 500)
+                    break
+                
+                self.log("📢 Playing SHINY ALARM (18s loop)...", "INFO")
+                # Reproducir sin loop interno, lo controlamos nosotros
+                winsound.PlaySound(path, winsound.SND_FILENAME | winsound.SND_ASYNC)
+                
+                # Esperar 18 segundos o hasta que se desactive
+                start_wait = time.time()
+                while time.time() - start_wait < 18:
+                    if not self._alarm_active: 
+                        winsound.PlaySound(None, winsound.SND_PURGE)
+                        return
+                    time.sleep(0.1)
+        
+        Thread(target=_alarm_loop, daemon=True).start()
+
+    def stop_shiny_alarm(self):
+        self._alarm_active = False
+        winsound.PlaySound(None, winsound.SND_PURGE)
+        self.log("🔇 Alarm stopped.", "INFO")
 
     def check_guardian(self, frame):
         """MANDATO 3: El Guardián es más cauteloso"""

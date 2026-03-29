@@ -35,11 +35,13 @@ class DittoMode(HuntingMode):
             self.log(f"Target {i+1}: {name.upper()}", "BATTLE")
 
         is_target = False
+        is_shiny = False
         if shiny_found:
             self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("SINGLE/DITTO", f"SHINY {target_name}!", "shiny_detected.png")
             is_target = True
+            is_shiny = True
         elif target_name and any(x in target_name.lower() for x in ["ditto", "itto", "ditt", "ito"]):
             is_target = True
             target_name = "Ditto"
@@ -52,7 +54,7 @@ class DittoMode(HuntingMode):
             self.bot.session_encounters += 1
             return
 
-        self._capture_sequence(target_name)
+        self._capture_sequence(target_name, is_shiny=is_shiny)
         self.bot.session_dittos += 1
         self.bot.session_encounters += 1
 

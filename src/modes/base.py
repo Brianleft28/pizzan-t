@@ -48,8 +48,11 @@ class HuntingMode:
             time.sleep(0.2)
         return False
 
-    def _capture_sequence(self, target_name):
+    def _capture_sequence(self, target_name, is_shiny=False):
         self.log(f"INITIATING CAPTURE: {target_name.upper()}", "ACTION")
+        if is_shiny:
+            self.bot.play_shiny_alarm()
+            
         turn = 1
         swiped = False; leppas = set()
 
@@ -94,6 +97,10 @@ class HuntingMode:
         self.bot.save_progress()
         self.log(f"CAPTURE SUCCESSFUL: {target_name.upper()}", "SUCCESS")
         
+        if is_shiny:
+            self.log("✨ 🎉 ¡BRUTAL! ¡HAS ATRAPADO UN SHINY! ¡FELICIDADES! 🎉 ✨", "SUCCESS")
+            self.bot.stop_shiny_alarm()
+
         if leppas and self.config.get("auto_heal_pp", True):
             self.bot.reset_activity_timer()
             self.log(f"Restoring {len(leppas)} moves from PP queue...", "HEAL")

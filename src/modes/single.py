@@ -38,7 +38,7 @@ class SingleMode(HuntingMode):
             self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("SINGLE", f"SHINY {target_name}!", "shiny_detected.png")
-            self._capture_sequence(target_name)
+            self._capture_sequence(target_name, is_shiny=True)
             return
 
         # 4. Escape si no es shiny
