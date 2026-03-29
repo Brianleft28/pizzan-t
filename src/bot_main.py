@@ -6,6 +6,7 @@ import requests
 import random
 import numpy as np
 import re
+import winsound
 from datetime import datetime, timedelta
 from threading import Thread
 from src.vision import PokéObserver
@@ -23,6 +24,7 @@ class ShinyBot:
         self.running = False
         self.start_time = None
         self.last_activity_time = time.time()
+        self._alarm_active = False
         
         self.logger = PokéLogger(log_widget)
         self.log_callback = self.logger.log
@@ -251,10 +253,8 @@ class ShinyBot:
                     break
                 
                 self.log("📢 Playing SHINY ALARM (18s loop)...", "INFO")
-                # Reproducir sin loop interno, lo controlamos nosotros
                 winsound.PlaySound(path, winsound.SND_FILENAME | winsound.SND_ASYNC)
                 
-                # Esperar 18 segundos o hasta que se desactive
                 start_wait = time.time()
                 while time.time() - start_wait < 18:
                     if not self._alarm_active: 
