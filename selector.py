@@ -40,7 +40,13 @@ class TkSelector:
         self.start_y = None
         
         # Number of rectangles based on mode
-        if mode == "hud": self.max_rects = 5
+        if mode == "hud":
+            h_size = 5
+            try:
+                if os.path.exists(CONFIG_PATH):
+                    with open(CONFIG_PATH, 'r') as f: h_size = json.load(f).get("horde_size", 5)
+            except: pass
+            self.max_rects = int(h_size)
         elif mode == "pp_slots": self.max_rects = 4
         elif mode in ["combat", "single_slot", "hp_bar", "status_slot", "sleep_icon", "battle_msg", "hunter_hp"]: self.max_rects = 1
         else: self.max_rects = 2
@@ -78,10 +84,14 @@ class TkSelector:
             else: config = {}
 
             if self.mode == "hud":
-                config["slots"] = {} 
+                h_size = len(self.rects)
+                slot_key = f"slots_{h_size}"
+                config[slot_key] = {} 
                 for i, r in enumerate(self.rects):
-                    config["slots"][f"slot_{i+1}"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
-                self.log_func(f"✅ SUCCESS: {len(self.rects)} slots saved.")
+                    config[slot_key][f"slot_{i+1}"] = {"x1": r[0], "y1": r[1], "x2": r[2], "y2": r[3]}
+                # También guardamos en 'slots' por compatibilidad básica
+                config["slots"] = config[slot_key]
+                self.log_func(f"✅ SUCCESS: {h_size} slots saved in {slot_key}.")
                 
             elif self.mode == "single_slot":
                 r = self.rects[0]

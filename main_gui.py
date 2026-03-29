@@ -51,6 +51,7 @@ class ShinyHunterGUI(ctk.CTk):
         self.tabview = ctk.CTkTabview(self, height=450)
         self.tabview.grid(row=2, column=0, padx=20, pady=5, sticky="ew")
         self.tab_general = self.tabview.add("General / Stats")
+        self.tab_horde = self.tabview.add("Horde Settings")
         self.tab_ditto = self.tabview.add("Ditto Settings")
 
         # --- General Tab ---
@@ -63,6 +64,15 @@ class ShinyHunterGUI(ctk.CTk):
         self.ocr_entry = ctk.CTkEntry(self.tab_general, width=70)
         self.ocr_entry.grid(row=1, column=1, padx=10, pady=5, sticky="w")
         self.ocr_entry.insert(0, self.get_config_val("ocr_retries", "6"))
+
+        # --- Horde Tab ---
+        ctk.CTkLabel(self.tab_horde, text="Horde Size:", font=ctk.CTkFont(weight="bold")).grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.horde_size_switch = ctk.CTkSegmentedButton(self.tab_horde, values=["3", "5"], command=self.save_all)
+        self.horde_size_switch.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+        self.horde_size_switch.set(self.get_config_val("horde_size", "5"))
+
+        self.save_btn_horde = ctk.CTkButton(self.tab_horde, text="SAVE HORDE CONFIG", fg_color="#1f538d", height=40, command=self.save_all)
+        self.save_btn_horde.grid(row=1, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
 
         # --- Ditto Tab ---
         # Patrol Time
@@ -160,6 +170,7 @@ class ShinyHunterGUI(ctk.CTk):
             config["total_encounters"] = int(self.count_entry.get())
             config["discord_webhook"] = self.web_entry.get()
             config["ocr_retries"] = int(self.ocr_entry.get())
+            config["horde_size"] = int(self.horde_size_switch.get())
             
             # Ditto Settings
             config["ditto_patrol_time"] = float(self.ditto_path_entry.get())

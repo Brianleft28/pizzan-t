@@ -4,7 +4,7 @@ Este documento detalla cada elemento de la interfaz de usuario y su función té
 
 ## 🛠️ Calibration Tools (Buzón de Visión)
 Estos botones activan el selector transparente para definir las coordenadas de lectura.
-- **HUD HORDE**: Define las 5 regiones donde aparecen los nombres de los enemigos en hordas.
+- **HUD HORDE**: Define las 3 o 5 regiones (según configuración) donde aparecen los nombres de los enemigos en hordas.
 - **SINGLE SLOT**: Define la región del nombre del enemigo en combates individuales.
 - **RUN BTN**: Define la región de los botones de batalla (Lucha/Huir) para confirmar el estado del menú.
 - **HP BAR**: Define la región de la barra de salud del enemigo (para detectar HP Low/High).
@@ -18,6 +18,9 @@ Estos botones activan el selector transparente para definir las coordenadas de l
 ## 📊 General / Stats Tab
 - **Webhook URL**: Dirección de Discord para recibir alertas de Shiny.
 - **OCR Retries**: Número de intentos (Base: 6) para leer un texto antes de dar error.
+
+## 🏹 Horde Settings Tab
+- **Horde Size**: Selecciona entre hordas de 3 o 5 Pokémon. Esto afecta tanto a la cantidad de rectángulos a calibrar en HUD HORDE como al contador de encuentros.
 
 ## 👾 Ditto Settings Tab
 ### 1. Movimientos y Tiempos

@@ -30,15 +30,15 @@ class HordeMode(HuntingMode):
             self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("HORDE", f"SHINY {target_name}!", "shiny_detected.png")
-            self.log("SHINY IN BATTLEFIELD! STOPPING...", "FATAL")
-            self.bot.running = False
+            self.bot.panic_stop()
             return
 
         # 4. Escape
         self.log("No shiny in battlefield. Escaping...", "ACTION")
         self.controller.run_away()
         self._wait_for_map()
-        self.bot.encounters += 5
+        h_size = self.bot.config.get("horde_size", 5)
+        self.bot.encounters += int(h_size)
         self.bot.save_progress()
         time.sleep(1.5)
 

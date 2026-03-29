@@ -27,6 +27,9 @@ Este documento es la **Única Fuente de Verdad**.
 7.  **DITTO MODE STRICT TURN LOGIC (v7.0)**:
     - Turno 1: Swipe | Turno 2+: Bucle de `Check Sleep -> Spore (si AWK) -> Ball (si SLP)`.
 
+8.  **IDIOMA DE RESPUESTA**:
+    - El asistente IA DEBE responder SIEMPRE en ESPAÑOL.
+
 ## 🏗️ Mapa del Proyecto
 - `src/bot_main.py`: Orquestador y Guardián.
 - `src/modes/ditto.py`: Lógica de captura y gestión de colas de curación.

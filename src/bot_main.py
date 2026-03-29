@@ -96,7 +96,9 @@ class ShinyBot:
         target_name = None
         shiny_slot = None
 
-        h_slots = self.config.get("slots", {})
+        h_size = self.config.get("horde_size", 5)
+        h_slots = self.config.get(f"slots_{h_size}", self.config.get("slots", {}))
+
         for s_id, r in h_slots.items():
             res = self.get_slot_data(frame, r)
             if res['name'] and len(res['name']) > 2:
@@ -119,7 +121,9 @@ class ShinyBot:
 
     def check_any_name_visible(self, frame):
         if frame is None: return False
-        h_slots = self.config.get("slots", {})
+        h_size = self.config.get("horde_size", 5)
+        h_slots = self.config.get(f"slots_{h_size}", self.config.get("slots", {}))
+        
         for s_id, r in h_slots.items():
             res = self.get_slot_data(frame, r)
             if res['name'] and len(res['name']) > 2: 
@@ -186,7 +190,8 @@ class ShinyBot:
             if len(nums) >= 2:
                 self.reset_activity_timer() # Éxito en lectura = actividad
                 curr, total = int(nums[0]), int(nums[1])
-                return curr, (total - curr >= 10)
+                # CAMBIO: Solo restaurar si queda 0 o 1 PP para no desperdiciar Zanamas
+                return curr, (curr <= 1)
             time.sleep(0.3)
         return 99, False
 
@@ -203,11 +208,33 @@ class ShinyBot:
 
     def send_discord_alert(self, category, message, img_path):
         url = self.config.get("discord_webhook")
-        if url:
-            try:
-                with open(img_path, "rb") as f:
-                    requests.post(url, data={"content": f"🏆 {category}: {message}"}, files={"file": f})
-            except: pass
+        if not url:
+            self.log("Discord Webhook URL not configured.", "WARN")
+            return
+            
+        self.log(f"Sending Discord alert: {category} - {message}...", "INFO")
+        try:
+            with open(img_path, "rb") as f:
+                # Usamos una estructura más robusta para Discord
+                payload = {"content": f"🚨 **{category} DETECTED** 🚨\n> {message}\n> Total Encounters: {self.encounters}"}
+                files = {"file": (img_path, f, "image/png")}
+                response = requests.post(url, data=payload, files=files, timeout=10)
+                
+                if response.status_code in [200, 204]:
+                    self.log("✅ Discord alert sent successfully!", "SUCCESS")
+                else:
+                    self.log(f"❌ Discord error: {response.status_code} - {response.text}", "FATAL")
+        except Exception as e:
+            self.log(f"❌ Failed to send Discord alert: {e}", "FATAL")
+
+    def panic_stop(self):
+        """MANDATO DE SEGURIDAD: Detiene todo para proteger un Shiny"""
+        self.running = False
+        self.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "FATAL")
+        self.log("!!!   PANIC STOP: SHINY DETECTED    !!!", "FATAL")
+        self.log("!!!    MANUAL INTERVENTION REQD     !!!", "FATAL")
+        self.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "FATAL")
+        # No hacemos nada más. El bot se queda 'congelado' en el loop
 
     def check_guardian(self, frame):
         """MANDATO 3: El Guardián es más cauteloso"""
