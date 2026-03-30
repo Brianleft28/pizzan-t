@@ -78,16 +78,22 @@ class HuntingMode:
                 self.controller.open_fight_menu(); time.sleep(0.6)
                 pp_curr, nr = self.bot.read_pp(mv_s, mv_n)
                 self.log(f"Move: {mv_n} | PP Check: {pp_curr}", "DEBUG")
+                
                 if nr: 
                     leppas.add((mv_s, True))
-                    self.log(f"PP for {mv_n} is {pp_curr}. Adding Leppa to queue.", "HEAL")
-                
-                self.controller.navigate_and_confirm_move(mv_s)
-                if mv_n == self.config.get("ditto_name_attack", "Swipe"): swiped = True
-                
-                time.sleep(2.0)
-                while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running: time.sleep(0.5)
-            else:
+                    self.log(f"[💊] PP for {mv_n} is {pp_curr}. Adding to restoration queue.", "HEAL")
+
+                if pp_curr == 0:
+                    self.log(f"⚠️ {mv_n} has 0 PP! Switching to Ball spam.", "WARN")
+                    mv_s = None # Forzamos el lanzamiento de Pokébola en este turno
+
+                if mv_s:
+                    self.controller.navigate_and_confirm_move(mv_s)
+                    if mv_n == self.config.get("ditto_name_attack", "Swipe"): swiped = True
+                    time.sleep(2.0)
+                    while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running: time.sleep(0.5)
+            
+            if not mv_s:
                 self.controller.use_ball(self.config.get("ditto_key_ball", "5"))
                 if self._check_capture_result(): break
             

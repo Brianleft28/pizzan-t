@@ -38,3 +38,12 @@ class PokéLogger:
 
     def clear_start_time(self):
         self.start_time = datetime.now()
+
+    def get_last_lines(self, count=10):
+        if not self.widget: return ""
+        try:
+            content = self.widget.get("1.0", "end-1c")
+            lines = [l for l in content.split("\n") if l.strip()]
+            return "\n".join(lines[-count:])
+        except:
+            return ""

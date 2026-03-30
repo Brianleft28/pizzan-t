@@ -157,8 +157,27 @@ class ShinyHunterGUI(ctk.CTk):
         self.log_container.grid_remove()
 
         # 5. View Toggle
-        self.toggle_btn = ctk.CTkButton(self, text="VIEW FULL LOGGER", height=35, fg_color="#5a5a5a", command=self.toggle_settings)
-        self.toggle_btn.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+        row_btns = ctk.CTkFrame(self, fg_color="transparent")
+        row_btns.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+        row_btns.grid_columnconfigure((0, 1), weight=1)
+
+        self.toggle_btn = ctk.CTkButton(row_btns, text="VIEW FULL LOGGER", height=35, fg_color="#5a5a5a", command=self.toggle_settings)
+        self.toggle_btn.grid(row=0, column=0, padx=5, sticky="ew")
+
+        self.copy_btn = ctk.CTkButton(row_btns, text="📋 COPIAR LOGS (10)", height=35, fg_color="#2c3e50", command=self.copy_logs)
+        self.copy_btn.grid(row=0, column=1, padx=5, sticky="ew")
+
+    def copy_logs(self):
+        if self.bot and self.bot.logger:
+            last_10 = self.bot.logger.get_last_lines(10)
+            if last_10:
+                self.clipboard_clear()
+                self.clipboard_append(last_10)
+                self.add_log("📋 Últimas 10 líneas copiadas al portapapeles.")
+            else:
+                self.add_log("⚠️ No hay logs para copiar.")
+        else:
+            self.add_log("⚠️ El bot no está inicializado.")
 
     def get_config_val(self, key, default=""):
         try:

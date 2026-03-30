@@ -26,6 +26,8 @@ class PokéObserver:
 
             sct_img = self._sct.grab(monitor)
             frame = np.array(sct_img)
+            if frame.size == 0:
+                return None
             return cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
         except Exception as e:
             # Si falla, reiniciamos el capturador para el siguiente intento

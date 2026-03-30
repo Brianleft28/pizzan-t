@@ -22,7 +22,7 @@ class PokéRecognizer:
 
     def check_status_sleep(self, img):
         """Compara el recorte con el icono de dormir guardado"""
-        if self.sleep_icon_tpl is None:
+        if self.sleep_icon_tpl is None or img is None or img.size == 0:
             return False
         
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -34,6 +34,9 @@ class PokéRecognizer:
         Analiza el recorte de un nombre.
         Retorna: { 'name': str, 'is_shiny': bool }
         """
+        if slot_img is None or slot_img.size == 0:
+            return {'name': "", 'is_shiny': False}
+            
         gray = cv2.cvtColor(slot_img, cv2.COLOR_BGR2GRAY)
         results = self.reader.readtext(gray)
         

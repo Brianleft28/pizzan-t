@@ -143,6 +143,7 @@ class ShinyBot:
         r = self.config.get("hp_bar_region")
         if not r or frame is None: return False, 0.0
         crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+        if crop.size == 0: return False, 0.0
         hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
         mask_g = cv2.inRange(hsv, np.array([35, 50, 50]), np.array([90, 255, 255]))
         mask_y = cv2.inRange(hsv, np.array([15, 50, 50]), np.array([35, 255, 255]))
@@ -161,7 +162,13 @@ class ShinyBot:
         if not r: return False, "??/??", 0
         for attempt in range(4):
             frame = self.observer.capture_frame()
+            if frame is None:
+                time.sleep(0.3)
+                continue
             crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+            if crop.size == 0:
+                time.sleep(0.3)
+                continue
             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
             upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
             res = self.recognizer.reader.readtext(upscaled)
@@ -182,7 +189,13 @@ class ShinyBot:
         r = pp_slots[slot_key]
         for attempt in range(4):
             frame = self.observer.capture_frame()
+            if frame is None:
+                time.sleep(0.3)
+                continue
             crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+            if crop.size == 0:
+                time.sleep(0.3)
+                continue
             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
             upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
             res = self.recognizer.reader.readtext(upscaled)
@@ -192,8 +205,8 @@ class ShinyBot:
             if len(nums) >= 2:
                 self.reset_activity_timer() # Éxito en lectura = actividad
                 curr, total = int(nums[0]), int(nums[1])
-                # CAMBIO: Solo restaurar si queda 0 o 1 PP para no desperdiciar Zanamas
-                return curr, (curr <= 1)
+                # MANDATO: Encolar si queda 5 o menos PP
+                return curr, (curr <= 5)
             time.sleep(0.3)
         return 99, False
 
