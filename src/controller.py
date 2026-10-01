@@ -11,6 +11,13 @@ class PokéController:
         # Desactivamos el pause de pydirectinput para manejarlo nosotros
         pydirectinput.PAUSE = 0.0
 
+        # --- ANTI-COLLISION: Estado de patrullaje ---
+        self.last_patrol_direction = random.choice(['left', 'right'])
+        self.patrol_axis_start_time = time.time()
+        # Segundos máximos caminando en el mismo eje sin encuentro antes de asumir colisión
+        self.collision_timeout_sec = float(self.controls.get("collision_timeout", 12.0))
+        self._collision_count = 0  # Contador de colisiones consecutivas
+
     def log(self, msg):
         if self.log_callback:
             # Clean and stylish terminal prefix
@@ -44,9 +51,56 @@ class PokéController:
         self.log(f"ACTIVATE: Sweet Scent (Key {key})")
         self._press(key)
 
+    def reset_patrol_timer(self):
+        """Llamar cuando el bot entra en combate o detecta actividad real.
+        Resetea el timer anti-colisión para que no dispare un cambio innecesario."""
+        self.patrol_axis_start_time = time.time()
+        self._collision_count = 0
+
+    def _handle_collision(self):
+        """Ejecuta la maniobra anti-colisión: micro-retroceso + cambio de eje."""
+        self._collision_count += 1
+        old_dir = self.last_patrol_direction
+
+        # Micro-retroceso: dar un paso corto en la dirección opuesta
+        opposite = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+        retreat_dir = opposite.get(old_dir, 'right')
+        self.log(f"🧱 ANTI-COLLISION #{self._collision_count}: Wall detected! Retreating {retreat_dir.upper()}")
+        self._press(retreat_dir, duration=random.uniform(0.3, 0.6))
+        time.sleep(random.uniform(0.1, 0.3))
+
+        # Cambio de eje: si estábamos en horizontal, pasar a vertical y viceversa
+        if old_dir in ['left', 'right']:
+            self.last_patrol_direction = random.choice(['up', 'down'])
+        else:
+            self.last_patrol_direction = random.choice(['left', 'right'])
+
+        self.log(f"🧭 ANTI-COLLISION: Axis change {old_dir.upper()} → {self.last_patrol_direction.upper()}")
+        self.patrol_axis_start_time = time.time()
+
+        # Si llevamos muchas colisiones seguidas, hacer un movimiento largo para escapar de la esquina
+        if self._collision_count >= 3:
+            self.log("⚠️ ANTI-COLLISION: Corner escape! Long diagonal movement")
+            escape_dir = random.choice(['left', 'right', 'up', 'down'])
+            self._press(escape_dir, duration=random.uniform(2.5, 4.0))
+            self._collision_count = 0
+            self.last_patrol_direction = escape_dir
+            self.patrol_axis_start_time = time.time()
+
     def search_movement(self):
-        """Fluid long-press movement for realistic patrolling"""
-        direction = random.choice(['left', 'right'])
+        """Fluid long-press movement for realistic patrolling — con anti-colisión por timeout."""
+        # Verificar si excedimos el timeout en el mismo eje (posible pared)
+        elapsed_on_axis = time.time() - self.patrol_axis_start_time
+        if elapsed_on_axis > self.collision_timeout_sec:
+            self._handle_collision()
+
+        direction = self.last_patrol_direction
+
+        # Variación humana: cambio ocasional de sentido dentro del mismo eje
+        if random.random() > 0.8:
+            opposite = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+            direction = opposite.get(direction, direction)
+
         # Long duration to cross multiple tiles fluidly (Human-like)
         duration = random.uniform(1.5, 3.5)
         self.log(f"Patrolling {direction.upper()} for {duration:.1f}s")
@@ -55,9 +109,20 @@ class PokéController:
         time.sleep(random.uniform(0.2, 0.5))
 
     def ditto_search_movement(self, direction):
-        """Linear patrol using long continuous presses"""
+        """Linear patrol using long continuous presses — con tracking anti-colisión."""
+        # Actualizar dirección trackeada
+        if direction != self.last_patrol_direction:
+            self.last_patrol_direction = direction
+            self.patrol_axis_start_time = time.time()
+
+        # Verificar timeout
+        elapsed_on_axis = time.time() - self.patrol_axis_start_time
+        if elapsed_on_axis > self.collision_timeout_sec:
+            self._handle_collision()
+            direction = self.last_patrol_direction  # Usar la nueva dirección
+
         # Duration is handled by the main loop timer, but we ensure the press is solid
-        duration = random.uniform(0.8, 1.5) 
+        duration = random.uniform(0.8, 1.5)
         self._press(direction, duration=duration)
         # Minimal pause to maintain momentum but avoid rigid patterns
         time.sleep(random.uniform(0.05, 0.15))

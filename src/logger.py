@@ -17,6 +17,19 @@ class PokéLogger:
             "HEAL":    "[💊]",
             "DEBUG":   "[🔍]"
         }
+        
+        self.colors = {
+            "INFO":    "\033[94m", # Blue
+            "ACTION":  "\033[96m", # Cyan
+            "SUCCESS": "\033[92m", # Green
+            "WARN":    "\033[93m", # Yellow
+            "FATAL":   "\033[91m", # Red
+            "BATTLE":  "\033[95m", # Magenta
+            "MAP":     "\033[97m", # White
+            "HEAL":    "\033[92m", # Green
+            "DEBUG":   "\033[90m", # Gray
+        }
+        self.reset = "\033[0m"
 
     def get_elapsed(self):
         elapsed = datetime.now() - self.start_time
@@ -25,16 +38,18 @@ class PokéLogger:
     def log(self, message, category="INFO"):
         timer = self.get_elapsed()
         prefix = self.prefixes.get(category, "[•]")
+        color = self.colors.get(category, self.reset)
         
         # Evitamos que se aniden los logs si el mensaje ya trae formato
         clean_msg = str(message).strip()
-        full_line = f"[{timer}] {prefix} {clean_msg}"
+        if clean_msg.startswith("[🎮]"): clean_msg = clean_msg[4:].strip()
         
         if self.widget:
-            self.widget.insert("end", f"{full_line}\n")
+            self.widget.insert("end", f"[{timer}] {prefix} {clean_msg}\n")
             self.widget.see("end")
         else:
-            print(full_line)
+            # Consola a color
+            print(f"{color}[{timer}] {prefix} {clean_msg}{self.reset}")
 
     def clear_start_time(self):
         self.start_time = datetime.now()

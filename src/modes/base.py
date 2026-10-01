@@ -26,13 +26,19 @@ class HuntingMode:
         
         self.controller.key_down(direction)
         start_walk = time.time()
+        last_ocr_check = 0  # Temporizador de control
         
         while (time.time() - start_walk) < duration:
             if not self.bot.running: break
-            # Chequeo atómico: Si vemos cualquier nombre arriba, soltamos la tecla YA.
-            if self.bot.check_any_name_visible(self.observer.capture_frame()):
-                self.log("HUD Detected! Stopping patrol.", "BRAIN")
-                break
+            
+            # OPTIMIZACIÓN: Solo hacer OCR pesado 1 vez por segundo durante la caminata
+            current_time = time.time()
+            if current_time - last_ocr_check > 0.8:
+                if self.bot.check_any_name_visible(self.observer.capture_frame()):
+                    self.log("HUD Detected! Stopping patrol.", "BRAIN")
+                    break
+                last_ocr_check = current_time
+                
             time.sleep(0.05)
             
         self.controller.key_up(direction)
@@ -108,13 +114,20 @@ class HuntingMode:
             self.bot.stop_shiny_alarm()
 
         if leppas and self.config.get("auto_heal_pp", True):
+            # Buffer extra: asegurar pantalla limpia antes de interactuar con el menú
+            self.log("Esperando pantalla limpia para curación...", "HEAL")
+            time.sleep(1.0)
             self.bot.reset_activity_timer()
-            self.log(f"Restoring {len(leppas)} moves from PP queue...", "HEAL")
+            self.log(f"[💊] Restoring {len(leppas)} moves from PP queue...", "HEAL")
             for slot_data in list(leppas):
                 self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), slot_data[0], slot_data[1])
                 time.sleep(1.0)
 
-        time.sleep(1.0); self.controller._press('x'); time.sleep(0.4); self.controller._press('x')
+        # Limpieza final por si quedó algún diálogo abierto
+        time.sleep(0.5)
+        self.controller._press('x')
+        time.sleep(0.3)
+        self.controller._press('x')
 
     def _check_capture_result(self):
         for _ in range(60): 
@@ -122,7 +135,12 @@ class HuntingMode:
             m = self.bot.check_msg_area(fb)
             if m == "SUCCESS": 
                 self.log("CAPTURE CONFIRMED!", "SUCCESS")
-                for _ in range(6): self.controller._press('x'); time.sleep(0.5)
+                # CORRECCIÓN: Esperar a que la ventana de stats del Ditto aparezca
+                # antes de intentar cerrarla, si no las X van al vacío.
+                time.sleep(2.5)
+                for _ in range(6):
+                    self.controller._press('x')
+                    time.sleep(0.5)
                 return True
             if self.bot.is_menu_ready(fb): return False
             time.sleep(0.2)

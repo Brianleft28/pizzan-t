@@ -33,3 +33,6 @@ Este documento es la **Única Fuente de Verdad**.
 ## 🏗️ Mapa del Proyecto
 - `src/bot_main.py`: Orquestador y Guardián.
 - `src/modes/ditto.py`: Lógica de captura y gestión de colas de curación.
+
+9.  **RESPETO A LA UI ORIGINAL**:
+    - Al actualizar o migrar temas, no sobrescribir ciegamente los XML de estructura si estos contienen Custom Layouts o elementos visuales propios (como fondos de login u overlays de HUD). Preservar el arte y la experiencia visual del usuario por encima de la estandarización.

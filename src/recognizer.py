@@ -2,12 +2,16 @@ import cv2
 import numpy as np
 import os
 import easyocr
+import warnings
+
+# Suprimir advertencias molestas de PyTorch sobre GPU y cuantización
+warnings.filterwarnings("ignore", category=UserWarning)
 
 class PokéRecognizer:
     def __init__(self, assets_path="assets"):
         self.assets_path = assets_path
-        # OCR en Español e Inglés
-        self.reader = easyocr.Reader(['es', 'en'])
+        # Inicializar explícitamente en CPU y silenciar el verbose de EasyOCR
+        self.reader = easyocr.Reader(['es', 'en'], gpu=False, verbose=False)
         
         # Template de estrella por si el OCR no lee bien el texto "Shiny"
         self.shiny_star_tpl = self._load_template("shiny_star.png")

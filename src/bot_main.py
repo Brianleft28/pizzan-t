@@ -123,6 +123,16 @@ class ShinyBot:
 
     def check_any_name_visible(self, frame):
         if frame is None: return False
+        
+        # Primero chequeamos solo el slot SINGLE (1 OCR call en lugar de 6)
+        r_s = self.config.get("slot_single")
+        if r_s:
+            res_s = self.get_slot_data(frame, r_s)
+            if res_s['name'] and len(res_s['name']) > 2: 
+                self.reset_activity_timer()
+                return True
+                
+        # Si el single no está, evaluamos hordas (solo si es necesario)
         h_size = self.config.get("horde_size", 5)
         h_slots = self.config.get(f"slots_{h_size}", self.config.get("slots", {}))
         
@@ -131,12 +141,7 @@ class ShinyBot:
             if res['name'] and len(res['name']) > 2: 
                 self.reset_activity_timer()
                 return True
-        r_s = self.config.get("slot_single")
-        if r_s:
-            res_s = self.get_slot_data(frame, r_s)
-            if res_s['name'] and len(res_s['name']) > 2: 
-                self.reset_activity_timer()
-                return True
+                
         return False
 
     def is_hp_low(self, frame):
@@ -205,8 +210,11 @@ class ShinyBot:
             if len(nums) >= 2:
                 self.reset_activity_timer() # Éxito en lectura = actividad
                 curr, total = int(nums[0]), int(nums[1])
-                # MANDATO: Encolar si queda 5 o menos PP
-                return curr, (curr <= 5)
+                
+                # MANDATO: Encolar si los PP caen por debajo de 15 
+                # (Configurable mediante 'leppa_threshold')
+                threshold = self.config.get("leppa_threshold", 15)
+                return curr, (curr < threshold)
             time.sleep(0.3)
         return 99, False
 
@@ -221,6 +229,39 @@ class ShinyBot:
         if any(k in txt for k in ["broke", "free", "liberó", "escapó", "oh no"]): return "FAILURE"
         return None
 
+    def check_captcha(self, frame):
+        r = self.config.get("captcha_region")
+        if not r or frame is None: return False
+        
+        crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+        if crop.size == 0: return False
+        
+        # OCR rápido buscando texto
+        res = self.recognizer.reader.readtext(crop, detail=0)
+        full_text = " ".join(res).lower()
+        
+        # Criterios de activación del Anti-Bot
+        if "http" in full_text or "captcha" in full_text or "bot" in full_text:
+            self.log(f"🚨 ¡CAPTCHA/MODERADOR DETECTADO! Texto: {full_text}", "FATAL")
+            
+            # Guardar evidencia
+            import cv2
+            cv2.imwrite("captcha_evidence.png", crop)
+            
+            # Alertar a Discord
+            self.send_discord_alert(
+                "CAPTCHA EMERGENCY", 
+                f"Posible CAPTCHA o moderador detectado.\nTexto extraído: `{full_text}`", 
+                "captcha_evidence.png"
+            )
+            
+            # Detener el bot y sonar alarma
+            self.play_shiny_alarm()
+            self.running = False
+            return True
+            
+        return False
+
     def send_discord_alert(self, category, message, img_path):
         url = self.config.get("discord_webhook")
         if not url:
@@ -230,8 +271,18 @@ class ShinyBot:
         self.log(f"Sending Discord alert: {category} - {message}...", "INFO")
         try:
             with open(img_path, "rb") as f:
-                # Usamos una estructura más robusta para Discord
-                payload = {"content": f"🚨 **{category} DETECTED** 🚨\n> {message}\n> Total Encounters: {self.encounters}"}
+                # Embed con badge y colores
+                payload = {
+                    "payload_json": json.dumps({
+                        "embeds": [{
+                            "title": f"🚨 {category} DETECTED 🚨",
+                            "description": f"**Status:** {message}\n**Total Encounters:** {self.encounters}",
+                            "color": 16766720, # Color dorado/Shiny
+                            "thumbnail": {"url": "https://cdn-icons-png.flaticon.com/512/287/287221.png"}, # Badge de Pokeball
+                            "footer": {"text": "The Humanoid Hunter v7.0"}
+                        }]
+                    })
+                }
                 files = {"file": (img_path, f, "image/png")}
                 response = requests.post(url, data=payload, files=files, timeout=10)
                 
@@ -308,10 +359,20 @@ class ShinyBot:
         self.start_time = datetime.now()
         self.logger.clear_start_time()
         self.reset_activity_timer()
+        
+        last_captcha_check = 0
+        
         while self.running:
             try:
                 frame = self.observer.capture_frame()
                 if frame is None: continue
+                
+                # Check de CAPTCHA de Emergencia cada 5s
+                if time.time() - last_captcha_check > 5.0:
+                    if self.check_captcha(frame):
+                        break # Termina el bucle inmediatamente por seguridad
+                    last_captcha_check = time.time()
+                
                 self.check_guardian(frame)
                 self.mode_instance.execute(frame)
                 time.sleep(0.1)
