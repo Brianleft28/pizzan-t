@@ -41,8 +41,8 @@ class ShinyHunterGUI(ctk.CTk):
         # Row 3: Stats bar (fixed)
         # Row 4: Logger panel (weight 2 - flexible, collapsible)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(2, weight=1)
-        self.grid_rowconfigure(4, weight=2)
+        self.grid_rowconfigure(2, weight=1)   # Solo las tabs crecen con la ventana
+        self.grid_rowconfigure(4, weight=0)   # Logger: altura fija, no crece
 
         # =========================================================
         # 0. START BUTTON
@@ -113,9 +113,8 @@ class ShinyHunterGUI(ctk.CTk):
         # 4. LOGGER PANEL (siempre visible, colapsable)
         # =========================================================
         self.logger_panel = ctk.CTkFrame(self)
-        self.logger_panel.grid(row=4, column=0, padx=15, pady=(2, 10), sticky="nsew")
+        self.logger_panel.grid(row=4, column=0, padx=15, pady=(2, 10), sticky="ew")
         self.logger_panel.grid_columnconfigure(0, weight=1)
-        self.logger_panel.grid_rowconfigure(1, weight=1)
 
         # Logger toolbar
         toolbar = ctk.CTkFrame(self.logger_panel, height=32, fg_color="transparent")
@@ -162,14 +161,15 @@ class ShinyHunterGUI(ctk.CTk):
             command=self.copy_logs
         ).grid(row=0, column=4, padx=2)
 
-        # Log textbox
+        # Log textbox — altura fija 150px, scroll interno nativo de CTkTextbox
         self.log_box = ctk.CTkTextbox(
             self.logger_panel,
             font=ctk.CTkFont(family="Consolas", size=11),
             fg_color="#0d1117",
-            wrap="word"
+            wrap="word",
+            height=150
         )
-        self.log_box.grid(row=1, column=0, padx=5, pady=(2, 5), sticky="nsew")
+        self.log_box.grid(row=1, column=0, padx=5, pady=(2, 5), sticky="ew")
 
         # Collapsed status line (hidden by default)
         self.collapsed_label = ctk.CTkLabel(
