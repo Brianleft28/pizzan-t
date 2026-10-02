@@ -139,7 +139,9 @@ class HuntingMode:
 
         if leppas and self.config.get("auto_heal_pp", True):
             self.log("━━━━━━━━━━ 💊 HEALING ━━━━━━━━━━", "PHASE")
-            time.sleep(1.0)
+            leppa_wait = float(self.config.get("timing_leppa_wait", 1.5))
+            self.log(f"⏳ Waiting {leppa_wait}s for map to load before Leppa...", "HEAL")
+            time.sleep(leppa_wait)
             self.bot.reset_activity_timer()
             self.log(f"Restoring {len(leppas)} move(s) from PP queue...", "HEAL")
             for slot_data in list(leppas):
@@ -154,18 +156,47 @@ class HuntingMode:
         self.log(f"━━━━━━━━━━ END CAPTURE ━━━━━━━━━━", "PHASE")
 
     def _check_capture_result(self):
-        for _ in range(60): 
+        """
+        Espera el resultado de la Pokébola con timings configurables.
+        - Espera 'timing_ball_wait' segundos ANTES de empezar el OCR (para la animación de sacudidas).
+        - Si detecta SUCCESS, espera 'timing_capture_settle' segundos antes de cerrar diálogos.
+        - Distingue FAILURE (rompió libre) de 'sin respuesta todavía'.
+        """
+        ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
+        settle_time = float(self.config.get("timing_capture_settle", 2.5))
+
+        # Esperar la animación de la pokébola ANTES de empezar a leer el OCR
+        self.log(f"⏳ Waiting {ball_wait}s for ball animation...", "DEBUG")
+        time.sleep(ball_wait)
+
+        for _ in range(60):
+            if not self.bot.running:
+                return False
             fb = self.observer.capture_frame()
             m = self.bot.check_msg_area(fb)
-            if m == "SUCCESS": 
-                self.log("CAPTURE CONFIRMED!", "SUCCESS")
-                # CORRECCIÓN: Esperar a que la ventana de stats del Ditto aparezca
-                # antes de intentar cerrarla, si no las X van al vacío.
-                time.sleep(2.5)
+
+            if m == "SUCCESS":
+                self.log("🎉 Message read: CAUGHT!", "SUCCESS")
+                self.log(f"⏳ Settling {settle_time}s for dialogs...", "DEBUG")
+                time.sleep(settle_time)
+                # Cerrar ventanas de stats/PokéDex
                 for _ in range(6):
                     self.controller._press('x')
                     time.sleep(0.5)
                 return True
-            if self.bot.is_menu_ready(fb): return False
+
+            if m == "FAILURE":
+                self.log("💨 Ball broke free — retrying next turn.", "WARN")
+                # Esperar a que el menú de batalla vuelva
+                time.sleep(1.5)
+                return False
+
+            if self.bot.is_menu_ready(fb):
+                # El menú volvió sin mensaje de captura → escapó o tardó demasiado
+                return False
+
             time.sleep(0.2)
+
+        self.log("⏱️ Capture check timed out after 60 polls.", "WARN")
         return False
+

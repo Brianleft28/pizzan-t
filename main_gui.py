@@ -294,9 +294,45 @@ class ShinyHunterGUI(ctk.CTk):
         if self.get_config_val("auto_heal_pp", "True") == "True":
             self.heal_pp_check.select()
 
+        # ── Sección de Timings ──────────────────────────────────────────
+        timing_frame = ctk.CTkFrame(tab, fg_color="#1a1a2e")
+        timing_frame.grid(row=6, column=0, columnspan=4, padx=10, pady=(8, 4), sticky="ew")
+
+        ctk.CTkLabel(timing_frame, text="⏱️  Timings de Captura",
+                      font=ctk.CTkFont(size=12, weight="bold"),
+                      text_color="#FFCB6B").grid(
+            row=0, column=0, columnspan=4, padx=10, pady=(6, 2), sticky="w")
+
+        # Row 1: Ball Wait | Capture Settle
+        ctk.CTkLabel(timing_frame, text="OCR Wait (s):", font=ctk.CTkFont(size=11)).grid(
+            row=1, column=0, padx=10, pady=3, sticky="w")
+        self.timing_ball_wait_entry = ctk.CTkEntry(timing_frame, width=55)
+        self.timing_ball_wait_entry.grid(row=1, column=1, padx=5, pady=3, sticky="w")
+        self.timing_ball_wait_entry.insert(0, self.get_config_val("timing_ball_wait", "0.5"))
+
+        ctk.CTkLabel(timing_frame, text="Settle (s):", font=ctk.CTkFont(size=11)).grid(
+            row=1, column=2, padx=10, pady=3, sticky="w")
+        self.timing_settle_entry = ctk.CTkEntry(timing_frame, width=55)
+        self.timing_settle_entry.grid(row=1, column=3, padx=5, pady=3, sticky="w")
+        self.timing_settle_entry.insert(0, self.get_config_val("timing_capture_settle", "2.5"))
+
+        # Row 2: Leppa Wait | Ball Press
+        ctk.CTkLabel(timing_frame, text="Leppa Pre-Wait (s):", font=ctk.CTkFont(size=11)).grid(
+            row=2, column=0, padx=10, pady=3, sticky="w")
+        self.timing_leppa_wait_entry = ctk.CTkEntry(timing_frame, width=55)
+        self.timing_leppa_wait_entry.grid(row=2, column=1, padx=5, pady=3, sticky="w")
+        self.timing_leppa_wait_entry.insert(0, self.get_config_val("timing_leppa_wait", "1.5"))
+
+        ctk.CTkLabel(timing_frame, text="Ball Press Delay (s):", font=ctk.CTkFont(size=11)).grid(
+            row=2, column=2, padx=10, pady=3, sticky="w")
+        self.timing_ball_press_entry = ctk.CTkEntry(timing_frame, width=55)
+        self.timing_ball_press_entry.grid(row=2, column=3, padx=5, pady=(3, 6), sticky="w")
+        self.timing_ball_press_entry.insert(0, self.get_config_val("timing_ball_press_wait", "0.7"))
+        # ────────────────────────────────────────────────────────────────
+
         ctk.CTkButton(tab, text="SAVE DITTO CONFIG", fg_color="#1f538d",
                        height=36, command=self.save_all).grid(
-            row=6, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
+            row=7, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
 
     def _build_brain_tab(self):
         """Pestaña Brain Viewer — muestra el código Python del modo activo"""
@@ -713,6 +749,12 @@ class ShinyHunterGUI(ctk.CTk):
             config["ditto_key_leppa"] = self.leppa_key_entry.get()
             config["auto_heal_hp"] = bool(self.heal_hp_check.get())
             config["auto_heal_pp"] = bool(self.heal_pp_check.get())
+
+            # Timings de captura
+            config["timing_ball_wait"]       = float(self.timing_ball_wait_entry.get())
+            config["timing_capture_settle"]  = float(self.timing_settle_entry.get())
+            config["timing_leppa_wait"]      = float(self.timing_leppa_wait_entry.get())
+            config["timing_ball_press_wait"] = float(self.timing_ball_press_entry.get())
 
             with open("config.json", "w") as f:
                 json.dump(config, f, indent=4)
