@@ -36,3 +36,7 @@ Este documento es la **Única Fuente de Verdad**.
 
 9.  **RESPETO A LA UI ORIGINAL**:
     - Al actualizar o migrar temas, no sobrescribir ciegamente los XML de estructura si estos contienen Custom Layouts o elementos visuales propios (como fondos de login u overlays de HUD). Preservar el arte y la experiencia visual del usuario por encima de la estandarización.
+
+10. **ENTORNO POWERSHELL Y UNICODE (EMOJIS)**:
+    - Para iniciar el proyecto en Windows PowerShell, siempre usar `.\venv\Scripts\activate` seguido de `python main_gui.py`.
+    - Al hacer prints en consola (stdout) que contengan Emojis (muy usados en los logs de este bot con OCR), tener en cuenta que PowerShell puede arrojar `UnicodeEncodeError`. El logger de la terminal debe manejar esta excepción o forzar el encoding a UTF-8.

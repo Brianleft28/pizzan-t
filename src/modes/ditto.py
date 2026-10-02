@@ -14,7 +14,7 @@ class DittoMode(HuntingMode):
         # 1. Observador Universal: Si no hay batalla, patrullar
         if not self.bot.check_any_name_visible(frame) and not self.bot.is_menu_ready(frame):
             base_t = float(self.config.get("ditto_patrol_time", 2.5))
-            # CORRECCIÓN: Pasar los argumentos requeridos
+            self.log(f"━━━━━ 🌍 PATROL ({self.direction.upper()}, {base_t:.1f}s) ━━━━━", "PHASE")
             self._human_patrol(self.direction, base_t, self.walk_stamina)
             
             # Post-patrulla logic
@@ -30,14 +30,15 @@ class DittoMode(HuntingMode):
         f_bat = self.observer.capture_frame()
         shiny_found, target_name, all_names, slot_id = self.bot.scan_all_potential_targets(f_bat)
         
-        self.log(f"BATTLEFIELD SCAN: {len(all_names)} targets.", "BATTLE")
-        for i, name in enumerate(all_names):
-            self.log(f"Target {i+1}: {name.upper()}", "BATTLE")
+        # Log compacto del scan
+        names_str = ", ".join([n.upper() for n in all_names]) if all_names else "NONE"
+        self.log(f"Scan: {len(all_names)} target(s) → {names_str}", "BATTLE")
 
         is_target = False
         is_shiny = False
         if shiny_found:
-            self.log(f"✨ SHINY DETECTADO: {target_name.upper()} ✨", "SUCCESS")
+            self.log(f"━━━━━ ✨ SHINY DETECTED! ━━━━━", "PHASE")
+            self.log(f"✨ SHINY: {target_name.upper()} ✨", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("SINGLE/DITTO", f"SHINY {target_name}!", "shiny_detected.png")
             is_target = True
@@ -45,13 +46,14 @@ class DittoMode(HuntingMode):
         elif target_name and any(x in target_name.lower() for x in ["ditto", "itto", "ditt", "ito"]):
             is_target = True
             target_name = "Ditto"
+            self.log(f"━━━━━ 🎯 DITTO DETECTED! ━━━━━", "PHASE")
 
         if not is_target:
-            self.log(f"Not target ({target_name}). Escaping...", "ACTION")
             self.controller.run_away()
             self._wait_for_map()
             self.bot.encounters += 1
             self.bot.session_encounters += 1
+            self.log(f"💨 Not Ditto ({target_name}). Escaped. [Enc #{self.bot.encounters} | Session: {self.bot.session_encounters}]", "ACTION")
             return
 
         self._capture_sequence(target_name, is_shiny=is_shiny)

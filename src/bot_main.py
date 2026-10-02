@@ -154,7 +154,7 @@ class ShinyBot:
         mask_y = cv2.inRange(hsv, np.array([15, 50, 50]), np.array([35, 255, 255]))
         g_px = cv2.countNonZero(mask_g); y_px = cv2.countNonZero(mask_y)
         percent = (g_px + y_px) / (crop.shape[0] * crop.shape[1] + 1e-6)
-        return (g_px + y_px) < 15, percent
+        return percent < 0.25, percent
 
     def is_asleep(self, frame):
         r = self.config.get("status_slot_region")

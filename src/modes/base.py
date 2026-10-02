@@ -55,12 +55,15 @@ class HuntingMode:
         return False
 
     def _capture_sequence(self, target_name, is_shiny=False):
-        self.log(f"INITIATING CAPTURE: {target_name.upper()}", "ACTION")
+        self.log(f"━━━━━━━━━━ 🎯 CAPTURE: {target_name.upper()} ━━━━━━━━━━", "PHASE")
         if is_shiny:
+            self.log(f"✨ ¡SHINY CONFIRMADO! Activando alarma...", "SUCCESS")
             self.bot.play_shiny_alarm()
             
         turn = 1
-        swiped = False; leppas = set()
+        swiped = False
+        leppas = set()
+        captured = False
 
         while self.bot.running:
             self.bot.reset_activity_timer() 
@@ -68,57 +71,77 @@ class HuntingMode:
             
             f_act = self.observer.capture_frame()
             is_slp = self.bot.is_asleep(f_act)
-            is_low, _ = self.bot.is_hp_low(f_act)
+            is_low, hp_pct = self.bot.is_hp_low(f_act)
             
-            self.log(f"[T-{turn:02d}] Enemy: {'LOW' if (is_low or swiped) else 'HIGH'} | Status: {'SLP' if is_slp else 'AWK'}", "DEBUG")
-
-            mv_s = None; mv_n = ""
+            # Decidir acción ANTES de loguear
+            mv_s = None
+            mv_n = ""
+            action_desc = ""
+            
             if turn == 1:
-                mv_s = self.config.get("ditto_key_attack", "2"); mv_n = self.config.get("ditto_name_attack", "Swipe")
+                mv_s = self.config.get("ditto_key_attack", "2")
+                mv_n = self.config.get("ditto_name_attack", "Swipe")
+                action_desc = f"⚔️ {mv_n} (Key {mv_s})"
             elif not is_slp:
-                mv_s = self.config.get("ditto_key_sleep", "1"); mv_n = self.config.get("ditto_name_sleep", "Sleep")
+                mv_s = self.config.get("ditto_key_sleep", "1")
+                mv_n = self.config.get("ditto_name_sleep", "Sleep")
+                action_desc = f"💤 {mv_n} (Key {mv_s})"
             else:
                 mv_n = "Ball"
+                action_desc = f"🟢 Throwing Ball"
+
+            # Log estructurado del turno
+            hp_status = f"LOW ({hp_pct:.0%})" if (is_low or swiped) else f"FULL ({hp_pct:.0%})"
+            slp_status = "💤 SLP" if is_slp else "👁️ AWK"
+            self.log(f"[T-{turn:02d}] HP: {hp_status} | {slp_status} | → {action_desc}", "BATTLE")
 
             if mv_s:
-                self.controller.open_fight_menu(); time.sleep(0.6)
+                self.controller.open_fight_menu()
+                time.sleep(0.6)
                 pp_curr, nr = self.bot.read_pp(mv_s, mv_n)
-                self.log(f"Move: {mv_n} | PP Check: {pp_curr}", "DEBUG")
                 
                 if nr: 
                     leppas.add((mv_s, True))
                     self.log(f"[💊] PP for {mv_n} is {pp_curr}. Adding to restoration queue.", "HEAL")
 
                 if pp_curr == 0:
-                    self.log(f"⚠️ {mv_n} has 0 PP! Switching to Ball spam.", "WARN")
-                    mv_s = None # Forzamos el lanzamiento de Pokébola en este turno
+                    self.log(f"⚠️ {mv_n} has 0 PP! Switching to Ball.", "WARN")
+                    mv_s = None
 
                 if mv_s:
                     self.controller.navigate_and_confirm_move(mv_s)
-                    if mv_n == self.config.get("ditto_name_attack", "Swipe"): swiped = True
+                    if mv_n == self.config.get("ditto_name_attack", "Swipe"):
+                        swiped = True
                     time.sleep(2.0)
-                    while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running: time.sleep(0.5)
+                    while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running:
+                        time.sleep(0.5)
             
             if not mv_s:
                 self.controller.use_ball(self.config.get("ditto_key_ball", "5"))
-                if self._check_capture_result(): break
+                if self._check_capture_result():
+                    captured = True
+                    break
             
             turn += 1
 
+        # Resultado real de la captura
         self.bot.encounters += 1
         self.bot.save_progress()
-        self.log(f"CAPTURE SUCCESSFUL: {target_name.upper()}", "SUCCESS")
         
-        if is_shiny:
+        if captured:
+            self.log(f"✅ CAPTURE CONFIRMED: {target_name.upper()} in {turn} turns!", "SUCCESS")
+        else:
+            self.log(f"❌ CAPTURE ENDED: {target_name.upper()} — {turn} turns (timeout/stop)", "WARN")
+        
+        if is_shiny and captured:
             self.log("✨ 🎉 ¡BRUTAL! ¡HAS ATRAPADO UN SHINY! ¡FELICIDADES! 🎉 ✨", "SUCCESS")
             self.bot.stop_shiny_alarm()
 
         if leppas and self.config.get("auto_heal_pp", True):
-            # Buffer extra: asegurar pantalla limpia antes de interactuar con el menú
-            self.log("Esperando pantalla limpia para curación...", "HEAL")
+            self.log("━━━━━━━━━━ 💊 HEALING ━━━━━━━━━━", "PHASE")
             time.sleep(1.0)
             self.bot.reset_activity_timer()
-            self.log(f"[💊] Restoring {len(leppas)} moves from PP queue...", "HEAL")
+            self.log(f"Restoring {len(leppas)} move(s) from PP queue...", "HEAL")
             for slot_data in list(leppas):
                 self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), slot_data[0], slot_data[1])
                 time.sleep(1.0)
@@ -128,6 +151,7 @@ class HuntingMode:
         self.controller._press('x')
         time.sleep(0.3)
         self.controller._press('x')
+        self.log(f"━━━━━━━━━━ END CAPTURE ━━━━━━━━━━", "PHASE")
 
     def _check_capture_result(self):
         for _ in range(60): 
