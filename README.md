@@ -1,31 +1,188 @@
-# SØREN - The Humanoid Shiny Hunter
+# 🇦🇷 SØREN — The Humanoid Shiny Hunter v7.0
 
-**SØREN** es un asistente de automatización quirúrgica diseñado para PokéMMO, enfocado en la detección de Shinies y la captura optimizada de Dittos. Utiliza visión artificial no invasiva (OCR y análisis de píxeles) para operar de manera indetectable y eficiente.
+**SØREN** es un bot de automatización para **PokéMMO** que detecta Shinies y captura Dittos usando visión artificial no invasiva (OCR + análisis de píxeles). Funciona sin tocar la memoria del juego.
 
-## 🚀 Características Principales
+---
 
-- **Arquitectura Modular (v6.8)**: Lógica separada por modos (Hordas, Ditto, Single) para máxima estabilidad.
-- **Escaneo Universal Anti-Pérdida**: Sin importar el modo, el bot escanea todo el campo de batalla para asegurar que ningún Shiny sea ignorado.
-- **Caminata Humanoide**: Patrones de patrullaje con stamina variable, micro-pausas y respuesta instantánea al Top HUD.
-- **Sistema Guardián (Anti-Stuck)**: Vigilancia activa de 30 segundos con protocolos de recuperación automática.
-- **Captura Inteligente de Ditto**: Gestión estricta de turnos (Swipe, Sleep) con monitoreo dinámico de estado.
-- **Transparencia Total**: Logger estilizado en ASCII con reportes de PP, Vida y marcas de tiempo milimétricas.
-- **Notificaciones**: Integración nativa con Discord vía Webhooks para alertas remotas.
+## ✨ Características v7.0
 
-## 🛠️ Requisitos e Instalación
+| Feature | Descripción |
+|---|---|
+| 🏹 **Modo Horda** | Sweet Scent → escanea 5 slots → pausa y alerta si encuentra Shiny |
+| 👾 **Modo Ditto** | Patrulla → detecta Ditto por OCR → Swipe → Spore → Ball |
+| 🔮 **Modo Single** | Patrulla → captura cualquier Shiny en combate individual |
+| 🌈 **Logger con colores** | Colores reales en la GUI por categoría (BATTLE, HEAL, SUCCESS...) |
+| 🧠 **Brain Viewer** | Pestaña en la GUI para leer el código fuente Python en tiempo real |
+| 📊 **Stats Bar** | Encounters, Dittos, rate/min y tiempo de sesión siempre visibles |
+| ⏱️ **Timings configurables** | OCR wait, settle time, Leppa pre-wait: todo editable desde la UI |
+| 💊 **Auto-Heal PP** | Restaura PP con Leppa Berry automáticamente al llegar a 0 |
+| 🚨 **Anti-Captcha** | Detección de texto sospechoso + alerta Discord + alarma sonora |
+| 🎮 **Humanización** | Caminata con stamina variable, micro-pausas y respuesta al HUD |
 
-1. Tener Python 3.10+ instalado.
-2. Instalar dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Ejecutar el panel de control:
-   ```bash
-   python main_gui.py
-   ```
+---
 
-## 📜 Manual de Operación
-Consulta el manual detallado de la interfaz y botones en [docs/config.md](docs/config.md). 
+## 🖥️ Requisitos del Sistema
 
-## ⚖️ Mandatos de Desarrollo
-Las reglas críticas de comportamiento y seguridad están grabadas en [GEMINI.md](GEMINI.md).
+- **Windows 10/11** (64-bit)
+- **Python 3.10 o superior** → [python.org/downloads](https://www.python.org/downloads/)
+- **Git** → [git-scm.com](https://git-scm.com/)
+- **PokéMMO** corriendo en pantalla (no minimizado)
+
+---
+
+## 🚀 Instalación (PC nueva)
+
+### 1. Clonar el repositorio
+
+```powershell
+git clone https://github.com/Brianleft28/pizzan-t
+cd pizzan-t
+```
+
+### 2. Crear el entorno virtual
+
+```powershell
+python -m venv venv
+```
+
+### 3. Activar el entorno virtual
+
+> ⚠️ **Importante:** Siempre activar el venv antes de correr el bot. En PowerShell:
+
+```powershell
+.\venv\Scripts\activate
+```
+
+Vas a ver `(venv)` al inicio de la línea cuando esté activo.
+
+### 4. Instalar dependencias
+
+```powershell
+pip install -r requirements.txt
+```
+
+> ⏳ La primera vez puede tardar varios minutos porque descarga PyTorch y EasyOCR (~2GB).
+
+### 5. Iniciar el bot
+
+```powershell
+python main_gui.py
+```
+
+---
+
+## 🔄 Actualizar desde GitHub (cuando hay cambios)
+
+```powershell
+git pull origin main
+```
+
+No hace falta reinstalar dependencias salvo que haya un cambio en `requirements.txt`.
+
+---
+
+## 🛠️ Calibración (primera vez en una PC)
+
+Antes de usar el bot tenés que calibrar las regiones de la pantalla para que el OCR sepa dónde mirar. En la pestaña **🔧 Calib** de la GUI:
+
+1. **HUD HORDE** → Los nombres de los Pokémon en hordas
+2. **SINGLE SLOT** → El nombre del Pokémon en combate individual
+3. **RUN BTN** → El botón de "Lucha/Huir" (para saber si estamos en batalla)
+4. **HP BAR** → La barra de vida del enemigo
+5. **STATUS** → El ícono de estado (dormido, paralizado, etc.)
+6. **PP SLOTS** → Los números de PP dentro del menú de Lucha
+7. **BATTLE MSG** → El área del mensaje "¡Atrapado!" / "¡Rompió libre!"
+
+Cada botón abre una pantalla de selección: arrastrá para marcar la región y presioná **Enter** para guardar.
+
+---
+
+## ⚙️ Configuración Rápida
+
+### Pestaña 👾 Ditto
+
+| Campo | Qué es |
+|---|---|
+| Patrol Time | Segundos de caminata antes de cambiar dirección |
+| Attack (Clave/Nombre) | Tecla y nombre del movimiento de Turno 1 (ej: `2` / `False Swipe`) |
+| Sleep (Clave/Nombre) | Tecla y nombre del movimiento de sueño (ej: `1` / `Spore`) |
+| Ball Hotkey | Tecla de acceso rápido de la Pokébola (ej: `5`) |
+| Leppa Key | Tecla de la Leppa Berry para restaurar PP (ej: `4`) |
+
+### ⏱️ Timings de Captura (críticos para evitar bugs)
+
+| Campo | Default | Descripción |
+|---|---|---|
+| OCR Wait | `0.5s` | Espera antes de leer el mensaje de captura (para la animación) |
+| Settle | `2.5s` | Espera para cerrar diálogos post-captura |
+| Leppa Pre-Wait | `1.5s` | Espera para que cargue el mapa antes de usar Leppa |
+| Ball Press Delay | `0.7s` | Delay entre presionar la pokébola y confirmar |
+
+### Pestaña 🏹 Horde
+
+- **Horde Size**: 3 o 5 Pokémon
+- **Alarma**: Colocar un archivo `assets/shiny_alarm.wav` para la alerta sonora
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+pizzan-t/
+├── main_gui.py          # Interfaz gráfica (CustomTkinter)
+├── config.json          # Configuración y calibración (auto-generado)
+├── selector.py          # Herramienta de calibración de regiones
+├── src/
+│   ├── bot_main.py      # Orquestador principal y Guardián
+│   ├── controller.py    # Input: teclas, movimientos, secuencias
+│   ├── vision.py        # Captura de pantalla (mss)
+│   ├── recognizer.py    # OCR (EasyOCR) + template matching
+│   ├── logger.py        # Logger con colores y buffer circular
+│   └── modes/
+│       ├── base.py      # Lógica base: captura, patrulla, curación
+│       ├── ditto.py     # Modo Ditto
+│       ├── horda.py     # Modo Horda
+│       └── single.py    # Modo Single
+├── docs/
+│   └── config.md        # Manual detallado de la UI
+└── assets/
+    └── shiny_alarm.wav  # Alarma sonora (agregar manualmente)
+```
+
+---
+
+## 🐛 Solución de Problemas Comunes
+
+### ❌ `UnicodeEncodeError` al arrancar en PowerShell
+El bot usa emojis en los logs. PowerShell puede fallar con caracteres especiales. El logger lo maneja automáticamente, pero si falla la terminal, usá:
+```powershell
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+```
+
+### ❌ El bot no detecta la batalla
+Recalibrar las regiones **HUD HORDE** y **SINGLE SLOT** en la pestaña 🔧 Calib.
+
+### ❌ Spam de pokébolas / no reconoce la captura
+Aumentar el valor de **OCR Wait** en los Timings de Captura (probar `1.0` o `1.5`).
+
+### ❌ La Leppa se usa en el momento equivocado
+Aumentar el valor de **Leppa Pre-Wait** (probar `2.0` o `2.5`).
+
+### ❌ `-eenv` o `-env` no reconocidos en PowerShell
+Esos no son comandos válidos. El comando correcto para activar el venv es:
+```powershell
+.\venv\Scripts\activate
+```
+
+---
+
+## 📜 Documentación Adicional
+
+- [Manual de la interfaz](docs/config.md) — descripción detallada de cada botón y campo
+- [GEMINI.md](GEMINI.md) — mandatos críticos de comportamiento del bot (para desarrolladores)
+
+---
+
+## ⚖️ Aviso Legal
+
+Este proyecto es de uso **personal y educativo**. El uso de bots puede violar los términos de servicio de PokéMMO. El autor no se responsabiliza por consecuencias derivadas de su uso.
