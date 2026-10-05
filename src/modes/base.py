@@ -162,6 +162,7 @@ class HuntingMode:
         """
         ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
         settle_time = float(self.config.get("timing_capture_settle", 2.5))
+        spam_delay  = float(self.config.get("timing_capture_spam_delay", 0.3))
 
         self.log(f"⏳ Waiting {ball_wait}s for ball animation...", "DEBUG")
         time.sleep(ball_wait)
@@ -198,7 +199,7 @@ class HuntingMode:
             if self.bot.is_menu_ready(fb):
                 return False
 
-            time.sleep(0.1) # Agilizamos el poll
+            time.sleep(spam_delay) # Delay del spam de captura
 
         # TIMEOUT FIX: Si el loop terminó y no volvió el menú de batalla, deducimos captura
         self.log("⏱️ No battle menu returned. Assuming CAUGHT due to UI overlap!", "SUCCESS")

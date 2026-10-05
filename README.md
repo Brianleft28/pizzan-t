@@ -63,7 +63,19 @@ pip install -r requirements.txt
 
 > ⏳ La primera vez puede tardar varios minutos porque descarga PyTorch y EasyOCR (~2GB).
 
-### 5. Iniciar el bot
+### 5. Instalar Tema Visual (Requisito Obligatorio)
+
+El bot usa visin artificial calibrada para una **plantilla especfica** y requiere que los fondos de combate estn desactivados.
+
+1. Coloca los archivos de tu tema dentro de `assets/pokemmo_theme/`
+2. Ejecuta el archivo instalador:
+```powershell
+.\install_theme.bat
+```
+3. Dentro de PokMMO, ve a **Ajustes -^> Interfaz -^> Tema** y elige `PizzantTheme`.
+4. En **Ajustes -^> Video**, **desactiva** la opcin de fondos de combate para que el OCR funcione.
+
+### 6. Iniciar el bot
 
 ```powershell
 python main_gui.py
