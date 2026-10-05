@@ -211,10 +211,9 @@ class ShinyBot:
                 self.reset_activity_timer() # Éxito en lectura = actividad
                 curr, total = int(nums[0]), int(nums[1])
                 
-                # MANDATO: Encolar si los PP caen por debajo de 15 
-                # (Configurable mediante 'leppa_threshold')
-                threshold = self.config.get("leppa_threshold", 15)
-                return curr, (curr < threshold)
+                # MANDATO: Encolar si los PP caen al umbral (1 por defecto)
+                threshold = self.config.get("leppa_threshold", 1)
+                return curr, (curr <= threshold)
             time.sleep(0.3)
         return 99, False
 

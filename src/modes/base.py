@@ -151,6 +151,7 @@ class HuntingMode:
         # Limpieza final por si quedó algún diálogo abierto
         time.sleep(0.5)
         self.controller._press('x')
+        self.controller._press('z')
         time.sleep(0.3)
         self.controller._press('x')
         self.log(f"━━━━━━━━━━ END CAPTURE ━━━━━━━━━━", "PHASE")
@@ -179,10 +180,11 @@ class HuntingMode:
                 self.log("🎉 Message read: CAUGHT!", "SUCCESS")
                 self.log(f"⏳ Settling {settle_time}s for dialogs...", "DEBUG")
                 time.sleep(settle_time)
-                # Cerrar ventanas de stats/PokéDex
-                for _ in range(6):
-                    self.controller._press('x')
-                    time.sleep(0.5)
+                # Cerrar diálogos (Z) y ventanas de stats/PokéDex (X)
+                for _ in range(15):
+                    self.controller._press('z', duration=0.05)
+                    self.controller._press('x', duration=0.05)
+                    time.sleep(0.3)
                 return True
 
             if m == "FAILURE":

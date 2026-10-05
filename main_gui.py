@@ -26,8 +26,8 @@ class ShinyHunterGUI(ctk.CTk):
         super().__init__()
 
         self.title("🇦🇷 SØREN - Shiny Hunter Bot v7.0")
-        self.geometry("720x960")
-        self.minsize(680, 700)
+        self.geometry("720x760")
+        self.minsize(680, 600)
         self.attributes("-topmost", True)
 
         self.bot = None
@@ -220,14 +220,26 @@ class ShinyHunterGUI(ctk.CTk):
         self.horde_size_switch.grid(row=0, column=1, padx=10, pady=10, sticky="w")
         self.horde_size_switch.set(self.get_config_val("horde_size", "5"))
 
+        # ZORUA CONFIG
+        self.mode_zorua_check = ctk.CTkCheckBox(tab, text="Modo Zorua", font=ctk.CTkFont(weight="bold"))
+        self.mode_zorua_check.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        if self.get_config_val("mode_zorua", "False") == "True":
+            self.mode_zorua_check.select()
+
+        ctk.CTkLabel(tab, text="Zorua Wait (s):", font=ctk.CTkFont(weight="bold")).grid(
+            row=1, column=1, padx=10, pady=5, sticky="e")
+        self.zorua_wait_entry = ctk.CTkEntry(tab, width=60)
+        self.zorua_wait_entry.grid(row=1, column=2, padx=10, pady=5, sticky="w")
+        self.zorua_wait_entry.insert(0, self.get_config_val("zorua_wait", "3.0"))
+
         ctk.CTkButton(tab, text="SAVE HORDE CONFIG", fg_color="#1f538d",
                        height=36, command=self.save_all).grid(
-            row=1, column=0, columnspan=2, padx=20, pady=8, sticky="ew")
+            row=2, column=0, columnspan=3, padx=20, pady=8, sticky="ew")
 
         ctk.CTkLabel(tab, text="Alarm Testing:", font=ctk.CTkFont(weight="bold")).grid(
-            row=2, column=0, padx=10, pady=8, sticky="w")
+            row=3, column=0, padx=10, pady=8, sticky="w")
         row_alarm = ctk.CTkFrame(tab, fg_color="transparent")
-        row_alarm.grid(row=2, column=1, padx=10, pady=8, sticky="w")
+        row_alarm.grid(row=3, column=1, columnspan=2, padx=10, pady=8, sticky="w")
         ctk.CTkButton(row_alarm, text="TEST ALARM", width=100,
                        fg_color="#d35400", hover_color="#e67e22",
                        command=self.test_alarm).pack(side="left", padx=5)
@@ -737,6 +749,11 @@ class ShinyHunterGUI(ctk.CTk):
             config["discord_webhook"] = self.web_entry.get()
             config["ocr_retries"] = int(self.ocr_entry.get())
             config["horde_size"] = int(self.horde_size_switch.get())
+
+            # Guardar Zorua Settings
+            if hasattr(self, 'mode_zorua_check'):
+                config["mode_zorua"] = bool(self.mode_zorua_check.get())
+                config["zorua_wait"] = float(self.zorua_wait_entry.get())
 
             # Ditto Settings
             config["ditto_patrol_time"] = float(self.ditto_path_entry.get())
