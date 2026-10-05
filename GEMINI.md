@@ -40,3 +40,6 @@ Este documento es la **Única Fuente de Verdad**.
 10. **ENTORNO POWERSHELL Y UNICODE (EMOJIS)**:
     - Para iniciar el proyecto en Windows PowerShell, siempre usar `.\venv\Scripts\activate` seguido de `python main_gui.py`.
     - Al hacer prints en consola (stdout) que contengan Emojis (muy usados en los logs de este bot con OCR), tener en cuenta que PowerShell puede arrojar `UnicodeEncodeError`. El logger de la terminal debe manejar esta excepción o forzar el encoding a UTF-8.
+
+11. **NO MAREAR AL USUARIO (NO INNOVAR DEMASIADO)**:
+    - No sobrecomplicar las soluciones ni dar vueltas innecesarias. Mantener las explicaciones directas y las arquitecturas manejables para evitar abrumar con innovaciones no solicitadas.

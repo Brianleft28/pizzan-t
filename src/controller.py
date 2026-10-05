@@ -256,32 +256,35 @@ class PokéController:
         self.log("Healing complete.")
 
     def run_away(self):
-        """Navigates to the 'RUN' button with detailed logs"""
+        """Navigates to the 'RUN' button with detailed logs and micro-delays to prevent input swallows"""
         path_id = random.randint(0, 3)
         self.log(f"ESCAPE PROTOCOL: Route {path_id}")
         
-        # 1. Reset menu
-        self._press('x')
-        self._press('up')
-        self._press('left')
+        # 1. Reset menu with micro-delays
+        self._press('x', duration=0.05)
+        time.sleep(0.15)
+        self._press('up', duration=0.05)
+        time.sleep(0.15)
+        self._press('left', duration=0.05)
+        time.sleep(0.15)
 
         # 2. Routes
         if path_id == 0: # Direct
-            self._press('right')
-            self._press('down')
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
         elif path_id == 1: # Inverse
-            self._press('down')
-            self._press('right')
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
         elif path_id == 2: # Redundant
-            self._press('right')
-            self._press('down')
-            self._press('down')
-            self._press('down')
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
         else: # Doubt
-            self._press('down')
-            self._press('right')
-            self._press('right')
-            self._press('right')
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
             
         self.log("CONFIRM: Running away (Z)")
         self._press('z')

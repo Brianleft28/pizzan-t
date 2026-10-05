@@ -20,6 +20,13 @@ class HordeMode(HuntingMode):
 
         # 3. ESCANEO UNIVERSAL (MANDATO 6)
         self.log("━━━━━ ⚔️ HORDE BATTLE ━━━━━", "PHASE")
+        
+        # Pausa extra si se caza Zorua (por animaciones de disfraz/ilusión)
+        if self.bot.config.get("mode_zorua", False):
+            z_wait = self.bot.config.get("zorua_wait", 2.5)
+            self.log(f"🦊 Modo Zorua Activo: Esperando {z_wait}s a que se asiente el disfraz...", "DEBUG")
+            time.sleep(z_wait)
+
         f_bat = self.observer.capture_frame()
         shiny_found, target_name, all_names, slot_id = self.bot.scan_all_potential_targets(f_bat)
         

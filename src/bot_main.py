@@ -18,6 +18,7 @@ from src.logger import PokéLogger
 from src.modes.horda import HordeMode
 from src.modes.ditto import DittoMode
 from src.modes.single import SingleMode
+from src.notifications.webhook_notifier import WebhookNotifier
 
 class ShinyBot:
     def __init__(self, log_widget=None):
@@ -38,6 +39,7 @@ class ShinyBot:
             self.encounters = int(self.config.get("total_encounters", 0))
             self.session_encounters = 0
             self.session_dittos = 0
+            self.notifier = WebhookNotifier(self)
             
             self.mode_instance = self._initialize_mode()
             

@@ -54,6 +54,9 @@ class SingleMode(HuntingMode):
     def _wait_for_map(self):
         esc_start = time.time()
         while self.bot.check_any_name_visible(self.observer.capture_frame()) and self.bot.running:
-            if time.time() - esc_start > 5.0: break
+            if time.time() - esc_start > 4.0:
+                self.log("⚠️ Escape falló o hay lag. Re-intentando huida...", "WARN")
+                self.controller.run_away() # Segundo intento automático
+                esc_start = time.time() # Resetear timer
             time.sleep(0.5)
         time.sleep(1.0)

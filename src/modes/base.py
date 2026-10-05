@@ -158,30 +158,33 @@ class HuntingMode:
 
     def _check_capture_result(self):
         """
-        Espera el resultado de la Pokébola con timings configurables.
-        - Espera 'timing_ball_wait' segundos ANTES de empezar el OCR (para la animación de sacudidas).
-        - Si detecta SUCCESS, espera 'timing_capture_settle' segundos antes de cerrar diálogos.
-        - Distingue FAILURE (rompió libre) de 'sin respuesta todavía'.
+        Espera el resultado de la Pokébola con spamming activo de la interfaz para evitar UI overlap.
         """
         ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
         settle_time = float(self.config.get("timing_capture_settle", 2.5))
 
-        # Esperar la animación de la pokébola ANTES de empezar a leer el OCR
         self.log(f"⏳ Waiting {ball_wait}s for ball animation...", "DEBUG")
         time.sleep(ball_wait)
 
         for _ in range(60):
             if not self.bot.running:
                 return False
+                
+            # ACTIVE POLLING: Destruimos ventanas emergentes de stats para que el OCR pueda ver el "CAUGHT"
+            self.controller._press('left', duration=0.02)
+            self.controller._press('x', duration=0.02)
+            self.controller._press('right', duration=0.02)
+            self.controller._press('x', duration=0.02)
+            
+            # Recién ahora tomamos captura, con el texto presumiblemente limpio
             fb = self.observer.capture_frame()
             m = self.bot.check_msg_area(fb)
 
             if m == "SUCCESS":
                 self.log("🎉 Message read: CAUGHT!", "SUCCESS")
-                self.log(f"⏳ Settling {settle_time}s for dialogs...", "DEBUG")
                 time.sleep(settle_time)
-                # Cerrar diálogos (Z) y ventanas de stats/PokéDex (X)
-                for _ in range(15):
+                # Cerrar diálogos adicionales
+                for _ in range(8):
                     self.controller._press('z', duration=0.05)
                     self.controller._press('x', duration=0.05)
                     time.sleep(0.3)
@@ -189,16 +192,15 @@ class HuntingMode:
 
             if m == "FAILURE":
                 self.log("💨 Ball broke free — retrying next turn.", "WARN")
-                # Esperar a que el menú de batalla vuelva
                 time.sleep(1.5)
                 return False
 
             if self.bot.is_menu_ready(fb):
-                # El menú volvió sin mensaje de captura → escapó o tardó demasiado
                 return False
 
-            time.sleep(0.2)
+            time.sleep(0.1) # Agilizamos el poll
 
-        self.log("⏱️ Capture check timed out after 60 polls.", "WARN")
-        return False
+        # TIMEOUT FIX: Si el loop terminó y no volvió el menú de batalla, deducimos captura
+        self.log("⏱️ No battle menu returned. Assuming CAUGHT due to UI overlap!", "SUCCESS")
+        return True
 
