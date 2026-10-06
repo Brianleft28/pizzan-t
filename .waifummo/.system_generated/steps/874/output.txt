@@ -1,0 +1,52 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+        time.sleep(random.uniform(min_s, max_s))
+            time.sleep(duration)
+            time.sleep(random.uniform(0.12, 0.22))
+        time.sleep(random.uniform(0.2, 0.35))
+        time.sleep(random.uniform(0.1, 0.3))
+        time.sleep(random.uniform(0.2, 0.5))
+        time.sleep(random.uniform(0.05, 0.15))
+        time.sleep(random.uniform(0.2, 0.4))
+        time.sleep(random.uniform(0.1, 0.2))
+        time.sleep(random.uniform(0.1, 0.2))
+        time.sleep(random.uniform(0.3, 0.6))
+        time.sleep(random.uniform(0.3, 0.6))
+        time.sleep(random.uniform(0.1, 0.3))
+        time.sleep(random.uniform(0.3, 0.8))
+        time.sleep(random.uniform(0.3, 0.8))
+        time.sleep(random.uniform(0.1, 0.25))
+        time.sleep(random.uniform(0.1, 0.25))
+        time.sleep(random.uniform(0.2, 0.6))
+            time.sleep(random.uniform(0.1, 0.2))
+            time.sleep(random.uniform(0.1, 0.2))
+            time.sleep(random.uniform(0.1, 0.3))
+            time.sleep(random.uniform(0.1, 0.2))
+        time.sleep(random.uniform(1.2, 1.8)) # Animation delay
+        time.sleep(random.uniform(0.05, 0.15))
+        time.sleep(random.uniform(0.05, 0.15))
+        time.sleep(random.uniform(0.05, 0.15))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+
+

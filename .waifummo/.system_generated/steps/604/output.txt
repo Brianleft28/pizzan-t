@@ -1,0 +1,57 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
+     | processing or it's redirected.
+
+                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+src/bot_main.py-164-        g_px = cv2.countNonZero(mask_g); y_px = cv2.countNonZero(mask_y)
+src/bot_main.py-165-        percent = (g_px + y_px) / (crop.shape[0] * crop.shape[1] + 1e-6)
+src/bot_main.py-166-        return percent < 0.25, percent
+src/bot_main.py-167-
+src/bot_main.py-168-    def is_asleep(self, frame):
+src/bot_main.py-169-        r = self.config.get("status_slot_region")
+src/bot_main.py-170-        if not r or frame is None: return False
+src/bot_main.py-171-        crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+src/bot_main.py-172-        return self.recognizer.check_status_sleep(crop)
+src/bot_main.py-173-
+src/bot_main.py:174:    def read_hunter_hp(self, frame_dummy=None):
+src/bot_main.py:175:        r = self.config.get("hunter_hp_region")
+src/bot_main.py-176-        if not r: return False, "??/??", 0
+src/bot_main.py-177-        for attempt in range(4):
+src/bot_main.py-178-            frame = self.observer.capture_frame()
+src/bot_main.py-179-            if frame is None:
+src/bot_main.py-180-                time.sleep(0.3)
+src/bot_main.py-181-                continue
+src/bot_main.py-182-            crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+src/bot_main.py-183-            if crop.size == 0:
+src/bot_main.py-184-                time.sleep(0.3)
+src/bot_main.py-185-                continue
+--
+src/controller.py-216-            time.sleep(0.2)
+src/controller.py-217-            self._press('z')
+src/controller.py-218-        else:
+src/controller.py-219-            # Just one more Z for single berry
+src/controller.py-220-            self._press('z')
+src/controller.py-221-            
+src/controller.py-222-        time.sleep(2.0) # Animation delay
+src/controller.py-223-        self.log(f"Slot {slot} restoration complete.")
+src/controller.py-224-
+src/controller.py-225-    def use_potion_sequence(self, key, full_heal=False):
+src/controller.py:226:        """Heals the hunter using a Potion hotkey and optional 'Max' navigation"""
+src/controller.py-227-        self.log(f"Healing Hunter (Full: {full_heal}) using Key {key}")
+src/controller.py-228-        # 1. Use Potion Hotkey
+src/controller.py-229-        pydirectinput.keyDown(key)
+src/controller.py-230-        time.sleep(0.4)
+src/controller.py-231-        pydirectinput.keyUp(key)
+src/controller.py-232-        time.sleep(1.0)
+src/controller.py-233-        
+src/controller.py-234-        # 2. Select first Pokemon (Z)
+src/controller.py-235-        self._press('z')
+src/controller.py-236-        time.sleep(0.8)
+

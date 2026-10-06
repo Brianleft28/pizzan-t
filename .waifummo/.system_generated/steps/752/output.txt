@@ -1,0 +1,17 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+warning: in the working copy of 'GEMINI.md', LF will be replaced by CRLF the next time Git touches it
+[main e93d866] docs: enforce powershell commands and strict japanese formatting
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+To https://github.com/Brianleft28/pizzan-t
+   b6e828b..e93d866  main -> main
+

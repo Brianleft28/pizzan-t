@@ -1,0 +1,60 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                          ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+>     def _check_capture_result(self):
+          """
+          Espera el resultado de la Pok�bola con timings configurables.
+          - Espera 'timing_ball_wait' segundos ANTES de empezar el OCR (para la animaci�n de sacudidas).
+          - Si detecta SUCCESS, espera 'timing_capture_settle' segundos antes de cerrar di�logos.
+          - Distingue FAILURE (rompi� libre) de 'sin respuesta todav�a'.
+          """
+          ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
+          settle_time = float(self.config.get("timing_capture_settle", 2.5))
+  
+          # Esperar la animaci�n de la pok�bola ANTES de empezar a leer el OCR
+          self.log(f"? Waiting {ball_wait}s for ball animation...", "DEBUG")
+          time.sleep(ball_wait)
+  
+          for _ in range(60):
+              if not self.bot.running:
+                  return False
+              fb = self.observer.capture_frame()
+              m = self.bot.check_msg_area(fb)
+  
+              if m == "SUCCESS":
+                  self.log("?? Message read: CAUGHT!", "SUCCESS")
+                  self.log(f"? Settling {settle_time}s for dialogs...", "DEBUG")
+                  time.sleep(settle_time)
+                  # Cerrar di�logos (Z) y ventanas de stats/Pok�Dex (X)
+                  for _ in range(15):
+                      self.controller._press('z', duration=0.05)
+                      self.controller._press('x', duration=0.05)
+                      time.sleep(0.3)
+                  return True
+  
+              if m == "FAILURE":
+                  self.log("?? Ball broke free - retrying next turn.", "WARN")
+                  # Esperar a que el men� de batalla vuelva
+                  time.sleep(1.5)
+                  return False
+  
+              if self.bot.is_menu_ready(fb):
+                  # El men� volvi� sin mensaje de captura  escap� o tard� demasiado
+                  return False
+  
+              time.sleep(0.2)
+  
+          self.log("?? Capture check timed out after 60 polls.", "WARN")
+          return False
+  
+
+

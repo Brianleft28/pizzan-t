@@ -1,0 +1,6 @@
+{
+  "summary":  "Plan para solucionar los warnings del Auto-Updater, parcheando la detección de ruta y el método de lectura de versión (usando revision.txt).",
+  "updatedAt":  "2026-10-06T04:17:55.962441400Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

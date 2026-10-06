@@ -1,0 +1,16 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
+     | processing or it's redirected.
+
+                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+src/modes/base.py:            is_low, hp_pct = self.bot.is_hp_low(f_act)
+src/modes/base.py:            hp_status = f"LOW ({hp_pct:.0%})" if (is_low or swiped) else f"FULL ({hp_pct:.0%})"
+src/modes/base.py:            self.log(f"[T-{turn:02d}] HP: {hp_status} | {slp_status} | → {action_desc}", "BATTLE")
+

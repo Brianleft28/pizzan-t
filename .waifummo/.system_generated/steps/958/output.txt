@@ -1,0 +1,31 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+>     def is_hp_low(self, frame):
+          r = self.config.get("hp_bar_region")
+          if not r or frame is None: return False, 0.0
+          crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+          if crop.size == 0: return False, 0.0
+          hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+          mask_g = cv2.inRange(hsv, np.array([35, 50, 50]), np.array([90, 255, 255]))
+          mask_y = cv2.inRange(hsv, np.array([15, 50, 50]), np.array([35, 255, 255]))
+          g_px = cv2.countNonZero(mask_g); y_px = cv2.countNonZero(mask_y)
+          percent = (g_px + y_px) / (crop.shape[0] * crop.shape[1] + 1e-6)
+          return percent < 0.25, percent
+  
+      def is_asleep(self, frame):
+          r = self.config.get("status_slot_region")
+          if not r or frame is None: return False
+          crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+
+

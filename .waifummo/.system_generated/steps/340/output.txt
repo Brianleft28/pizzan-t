@@ -1,0 +1,201 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's
+     | redirected.
+
+                                    ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+# ???? S�REN - The Humanoid Shiny Hunter v7.0
+
+**S�REN** es un bot de automatizaci�n para **Pok�MMO** que detecta Shinies y captura Dittos usando visi�n artificial no invasiva (OCR + an�lisis de p�xeles). Funciona sin tocar la memoria del juego.
+
+---
+
+## ? Caracter�sticas v7.0
+
+| Feature | Descripci�n |
+|---|---|
+| ?? **Modo Horda** | Sweet Scent  escanea 5 slots  pausa y alerta si encuentra Shiny |
+| ?? **Modo Ditto** | Patrulla  detecta Ditto por OCR  Swipe  Spore  Ball |
+| ?? **Modo Single** | Patrulla  captura cualquier Shiny en combate individual |
+| ?? **Logger con colores** | Colores reales en la GUI por categor�a (BATTLE, HEAL, SUCCESS...) |
+| ?? **Brain Viewer** | Pesta�a en la GUI para leer el c�digo fuente Python en tiempo real |
+| ?? **Stats Bar** | Encounters, Dittos, rate/min y tiempo de sesi�n siempre visibles |
+| ?? **Timings configurables** | OCR wait, settle time, Leppa pre-wait: todo editable desde la UI |
+| ?? **Auto-Heal PP** | Restaura PP con Leppa Berry autom�ticamente al llegar a 0 |
+| ?? **Anti-Captcha** | Detecci�n de texto sospechoso + alerta Discord + alarma sonora |
+| ?? **Humanizaci�n** | Caminata con stamina variable, micro-pausas y respuesta al HUD |
+
+---
+
+## ??? Requisitos del Sistema
+
+- **Windows 10/11** (64-bit)
+- **Python 3.10 o superior**  [python.org/downloads](https://www.python.org/downloads/)
+- **Git**  [git-scm.com](https://git-scm.com/)
+- **Pok�MMO** corriendo en pantalla (no minimizado)
+
+---
+
+## ?? Instalaci�n (PC nueva)
+
+### 1. Clonar el repositorio
+
+```powershell
+git clone https://github.com/Brianleft28/pizzan-t
+cd pizzan-t
+```
+
+### 2. Crear el entorno virtual
+
+```powershell
+python -m venv venv
+```
+
+### 3. Activar el entorno virtual
+
+> ?? **Importante:** Siempre activar el venv antes de correr el bot. En PowerShell:
+
+```powershell
+.\venv\Scripts\activate
+```
+
+Vas a ver `(venv)` al inicio de la l�nea cuando est� activo.
+
+### 4. Instalar dependencias
+
+```powershell
+pip install -r requirements.txt
+```
+
+> ? La primera vez puede tardar varios minutos porque descarga PyTorch y EasyOCR (~2GB).
+
+### 5. Iniciar el bot
+
+```powershell
+python main_gui.py
+```
+
+---
+
+## ?? Actualizar desde GitHub (cuando hay cambios)
+
+```powershell
+git pull origin main
+```
+
+No hace falta reinstalar dependencias salvo que haya un cambio en `requirements.txt`.
+
+---
+
+## ??? Calibraci�n (primera vez en una PC)
+
+Antes de usar el bot ten�s que calibrar las regiones de la pantalla para que el OCR sepa d�nde mirar. En la pesta�a **?? Calib** de la GUI:
+
+1. **HUD HORDE**  Los nombres de los Pok�mon en hordas
+2. **SINGLE SLOT**  El nombre del Pok�mon en combate individual
+3. **RUN BTN**  El bot�n de "Lucha/Huir" (para saber si estamos en batalla)
+4. **HP BAR**  La barra de vida del enemigo
+5. **STATUS**  El �cono de estado (dormido, paralizado, etc.)
+6. **PP SLOTS**  Los n�meros de PP dentro del men� de Lucha
+7. **BATTLE MSG**  El �rea del mensaje "�Atrapado!" / "�Rompi� libre!"
+
+Cada bot�n abre una pantalla de selecci�n: arrastr� para marcar la regi�n y presion� **Enter** para guardar.
+
+---
+
+## ?? Configuraci�n R�pida
+
+### Pesta�a ?? Ditto
+
+| Campo | Qu� es |
+|---|---|
+| Patrol Time | Segundos de caminata antes de cambiar direcci�n |
+| Attack (Clave/Nombre) | Tecla y nombre del movimiento de Turno 1 (ej: `2` / `False Swipe`) |
+| Sleep (Clave/Nombre) | Tecla y nombre del movimiento de sue�o (ej: `1` / `Spore`) |
+| Ball Hotkey | Tecla de acceso r�pido de la Pok�bola (ej: `5`) |
+| Leppa Key | Tecla de la Leppa Berry para restaurar PP (ej: `4`) |
+
+### ?? Timings de Captura (cr�ticos para evitar bugs)
+
+| Campo | Default | Descripci�n |
+|---|---|---|
+| OCR Wait | `0.5s` | Espera antes de leer el mensaje de captura (para la animaci�n) |
+| Settle | `2.5s` | Espera para cerrar di�logos post-captura |
+| Leppa Pre-Wait | `1.5s` | Espera para que cargue el mapa antes de usar Leppa |
+| Ball Press Delay | `0.7s` | Delay entre presionar la pok�bola y confirmar |
+
+### Pesta�a ?? Horde
+
+- **Horde Size**: 3 o 5 Pok�mon
+- **Alarma**: Colocar un archivo `assets/shiny_alarm.wav` para la alerta sonora
+
+---
+
+## ?? Estructura del Proyecto
+
+```
+pizzan-t/
+� main_gui.py          # Interfaz gr�fica (CustomTkinter)
+� config.json          # Configuraci�n y calibraci�n (auto-generado)
+� selector.py          # Herramienta de calibraci�n de regiones
+� src/
+�   � bot_main.py      # Orquestador principal y Guardi�n
+�   � controller.py    # Input: teclas, movimientos, secuencias
+�   � vision.py        # Captura de pantalla (mss)
+�   � recognizer.py    # OCR (EasyOCR) + template matching
+�   � logger.py        # Logger con colores y buffer circular
+�   � modes/
+�       � base.py      # L�gica base: captura, patrulla, curaci�n
+�       � ditto.py     # Modo Ditto
+�       � horda.py     # Modo Horda
+�       � single.py    # Modo Single
+� docs/
+�   � config.md        # Manual detallado de la UI
+� assets/
+    � shiny_alarm.wav  # Alarma sonora (agregar manualmente)
+```
+
+---
+
+## ?? Soluci�n de Problemas Comunes
+
+### ? `UnicodeEncodeError` al arrancar en PowerShell
+El bot usa emojis en los logs. PowerShell puede fallar con caracteres especiales. El logger lo maneja autom�ticamente, pero si falla la terminal, us�:
+```powershell
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+```
+
+### ? El bot no detecta la batalla
+Recalibrar las regiones **HUD HORDE** y **SINGLE SLOT** en la pesta�a ?? Calib.
+
+### ? Spam de pok�bolas / no reconoce la captura
+Aumentar el valor de **OCR Wait** en los Timings de Captura (probar `1.0` o `1.5`).
+
+### ? La Leppa se usa en el momento equivocado
+Aumentar el valor de **Leppa Pre-Wait** (probar `2.0` o `2.5`).
+
+### ? `-eenv` o `-env` no reconocidos en PowerShell
+Esos no son comandos v�lidos. El comando correcto para activar el venv es:
+```powershell
+.\venv\Scripts\activate
+```
+
+---
+
+## ?? Documentaci�n Adicional
+
+- [Manual de la interfaz](docs/config.md) - descripci�n detallada de cada bot�n y campo
+- [GEMINI.md](GEMINI.md) - mandatos cr�ticos de comportamiento del bot (para desarrolladores)
+
+---
+
+## ?? Aviso Legal
+
+Este proyecto es de uso **personal y educativo**. El uso de bots puede violar los t�rminos de servicio de Pok�MMO. El autor no se responsabiliza por consecuencias derivadas de su uso.
+

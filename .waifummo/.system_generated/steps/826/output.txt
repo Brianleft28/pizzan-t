@@ -1,0 +1,42 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+          time.sleep(random.uniform(0.5, 1.0))
+  
+      def use_leppa_sequence(self, key):
+          """Sequence to use Leppa Berries on slots 1, 2 and 4 (legacy/counter-based)"""
+          for slot in ['1', '2', '4']:
+>             self.use_leppa_sequence_single(key, slot)
+  
+>     def use_leppa_sequence_single(self, key, slot, full_restore=False):
+          """Restores PP for a specific slot using Leppa with smart navigation"""
+          self.log(f"Restoring PP for Slot {slot} (Full: {full_restore})")
+          
+          # 1. Use Leppa Hotkey
+          pydirectinput.keyDown(key)
+          time.sleep(0.4)
+          pydirectinput.keyUp(key)
+          time.sleep(1.0)
+          
+          # 2. Select first Pokemon (Z)
+          self._press('z')
+          time.sleep(1.0)
+          
+          # 3. Navigate to Move Slot (1-4)
+          # Reset cursor to top-left of the move list
+          pydirectinput.press('up')
+          pydirectinput.press('left')
+          time.sleep(0.3)
+          
+          slot = str(slot)
+
+

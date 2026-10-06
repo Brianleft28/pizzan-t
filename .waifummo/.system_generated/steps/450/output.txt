@@ -1,0 +1,31 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't
+     | support virtual terminal processing or it's redirected.
+
+           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+    Directorio: C:\Program Files\PokeMMO\data\themes\default
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          2026/03/08    18:00                .pokemmo_patcher_backups
+d----          2026/01/23    17:44                res
+d----          2026/01/23    17:44                textures
+d----          2026/08/23     0:04                ui
+-a---          2025/12/25     7:17           1279 cursors.xml
+-a---          2026/08/23     0:04           9231 fonts.xml
+-a---          2026/08/23     0:04          31773 gfx_ui.xml
+-a---          2025/12/25     7:17          63256 gfx.xml
+-a---          2026/08/23     0:04          59116 init.xml
+-a---          2026/08/23     0:04          72238 main-widgets.xml
+-a---          2026/02/18    18:14           1722 theme.xml
+-a---          2025/12/25     7:17            515 twl-themer-load.xml
+
+

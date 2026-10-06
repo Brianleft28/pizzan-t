@@ -1,0 +1,51 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's
+     | redirected.
+
+                                    ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+# Walkthrough: Webhooks Modulares y As�ncronos (Arquitectura Brian)
+
+## ?? Cambios Realizados
+Se ha implementado con �xito la arquitectura modular orientada a eventos para notificar hallazgos de Shinies y otras emergencias del bot sin afectar el rendimiento de la caza.
+
+### 1. Nuevo M�dulo: `WebhookNotifier`
+* **Archivo:** `src/notifications/webhook_notifier.py`
+* **Qu� hace:** Act�a como el despachador de eventos HTTP del bot.
+* **Caracter�sticas:**
+  * **As�ncrono:** Utiliza `threading.Thread` y `daemon=True` para lanzar la petici�n de red sin bloquear la interfaz gr�fica ni detener el ciclo de caza de Pokemmo.
+  * **Retrocompatibilidad Inteligente:** 
+    * Si la configuraci�n incluye un **Token JWT**, empaqueta los datos de forma limpia (para el servidor NestJS).
+    * Si no hay Token JWT (comportamiento legacy), empaqueta los datos usando el cl�sico formato de "Embed" que Discord entiende de forma nativa.
+
+### 2. Refactor del Core (`bot_main.py`)
+* Se inyect� la dependencia `self.notifier = WebhookNotifier(self)` dentro del ciclo de vida inicial del bot.
+* El antiguo m�todo s�ncrono `send_discord_alert` ahora act�a como un puente, delegando inmediatamente el trabajo a `self.notifier.send_alert_async()`.
+
+### 3. Actualizaci�n de Interfaz (`main_gui.py`)
+* Se a�adi� un campo seguro (`show="*"`) en la pesta�a principal llamado **Webhook JWT**.
+* Se mapearon las variables de guardado y lectura (`webhook_jwt`) en el diccionario `config.json`.
+
+---
+
+## ?? Pr�ximos Pasos (Tu turno)
+Todo del lado de Python est� en l�nea y funcionando. Ahora la estafeta est� de tu lado en el servidor NestJS:
+
+1. Levanta tu servidor NestJS (`npm run start:dev`).
+2. Configura tu controlador para escuchar en la misma URL que pongas en la GUI del bot (ej. `http://tu-servidor:3000/api/webhooks/shiny`).
+3. El payload que Python enviar� luce as�:
+   * **Headers:** `{"Authorization": "Bearer <tu-jwt-aqui>"}`
+   * **Body (Form-Data):**
+     * `category` (String) -> ej. "SINGLE", "HORDE", "CAPTCHA EMERGENCY"
+     * `message` (String) -> ej. "SHINY Tentacool!"
+     * `encounters` (String) -> ej. "425"
+     * `file` (Binary) -> La imagen `.png` de prueba.
+
+�Felicidades por armar una arquitectura tan limpia! Estar� lista para cuando atrapes tu pr�ximo objetivo. ???
+

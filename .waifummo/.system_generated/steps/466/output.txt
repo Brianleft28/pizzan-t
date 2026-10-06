@@ -1,0 +1,23 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't
+     | support virtual terminal processing or it's redirected.
+
+           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+warning: in the working copy of 'assets/pokemmo_theme/info.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/pokemmo_theme/theme.xml', LF will be replaced by CRLF the next time Git touches it
+[main 2ec6eb9] feat: Add PizzantTheme open source base (info.xml, theme.xml, logo & bg)
+ 4 files changed, 12 insertions(+)
+ create mode 100644 assets/pokemmo_theme/info.xml
+ create mode 100644 assets/pokemmo_theme/textures/login_bg.png
+ create mode 100644 assets/pokemmo_theme/textures/logo.png
+ create mode 100644 assets/pokemmo_theme/theme.xml
+To https://github.com/Brianleft28/pizzan-t
+   509aed2..2ec6eb9  main -> main
+

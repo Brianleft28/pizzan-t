@@ -1,0 +1,131 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+              row=0, column=0, padx=10, pady=8, sticky="w")
+          self.mode_switch = ctk.CTkSegmentedButton(
+>             self.config_frame, values=["Horda", "Single", "Ditto"],
+              command=self._on_mode_change
+          )
+  
+          # =========================================================
+>         # 2. TABS (General, Horde, Ditto, Brain, Calibration)
+          # =========================================================
+          self.tabview = ctk.CTkTabview(self, height=300)
+          self.tab_general = self.tabview.add("?? General")
+          self.tab_horde = self.tabview.add("?? Horde")
+>         self.tab_ditto = self.tabview.add("?? Ditto")
+          self.tab_brain = self.tabview.add("?? Brain")
+          self.tab_calib = self.tabview.add("?? Calib")
+          self._build_general_tab()
+          self._build_horde_tab()
+>         self._build_ditto_tab()
+          self._build_brain_tab()
+          self._build_calib_tab()
+          self.stats_label = ctk.CTkLabel(
+              self.stats_frame,
+>             text="Enc: 0 | Session: 0 | Dittos: 0 | ?? 00:00:00",
+              font=ctk.CTkFont(family="Consolas", size=11),
+              text_color="#7f8c8d"
+                         command=self.stop_alarm).pack(side="left", padx=5)
+  
+>     def _build_ditto_tab(self):
+>         tab = self.tab_ditto
+          # Patrol Time
+          ctk.CTkLabel(tab, text="Patrol Time (s):", font=ctk.CTkFont(weight="bold")).grid(
+              row=0, column=0, padx=10, pady=4, sticky="w")
+>         self.ditto_path_entry = ctk.CTkEntry(tab, width=60)
+>         self.ditto_path_entry.grid(row=0, column=1, padx=10, pady=4, sticky="w")
+>         self.ditto_path_entry.insert(0, self.get_config_val("ditto_patrol_time", "2.5"))
+  
+          # Attack (Swipe)
+          ctk.CTkLabel(tab, text="1. Attack (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(
+              row=1, column=0, padx=10, pady=4, sticky="w")
+>         self.ditto_atk_entry = ctk.CTkEntry(tab, width=40)
+>         self.ditto_atk_entry.grid(row=1, column=1, padx=10, pady=4, sticky="w")
+>         self.ditto_atk_entry.insert(0, self.get_config_val("ditto_key_attack", "2"))
+>         self.ditto_atk_name = ctk.CTkEntry(tab, width=120)
+>         self.ditto_atk_name.grid(row=1, column=2, padx=10, pady=4, sticky="w")
+>         self.ditto_atk_name.insert(0, self.get_config_val("ditto_name_attack", "False Swipe"))
+  
+          # Sleep (Spora)
+          ctk.CTkLabel(tab, text="2. Sleep (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(
+              row=2, column=0, padx=10, pady=4, sticky="w")
+>         self.ditto_slp_entry = ctk.CTkEntry(tab, width=40)
+>         self.ditto_slp_entry.grid(row=2, column=1, padx=10, pady=4, sticky="w")
+>         self.ditto_slp_entry.insert(0, self.get_config_val("ditto_key_sleep", "1"))
+>         self.ditto_slp_name = ctk.CTkEntry(tab, width=120)
+>         self.ditto_slp_name.grid(row=2, column=2, padx=10, pady=4, sticky="w")
+>         self.ditto_slp_name.insert(0, self.get_config_val("ditto_name_sleep", "Spore"))
+  
+          # Balls & Utils
+          ctk.CTkLabel(tab, text="3. Ball Hotkey:", font=ctk.CTkFont(weight="bold")).grid(
+              row=3, column=0, padx=10, pady=4, sticky="w")
+>         self.ditto_ball_entry = ctk.CTkEntry(tab, width=50)
+>         self.ditto_ball_entry.grid(row=3, column=1, padx=10, pady=4, sticky="w")
+>         self.ditto_ball_entry.insert(0, self.get_config_val("ditto_key_ball", "5"))
+  
+          ctk.CTkLabel(tab, text="Potion Key:", font=ctk.CTkFont(weight="bold")).grid(
+          self.potion_key_entry = ctk.CTkEntry(tab, width=50)
+          self.potion_key_entry.grid(row=4, column=1, padx=10, pady=4, sticky="w")
+>         self.potion_key_entry.insert(0, self.get_config_val("ditto_key_potion", "6"))
+  
+          ctk.CTkLabel(tab, text="Leppa Key:", font=ctk.CTkFont(weight="bold")).grid(
+          self.leppa_key_entry = ctk.CTkEntry(tab, width=50)
+          self.leppa_key_entry.grid(row=4, column=3, padx=10, pady=4, sticky="w")
+>         self.leppa_key_entry.insert(0, self.get_config_val("ditto_key_leppa", "4"))
+  
+          # Checkpoints de Curaci�n
+          # �
+  
+>         ctk.CTkButton(tab, text="SAVE DITTO CONFIG", fg_color="#1f538d",
+                         height=36, command=self.save_all).grid(
+              row=7, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
+              "horda": os.path.join("src", "modes", "horda.py"),
+              "single": os.path.join("src", "modes", "single.py"),
+>             "ditto": os.path.join("src", "modes", "ditto.py"),
+          }
+          return mode_map.get(mode, os.path.join("src", "modes", "base.py"))
+                  enc = self.bot.encounters
+                  sess = self.bot.session_encounters
+>                 dittos = self.bot.session_dittos
+                  elapsed = self.bot.get_elapsed_time()
+  
+                  self.stats_label.configure(
+                      text=f"?? {mode} | Enc: {enc} | Sess: {sess} | "
+>                          f"Dittos: {dittos} | Rate: {rate:.1f}/min | ?? {elapsed}",
+                      text_color="#C3E88D" if self.bot.running else "#7f8c8d"
+                  )
+                  config["zorua_wait"] = float(self.zorua_wait_entry.get())
+  
+>             # Ditto Settings
+>             config["ditto_patrol_time"] = float(self.ditto_path_entry.get())
+>             config["ditto_key_attack"] = self.ditto_atk_entry.get()
+>             config["ditto_name_attack"] = self.ditto_atk_name.get()
+>             config["ditto_key_sleep"] = self.ditto_slp_entry.get()
+>             config["ditto_name_sleep"] = self.ditto_slp_name.get()
+>             config["ditto_key_ball"] = self.ditto_ball_entry.get()
+>             config["ditto_key_potion"] = self.potion_key_entry.get()
+>             config["ditto_key_leppa"] = self.leppa_key_entry.get()
+              config["auto_heal_hp"] = bool(self.heal_hp_check.get())
+              config["auto_heal_pp"] = bool(self.heal_pp_check.get())
+                  os.path.join("src", "modes", "horda.py"),
+                  os.path.join("src", "modes", "single.py"),
+>                 os.path.join("src", "modes", "ditto.py"),
+                  os.path.join("src", "modes", "base.py"),
+              ]
+                  self._stats_update_id = None
+              self.stats_label.configure(
+>                 text="Enc: 0 | Session: 0 | Dittos: 0 | ?? 00:00:00",
+                  text_color="#7f8c8d"
+              )
+
+

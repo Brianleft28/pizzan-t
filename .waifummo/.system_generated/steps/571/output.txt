@@ -1,0 +1,57 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
+     | processing or it's redirected.
+
+                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+          pydirectinput.keyDown(key)
+          time.sleep(0.4)
+          pydirectinput.keyUp(key)
+          time.sleep(1.0)
+          
+>         # 2. Select first Pokemon (Z)
+          self._press('z')
+          time.sleep(1.0)
+          
+          # 3. Navigate to Move Slot (1-4)
+          # Reset cursor to top-left of the move list
+          pydirectinput.press('up')
+          pydirectinput.press('left')
+          time.sleep(0.3)
+          
+          slot = str(slot)
+          if slot == '2': pydirectinput.press('right')
+          elif slot == '3': pydirectinput.press('down')
+          elif slot == '4': 
+              pydirectinput.press('right')
+              pydirectinput.press('down')
+          pydirectinput.keyDown(key)
+          time.sleep(0.4)
+          pydirectinput.keyUp(key)
+          time.sleep(1.0)
+          
+>         # 2. Select first Pokemon (Z)
+          self._press('z')
+          time.sleep(0.8)
+          
+          if full_heal:
+              # 3. Navigate to 'Max'
+              pydirectinput.press('up')
+              time.sleep(0.3)
+              pydirectinput.press('right')
+              time.sleep(0.3)
+              self._press('z') # Confirm MAX
+              time.sleep(0.5)
+              # 4. Navigate down to 'Use' and confirm
+              pydirectinput.press('down')
+              time.sleep(0.3)
+              self._press('z')
+
+

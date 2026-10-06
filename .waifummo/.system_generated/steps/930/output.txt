@@ -1,0 +1,51 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+              # Decidir acci�n ANTES de loguear
+              mv_s = None
+              mv_n = ""
+              action_desc = ""
+              
+              if turn == 1:
+                  mv_s = self.config.get("ditto_key_attack", "2")
+                  mv_n = self.config.get("ditto_name_attack", "Swipe")
+                  action_desc = f"?? {mv_n} (Key {mv_s})"
+              elif not is_slp:
+                  mv_s = self.config.get("ditto_key_sleep", "1")
+                  mv_n = self.config.get("ditto_name_sleep", "Sleep")
+                  action_desc = f"?? {mv_n} (Key {mv_s})"
+              else:
+                  mv_n = "Ball"
+>                 action_desc = f"?? Throwing Ball"
+  
+              # Log estructurado del turno
+              hp_status = f"LOW ({hp_pct:.0%})" if (is_low or swiped) else f"FULL ({hp_pct:.0%})"
+              slp_status = "?? SLP" if is_slp else "??? AWK"
+              self.log(f"[T-{turn:02d}] HP: {hp_status} | {slp_status} |  {action_desc}", "BATTLE")
+  
+              if mv_s:
+                  self.controller.open_fight_menu()
+                  time.sleep(0.6)
+                  pp_curr, nr = self.bot.read_pp(mv_s, mv_n)
+                  
+                  if nr: 
+                      leppas.add((mv_s, True))
+                      self.log(f"[??] PP for {mv_n} is {pp_curr}. Adding to restoration queue.", "HEAL")
+  
+                  if pp_curr == 0:
+                      self.log(f"?? {mv_n} has 0 PP! Switching to Ball.", "WARN")
+                      mv_s = None
+  
+                  if mv_s:
+
+

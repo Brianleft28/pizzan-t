@@ -1,0 +1,26 @@
+The following changes were made by the replace_file_content tool to: C:\Users\Brian\Desktop\workspace\pizzant\src\bot_main.py. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -19,6 +19,7 @@
+ from src.modes.ditto import DittoMode
+ from src.modes.single import SingleMode
+ from src.notifications.webhook_notifier import WebhookNotifier
++from scripts.installer import auto_sync_theme
+ 
+ class ShinyBot:
+     def __init__(self, log_widget=None):
+@@ -26,6 +26,12 @@
+         self.last_activity_time = time.time()
+         self._alarm_active = False
+         
++        # 0 Complacencia: Auto-Sync Theme
++        try:
++            auto_sync_theme()
++        except Exception:
++            pass
++        
+         self.logger = PokéLogger(log_widget)
+         self.log_callback = self.logger.log
+         
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

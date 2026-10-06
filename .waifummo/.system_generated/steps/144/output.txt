@@ -1,0 +1,55 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual
+     | terminal processing or it's redirected.
+
+                       ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+    Directorio: C:\Users\Brian\.gemini
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          2026/03/18     3:19             58 google_accounts.json
+-a---          2026/03/18     3:19             36 installation_id
+-a---          2026/03/30    10:43           1574 oauth_creds.json
+-a---          2026/03/23    19:30            200 projects.json
+-a---          2026/03/18     3:19             82 settings.json
+-a---          2026/03/23    22:59            105 state.json
+-a---          2026/03/23    19:32            120 trustedFolders.json
+
+    Directorio: C:\Users\Brian\.gemini\antigravity-cli
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+la---          2026/10/05     3:43              0 cli.log -> log\cli-20261005_034343.log
+-a---          2026/10/05     3:46         106496 conversation_summaries.db
+-a---          2026/10/05     3:46          32768 conversation_summaries.db-shm
+-a---          2026/10/05     3:46             32 conversation_summaries.db-wal
+-a---          2026/10/05     3:46         173586 history.jsonl
+-a---          2026/06/24    22:41             36 installation_id
+-a---          2026/10/05     3:47          19886 jetbox_summaries_proto.pb
+-a---          2026/09/10    22:01            579 jetski_state.pbtxt
+-a---          2026/10/05     3:41              0 last_check.timestamp
+-a---          2026/10/05     3:31           3242 settings.json
+
+    Directorio: C:\Users\Brian\.gemini\antigravity-ide
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          2026/07/21    21:02             36 installation_id
+
+    Directorio: C:\Users\Brian\.gemini\config
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          2026/06/24    22:41              0 .migrated
+-a---          2026/09/10    20:51            180 config.json
+-a---          2026/07/21    21:51            534 mcp_config.json
+
+

@@ -1,0 +1,44 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be
+     | enabled because the console output doesn't support
+     | virtual terminal processing or it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+# Importar los modos
+from src.modes.horda import HordeMode
+from src.modes.ditto import DittoMode
+from src.modes.single import SingleMode
+
+class ShinyBot:
+    def __init__(self, log_widget=None):
+        self.running = False
+        self.start_time = None
+        self.last_activity_time = time.time()
+        self._alarm_active = False
+        
+        self.logger = Pok�Logger(log_widget)
+        self.log_callback = self.logger.log
+        
+        try:
+            self.config = self.load_config()
+            self.observer = Pok�Observer()
+            self.recognizer = Pok�Recognizer()
+            self.controller = Pok�Controller(self.config, log_callback=self.log_callback)
+            
+            self.encounters = int(self.config.get("total_encounters", 0))
+            self.session_encounters = 0
+            self.session_dittos = 0
+            
+            self.mode_instance = self._initialize_mode()
+            
+            self.logger.log("---------------------------------------")
+            self.logger.log("  THE HUMANOID HUNTER v6.9 - SENTINEL ", "SUCCESS")
+

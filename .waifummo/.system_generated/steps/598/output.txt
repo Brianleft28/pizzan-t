@@ -1,0 +1,34 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
+     | processing or it's redirected.
+
+                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+src/modes/base.py-64-        swiped = False
+src/modes/base.py-65-        leppas = set()
+src/modes/base.py-66-        captured = False
+src/modes/base.py-67-
+src/modes/base.py-68-        while self.bot.running:
+src/modes/base.py-69-            self.bot.reset_activity_timer() 
+src/modes/base.py-70-            if not self._wait_for_menu(): break
+src/modes/base.py-71-            
+src/modes/base.py-72-            f_act = self.observer.capture_frame()
+src/modes/base.py-73-            is_slp = self.bot.is_asleep(f_act)
+src/modes/base.py:74:            is_low, hp_pct = self.bot.is_hp_low(f_act)
+src/modes/base.py-75-            
+src/modes/base.py-76-            # Decidir acción ANTES de loguear
+src/modes/base.py-77-            mv_s = None
+src/modes/base.py-78-            mv_n = ""
+src/modes/base.py-79-            action_desc = ""
+src/modes/base.py-80-            
+src/modes/base.py-81-            if turn == 1:
+src/modes/base.py-82-                mv_s = self.config.get("ditto_key_attack", "2")
+src/modes/base.py-83-                mv_n = self.config.get("ditto_name_attack", "Swipe")
+src/modes/base.py-84-                action_desc = f"⚔️ {mv_n} (Key {mv_s})"
+

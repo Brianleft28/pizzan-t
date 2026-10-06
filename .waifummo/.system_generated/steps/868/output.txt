@@ -1,0 +1,201 @@
+
+The command exited with code 0.
+Output:
+<truncated 73 lines>
+        opposite = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+        retreat_dir = opposite.get(old_dir, 'right')
+        self.log(f"?? ANTI-COLLISION #{self._collision_count}: Wall detected! Retreating {retreat_dir.upper()}")
+        self._press(retreat_dir, duration=random.uniform(0.3, 0.6))
+        time.sleep(random.uniform(0.1, 0.3))
+
+        # Cambio de eje: si est�bamos en horizontal, pasar a vertical y viceversa
+        if old_dir in ['left', 'right']:
+            self.last_patrol_direction = random.choice(['up', 'down'])
+        else:
+            self.last_patrol_direction = random.choice(['left', 'right'])
+
+        self.log(f"?? ANTI-COLLISION: Axis change {old_dir.upper()}  {self.last_patrol_direction.upper()}")
+        self.patrol_axis_start_time = time.time()
+
+        # Si llevamos muchas colisiones seguidas, hacer un movimiento largo para escapar de la esquina
+        if self._collision_count >= 3:
+            self.log("?? ANTI-COLLISION: Corner escape! Long diagonal movement")
+            escape_dir = random.choice(['left', 'right', 'up', 'down'])
+            self._press(escape_dir, duration=random.uniform(2.5, 4.0))
+            self._collision_count = 0
+            self.last_patrol_direction = escape_dir
+            self.patrol_axis_start_time = time.time()
+
+    def search_movement(self):
+        """Fluid long-press movement for realistic patrolling - con anti-colisi�n por timeout."""
+        # Verificar si excedimos el timeout en el mismo eje (posible pared)
+        elapsed_on_axis = time.time() - self.patrol_axis_start_time
+        if elapsed_on_axis > self.collision_timeout_sec:
+            self._handle_collision()
+
+        direction = self.last_patrol_direction
+
+        # Variaci�n humana: cambio ocasional de sentido dentro del mismo eje
+        if random.random() > 0.8:
+            opposite = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+            direction = opposite.get(direction, direction)
+
+        # Long duration to cross multiple tiles fluidly (Human-like)
+        duration = random.uniform(1.5, 3.5)
+        self.log(f"Patrolling {direction.upper()} for {duration:.1f}s")
+        self._press(direction, duration=duration)
+        # Human pause before next action
+        time.sleep(random.uniform(0.2, 0.5))
+
+    def ditto_search_movement(self, direction):
+        """Linear patrol using long continuous presses - con tracking anti-colisi�n."""
+        # Actualizar direcci�n trackeada
+        if direction != self.last_patrol_direction:
+            self.last_patrol_direction = direction
+            self.patrol_axis_start_time = time.time()
+
+        # Verificar timeout
+        elapsed_on_axis = time.time() - self.patrol_axis_start_time
+        if elapsed_on_axis > self.collision_timeout_sec:
+            self._handle_collision()
+            direction = self.last_patrol_direction  # Usar la nueva direcci�n
+
+        # Duration is handled by the main loop timer, but we ensure the press is solid
+        duration = random.uniform(0.8, 1.5)
+        self._press(direction, duration=duration)
+        # Minimal pause to maintain momentum but avoid rigid patterns
+        time.sleep(random.uniform(0.05, 0.15))
+
+    def open_fight_menu(self):
+        """Press Z to enter the fight/move selection menu"""
+        self.log("Opening Fight Menu (Z)")
+        self._press('z')
+        time.sleep(random.uniform(0.4, 0.6))
+
+    def execute_move(self, slot):
+        """Navigates a 2x2 grid: 1=TL, 2=TR, 3=BL, 4=BR"""
+        self.open_fight_menu()
+        self.navigate_and_confirm_move(slot)
+
+    def navigate_and_confirm_move(self, slot):
+        """Navigates 2x2 grid and confirms (Z). Assumes already in Fight Menu."""
+        slot = str(slot)
+        self.log(f"Navigating to Slot: {slot}")
+
+        # Reset cursor to Top-Left
+        pydirectinput.press('up')
+        pydirectinput.press('left')
+        time.sleep(0.2)
+
+        if slot == '2': pydirectinput.press('right')
+        elif slot == '3': pydirectinput.press('down')
+        elif slot == '4': 
+            pydirectinput.press('right')
+            pydirectinput.press('down')
+        
+        time.sleep(0.2)
+        self.log("Confirming Move (Z)")
+        self._press('z')
+        time.sleep(random.uniform(0.5, 1.0))
+
+    def use_ball(self, key):
+        """Use the quick-access ball (Hotkey)"""
+        self.log(f"Using Pokeball Hotkey (Key {key})")
+        self._press(key)
+        time.sleep(random.uniform(0.5, 1.0))
+
+    def use_leppa_sequence(self, key):
+        """Sequence to use Leppa Berries on slots 1, 2 and 4 (legacy/counter-based)"""
+        for slot in ['1', '2', '4']:
+            self.use_leppa_sequence_single(key, slot)
+
+    def use_leppa_sequence_single(self, key, slot, full_restore=False):
+        """Restores PP for a specific slot using Leppa with smart navigation"""
+        self.log(f"Restoring PP for Slot {slot} (Full: {full_restore})")
+        
+        # 1. Use Leppa Hotkey
+        pydirectinput.keyDown(key)
+        time.sleep(0.4)
+        pydirectinput.keyUp(key)
+        time.sleep(1.0)
+        
+        # 2. Select first Pokemon (Z)
+        self._press('z')
+        time.sleep(1.0)
+        
+        # 3. Navigate to Move Slot (1-4)
+        # Reset cursor to top-left of the move list
+        pydirectinput.press('up')
+        pydirectinput.press('left')
+        time.sleep(0.3)
+        
+        slot = str(slot)
+        if slot == '2': pydirectinput.press('right')
+        elif slot == '3': pydirectinput.press('down')
+        elif slot == '4': 
+            pydirectinput.press('right')
+            pydirectinput.press('down')
+        time.sleep(0.3)
+        
+        # 4. Confirm Move Selection
+        self._press('z')
+        time.sleep(0.8)
+
+        # 5. Handle Quantity Submenu
+        if full_restore:
+            # Navigate to 'Max'
+            pydirectinput.press('up')
+            time.sleep(0.2)
+            pydirectinput.press('right')
+            time.sleep(0.2)
+            self._press('z') # Select Max
+            time.sleep(0.4)
+            # Navigate to 'Use' and confirm
+            pydirectinput.press('down')
+            time.sleep(0.2)
+            self._press('z')
+        else:
+            # Just one more Z for single berry
+            self._press('z')
+            
+        time.sleep(2.0) # Animation delay
+        self.log(f"Slot {slot} restoration complete.")
+
+
+    def run_away(self):
+        """Navigates to the 'RUN' button with detailed logs and micro-delays to prevent input swallows"""
+        path_id = random.randint(0, 3)
+        self.log(f"ESCAPE PROTOCOL: Route {path_id}")
+        
+        # 1. Reset menu with micro-delays
+        self._press('x', duration=0.05)
+        time.sleep(0.15)
+        self._press('up', duration=0.05)
+        time.sleep(0.15)
+        self._press('left', duration=0.05)
+        time.sleep(0.15)
+
+        # 2. Routes
+        if path_id == 0: # Direct
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+        elif path_id == 1: # Inverse
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+        elif path_id == 2: # Redundant
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(0.1)
+        else: # Doubt
+            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(0.1)
+            
+        self.log("CONFIRM: Running away (Z)")
+        self._press('z')
+        
+        if random.random() > 0.6:
+            self._press('x')
+

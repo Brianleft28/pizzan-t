@@ -1,0 +1,47 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                          ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+>     def run_away(self):
+          """Navigates to the 'RUN' button with detailed logs"""
+          path_id = random.randint(0, 3)
+          self.log(f"ESCAPE PROTOCOL: Route {path_id}")
+          
+          # 1. Reset menu
+          self._press('x')
+          self._press('up')
+          self._press('left')
+  
+          # 2. Routes
+          if path_id == 0: # Direct
+              self._press('right')
+              self._press('down')
+          elif path_id == 1: # Inverse
+              self._press('down')
+              self._press('right')
+          elif path_id == 2: # Redundant
+              self._press('right')
+              self._press('down')
+              self._press('down')
+              self._press('down')
+          else: # Doubt
+              self._press('down')
+              self._press('right')
+              self._press('right')
+              self._press('right')
+              
+          self.log("CONFIRM: Running away (Z)")
+          self._press('z')
+          
+          if random.random() > 0.6:
+              self._press('x')
+
+

@@ -1,0 +1,76 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+              self.encounters = int(self.config.get("total_encounters", 0))
+              self.session_encounters = 0
+              self.session_dittos = 0
+              self.notifier = WebhookNotifier(self)
+              
+              self.mode_instance = self._initialize_mode()
+              
+              self.logger.log("---------------------------------------")
+              self.logger.log("  THE HUMANOID HUNTER v7.0 - SENTINEL ", "SUCCESS")
+              self.logger.log("---------------------------------------")
+>         except Exception as e: 
+              self.logger.log(f"Bot initialization failed: {e}", "FATAL")
+  
+      def reset_activity_timer(self):
+          self.last_activity_time = time.time()
+  
+      def _initialize_mode(self):
+          mode_name = self.config.get("mode", "horda").lower()
+          if mode_name == "horda": return HordeMode(self)
+          if mode_name == "ditto": return DittoMode(self)
+          if mode_name == "single": return SingleMode(self)
+                          }]
+                      })
+                  }
+                  files = {"file": (img_path, f, "image/png")}
+                  response = requests.post(url, data=payload, files=files, timeout=10)
+                  
+                  if response.status_code in [200, 204]:
+                      self.log("? Discord alert sent successfully!", "SUCCESS")
+                  else:
+                      self.log(f"? Discord error: {response.status_code} - {response.text}", "FATAL")
+>         except Exception as e:
+              self.log(f"? Failed to send Discord alert: {e}", "FATAL")
+  
+      def panic_stop(self):
+          """MANDATO DE SEGURIDAD: Detiene todo para proteger un Shiny"""
+          self.running = False
+          self.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "FATAL")
+          self.log("!!!   PANIC STOP: SHINY DETECTED    !!!", "FATAL")
+          self.log("!!!    MANUAL INTERVENTION REQD     !!!", "FATAL")
+          self.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "FATAL")
+          self.play_shiny_alarm()
+                  
+                  # Check de CAPTCHA de Emergencia cada 5s
+                  if time.time() - last_captcha_check > 5.0:
+                      if self.check_captcha(frame):
+                          break # Termina el bucle inmediatamente por seguridad
+                      last_captcha_check = time.time()
+                  
+                  self.check_guardian(frame)
+                  self.mode_instance.execute(frame)
+                  time.sleep(0.1)
+>             except Exception as e:
+                  self.log(f"LOOP ERROR: {e}", "FATAL")
+                  time.sleep(1.0)
+  
+      def start(self):
+          self.running = True; self.thread = Thread(target=self.loop, daemon=True); self.thread.start()
+  
+      def stop(self):
+          self.running = False; self.save_progress()
+
+

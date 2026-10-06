@@ -1,0 +1,20 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
+     | processing or it's redirected.
+
+                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+src/bot_main.py:54:            self.logger.log("  THE HUMANOID HUNTER v6.9 - SENTINEL ", "SUCCESS")
+src/bot_main.py:174:    def read_hunter_hp(self, frame_dummy=None):
+src/bot_main.py:175:        r = self.config.get("hunter_hp_region")
+src/bot_main.py:290:                            "footer": {"text": "The Humanoid Hunter v7.0"}
+src/controller.py:226:        """Heals the hunter using a Potion hotkey and optional 'Max' navigation"""
+src/controller.py:227:        self.log(f"Healing Hunter (Full: {full_heal}) using Key {key}")
+src/notifications/webhook_notifier.py:54:                            "footer": {"text": "The Humanoid Hunter v7.0"}
+

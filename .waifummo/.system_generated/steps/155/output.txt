@@ -1,0 +1,63 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual
+     | terminal processing or it's redirected.
+
+                       ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+---
+name: agy-customizations
+description: >-
+  Comprehensive guide and reference for the Antigravity Customization System.
+  Use to explain how customizations work, their loading priority, discovery mechanisms,
+  and to guide the creation of skills, rules, plugins, hooks, and MCP servers.
+---
+
+# Antigravity Customization System Guide
+
+The Antigravity Customization System allows you to tailor the agent's behavior,
+teach it new workflows, enforce guidelines, and integrate it with external
+tools. By customizing the agent, you can transition it from a general-purpose
+assistant to an expert pair programmer specialized in your project's codebase
+and processes.
+
+--------------------------------------------------------------------------------
+
+## Customization Types: Quick Reference
+
+Choose the right customization type based on your goal:
+
+Type            | Config File/Folder           | Scope                     | Best For                                                                                | Learn More
+:-------------- | :--------------------------- | :------------------------ | :-------------------------------------------------------------------------------------- | :---------
+**Rules**       | `GEMINI.md`, `AGENTS.md`     | Contextual / Hierarchical | Enforcing coding styles, API restrictions, and local guidelines.                        | [Rules Guide](./docs/rules.md)
+**Skills**      | `skills/<name>/SKILL.md`     | On-Demand (Progressive)   | Teaching the agent multi-step procedures, runbooks, and tool workflows.                 | [Skills Guide](./docs/skills.md)
+**Plugins**     | `plugins/<name>/plugin.json` | Bundle                    | Packaging related skills, rules, and MCP configs into a single unit.                    | [Plugins Guide](./docs/plugins.md)
+**Hooks**       | `hooks.json`                 | Lifecycle Event           | Running scripts/commands at specific agent lifecycle points (e.g., pre-tool execution). | [Hooks Guide](./docs/hooks.md)
+**MCP Servers** | `mcp_config.json`            | Tool Integration          | Connecting the agent to external services and custom tool providers.                    | [MCP Guide](./docs/mcp_servers.md)
+
+--------------------------------------------------------------------------------
+
+## Customization Discovery and Locations
+
+Antigravity automatically discovers your own customizations by traversing
+specific directories. Built-in customizations are not found this way: the agent
+config names the ones it mounts.
+
+### Discovery Locations
+
+1.  **Workspace Customizations** (Project-Specific):
+    *   Path: `.agents/` (or `.agent/`, `_agents/`, `_agent/`) at the root of
+        your project.
+    *   Use this to share customizations with your team by checking them into
+        version control (VCS).
+    *   The agent walks from your current working directory up to the repository
+        root (e.g., the folder containing `.git`) to find these directories.
+2.  **Directory & Project Rules** (Hierarchical):
+    *   Paths: `GEMINI.md`, `AGENTS.md`, `.agents/rules/*.md`
+    *   As you open or edit files, the agent walks up from the file's directory
+

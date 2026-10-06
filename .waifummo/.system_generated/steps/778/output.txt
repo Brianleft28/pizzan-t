@@ -1,0 +1,53 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+src/bot_main.py:336:                    self.controller._press('x')
+src/controller.py:37:    def _press(self, key, duration=None):
+src/controller.py:52:        self._press(key)
+src/controller.py:69:        self._press(retreat_dir, duration=random.uniform(0.3, 0.6))
+src/controller.py:85:            self._press(escape_dir, duration=random.uniform(2.5, 4.0))
+src/controller.py:107:        self._press(direction, duration=duration)
+src/controller.py:126:        self._press(direction, duration=duration)
+src/controller.py:133:        self._press('z')
+src/controller.py:159:        self._press('z')
+src/controller.py:165:        self._press(key)
+src/controller.py:184:        self._press('z')
+src/controller.py:202:        self._press('z')
+src/controller.py:212:            self._press('z') # Select Max
+src/controller.py:217:            self._press('z')
+src/controller.py:220:            self._press('z')
+src/controller.py:232:        self._press('x', duration=0.05)
+src/controller.py:234:        self._press('up', duration=0.05)
+src/controller.py:236:        self._press('left', duration=0.05)
+src/controller.py:241:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:242:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:244:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:245:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:247:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:248:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:249:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:250:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:252:            self._press('down', duration=0.05); time.sleep(0.1)
+src/controller.py:253:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:254:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:255:            self._press('right', duration=0.05); time.sleep(0.1)
+src/controller.py:258:        self._press('z')
+src/controller.py:261:            self._press('x')
+src/modes/base.py:153:        self.controller._press('x')
+src/modes/base.py:154:        self.controller._press('z')
+src/modes/base.py:156:        self.controller._press('x')
+src/modes/base.py:175:            self.controller._press('left', duration=0.02)
+src/modes/base.py:176:            self.controller._press('x', duration=0.02)
+src/modes/base.py:177:            self.controller._press('right', duration=0.02)
+src/modes/base.py:178:            self.controller._press('x', duration=0.02)
+src/modes/base.py:189:                    self.controller._press('z', duration=0.05)
+src/modes/base.py:190:                    self.controller._press('x', duration=0.05)
+

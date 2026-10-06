@@ -1,0 +1,32 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+    def __init__(self, config, log_callback=None):
+    def log(self, msg):
+    def _human_wait(self, min_s, max_s):
+    def key_down(self, key):
+    def key_up(self, key):
+    def _press(self, key, duration=None):
+    def use_sweet_scent(self):
+    def reset_patrol_timer(self):
+    def _handle_collision(self):
+    def search_movement(self):
+    def ditto_search_movement(self, direction):
+    def open_fight_menu(self):
+    def execute_move(self, slot):
+    def navigate_and_confirm_move(self, slot):
+    def use_ball(self, key):
+    def use_leppa_sequence(self, key):
+    def use_leppa_sequence_single(self, key, slot, full_restore=False):
+    def run_away(self):
+
+

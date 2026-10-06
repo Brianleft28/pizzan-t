@@ -1,0 +1,35 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be
+     | enabled because the console output doesn't support
+     | virtual terminal processing or it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+  main_gui.py:200:        self.web_entry = ctk.CTkEntry(t
+ab, placeholder_text="Discord URL", width=350)
+  main_gui.py:201:        self.web_entry.grid(row=0, colu
+mn=1, padx=10, pady=5, sticky="ew")
+> main_gui.py:202:        self.web_entry.insert(0, self.g
+et_config_val("discord_webhook"))
+  main_gui.py:203:
+  main_gui.py:204:        ctk.CTkLabel(tab, text="OCR Ret
+ries:", font=ctk.CTkFont(weight="bold")).grid(
+  main_gui.py:747:            config["mode"] = self.mode_
+switch.get().lower()
+  main_gui.py:748:            config["total_encounters"] 
+= int(self.count_entry.get())
+> main_gui.py:749:            config["discord_webhook"] =
+ self.web_entry.get()
+  main_gui.py:750:            config["ocr_retries"] = int
+(self.ocr_entry.get())
+  main_gui.py:751:            config["horde_size"] = int(
+self.horde_size_switch.get())
+
+

@@ -1,0 +1,41 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+          """
+          ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
+          settle_time = float(self.config.get("timing_capture_settle", 2.5))
+          spam_delay  = float(self.config.get("timing_capture_spam_delay", 0.3))
+  
+>         self.log(f"? Waiting {ball_wait}s for ball animation...", "DEBUG")
+          time.sleep(ball_wait)
+  
+          for _ in range(60):
+              if not self.bot.running:
+                  return False
+                  
+              # ACTIVE POLLING: Destruimos ventanas emergentes de stats para que el OCR pueda ver el "CAUGHT"
+              self.controller._press('x', duration=0.05)
+              time.sleep(0.05)
+              self.controller._press('x', duration=0.05)
+              
+              # Reci�n ahora tomamos captura, con el texto presumiblemente limpio
+              fb = self.observer.capture_frame()
+              m = self.bot.check_msg_area(fb)
+  
+              if m == "SUCCESS":
+                  self.log("?? Message read: CAUGHT!", "SUCCESS")
+                  time.sleep(settle_time)
+                  # Cerrar di�logos adicionales
+                  for _ in range(8):
+
+

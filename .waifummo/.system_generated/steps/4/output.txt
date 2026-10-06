@@ -1,0 +1,28 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the
+     | console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+FullName
+--------                                                              
+C:\Users\Brian\Desktop\workspace\pizzant\venv\Scripts\activate.bat    
+C:\Users\Brian\Desktop\workspace\pizzant\venv\Scripts\activate.fish   
+C:\Users\Brian\Desktop\workspace\pizzant\venv\Scripts\activate        
+C:\Users\Brian\Desktop\workspace\pizzant\venv\pyvenv.cfg              
+C:\Users\Brian\Desktop\workspace\pizzant\venv\.gitignore              
+C:\Users\Brian\Desktop\workspace\pizzant\src\modes\__pycache__\base.c.
+C:\Users\Brian\Desktop\workspace\pizzant\src\__pycache__\bot_main.cpy.
+C:\Users\Brian\Desktop\workspace\pizzant\src\modes\base.py            
+C:\Users\Brian\Desktop\workspace\pizzant\main_gui.py                  
+C:\Users\Brian\Desktop\workspace\pizzant\src\bot_main.py              
+
+

@@ -1,0 +1,48 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be
+     | enabled because the console output doesn't support
+     | virtual terminal processing or it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+diff --git a/main_gui.py b/main_gui.py
+index 1840a39..117ccfb 100644
+--- a/main_gui.py
++++ b/main_gui.py
+@@ -200,6 +200,12 @@ class ShinyHunterGUI(ctk.CTk):
+         self.web_entry = ctk.CTkEntry(tab, placeholder_text="Discord URL", width=350)
+         self.web_entry.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+         self.web_entry.insert(0, self.get_config_val("discord_webhook"))
++        
++        ctk.CTkLabel(tab, text="Webhook JWT:", font=ctk.CTkFont(weight="bold")).grid(
++            row=1, column=0, padx=10, pady=5, sticky="w")
++        self.jwt_entry = ctk.CTkEntry(tab, placeholder_text="NestJS JWT Token", width=350, show="*")
++        self.jwt_entry.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
++        self.jwt_entry.insert(0, self.get_config_val("webhook_jwt"))
+ 
+         ctk.CTkLabel(tab, text="OCR Retries:", font=ctk.CTkFont(weight="bold")).grid(
+             row=1, column=0, padx=10, pady=5, sticky="w")
+@@ -209,7 +215,7 @@ class ShinyHunterGUI(ctk.CTk):
+ 
+         ctk.CTkButton(tab, text="SAVE GENERAL CONFIG", fg_color="#1f538d",
+                        height=36, command=self.save_all).grid(
+-            row=2, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
++            row=3, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
+ 
+     def _build_horde_tab(self):
+         tab = self.tab_horde
+@@ -747,6 +753,7 @@ class ShinyHunterGUI(ctk.CTk):
+             config["mode"] = self.mode_switch.get().lower()
+             config["total_encounters"] = int(self.count_entry.get())
+             config["discord_webhook"] = self.web_entry.get()
++            config["webhook_jwt"] = self.jwt_entry.get()
+             config["ocr_retries"] = int(self.ocr_entry.get())
+             config["horde_size"] = int(self.horde_size_switch.get())
+ 
+

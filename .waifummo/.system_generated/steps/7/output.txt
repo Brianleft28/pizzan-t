@@ -1,0 +1,33 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the
+     | console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+warning: in the working copy of 'src/modes/horda.py', LF will be replaced by CRLF the next time Git touches it
+diff --git a/src/modes/horda.py b/src/modes/horda.py
+index 697f313..ba91bd3 100644
+--- a/src/modes/horda.py
++++ b/src/modes/horda.py
+@@ -20,6 +20,13 @@ class HordeMode(HuntingMode):
+ 
+         # 3. ESCANEO UNIVERSAL (MANDATO 6)
+         self.log("━━━━━ ⚔️ HORDE BATTLE ━━━━━", "PHASE")
++        
++        # Pausa extra si se caza Zorua (por animaciones de disfraz/ilusión)
++        if self.bot.config.get("mode_zorua", False):
++            z_wait = self.bot.config.get("zorua_wait", 3.0)
++            self.log(f"🦊 Modo Zorua Activo: Esperando {z_wait}s a que se asiente el disfraz...", "DEBUG")
++            time.sleep(z_wait)
++
+         f_bat = self.observer.capture_frame()
+         shiny_found, target_name, all_names, slot_id = self.bot.scan_all_potential_targets(f_bat)
+         
+

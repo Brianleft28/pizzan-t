@@ -1,0 +1,28 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+          pydirectinput.keyUp(key)
+  
+>     def _press(self, key, duration=None):
+          """Presses a key with precise timing and a mandatory human-like pause"""
+          pydirectinput.keyDown(key)
+          if duration:
+              time.sleep(duration)
+          else:
+              time.sleep(random.uniform(0.12, 0.22))
+          pydirectinput.keyUp(key)
+          # Trailing sleep to avoid "robo-speed" in menus
+          time.sleep(random.uniform(0.2, 0.35))
+  
+
+

@@ -1,0 +1,20 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't
+     | support virtual terminal processing or it's redirected.
+
+           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+    Directorio: C:\Users\Brian\Desktop\workspace\pizzant\assets\pokemmo_theme
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          2026/10/05    22:16                textures
+
+

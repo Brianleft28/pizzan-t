@@ -1,0 +1,14 @@
+
+The command exited with code 1.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
+
+                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+gh: El t�rmino "gh" no se reconoce como nombre de un cmdlet, funci�n, archivo de script o programa ejecutable.
+Compruebe la ortograf�a del nombre o, si se incluy� una ruta de acceso, compruebe que la ruta de acceso es correcta e int�ntelo de nuevo.
+

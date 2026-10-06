@@ -1,0 +1,31 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or
+     | it's redirected.
+
+                                ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+>     def is_menu_ready(self, frame):
+          r = self.config.get("button_run")
+          if not r or frame is None: return False
+          crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
+          res = self.recognizer.reader.readtext(crop)
+          txt = " ".join([rm[1].lower() for rm in res])
+          keywords = ["run", "huir", "huida", "fight", "luch", "bag", "moch", "pkmn", "poke", "ata", "batalla", "combate", "escapar"]
+          if any(k in txt for k in keywords):
+              self.reset_activity_timer() # Ver el men� es actividad
+              return True
+          return False
+  
+      def get_slot_data(self, frame, region):
+          crop = frame[region['y1']:region['y2'], region['x1']:region['x2']]
+          return self.recognizer.analyze_slot(crop)
+  
+
+

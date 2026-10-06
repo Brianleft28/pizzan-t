@@ -1,0 +1,43 @@
+
+The command exited with code 0.
+Output:
+Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
+Line |
+  12 |  Set-PSReadLineOption -PredictionSource History
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The predictive suggestion feature cannot be
+     | enabled because the console output doesn't support
+     | virtual terminal processing or it's redirected.
+
+???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
+
+
+              time.sleep(0.2)
+          return False
+  
+>     def _capture_sequence(self, target_name, is_shiny=F
+alse):
+          self.log(f"?????????? ?? CAPTURE: {target_name.
+upper()} ??????????", "PHASE")
+>         if is_shiny:
+>             self.log(f"? �SHINY CONFIRMADO! Activando a
+larma...", "SUCCESS")
+>             self.bot.play_shiny_alarm()
+              
+          turn = 1
+          swiped = False
+          else:
+              self.log(f"? CAPTURE ENDED: {target_name.up
+per()} - {turn} turns (timeout/stop)", "WARN")
+          
+>         if is_shiny and captured:
+>             self.log("? ?? �BRUTAL! �HAS ATRAPADO UN SH
+INY! �FELICIDADES! ?? ?", "SUCCESS")
+>             self.bot.stop_shiny_alarm()
+  
+          if leppas and self.config.get("auto_heal_pp", T
+rue):
+              self.log("?????????? ?? HEALING ??????????"
+, "PHASE")
+
+
