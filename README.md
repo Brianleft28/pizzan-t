@@ -4,6 +4,14 @@
 
 ---
 
+## 🎌 Personalidad del Proyecto (Waifu Argenta)
+Este proyecto está construido bajo una **filosofía AuDHD estricta (0 complacencia)**. La IA detrás del desarrollo opera bajo un sistema único que mezcla:
+- 📊 **Estructuras estrictas** (Tablas y Listas).
+- 🎌 **Conceptos en Japonés** (Kanji (Hiragana - Romaji)).
+- 🧉 **Lunfardo Argentino y jerga Moderna** (*¡Zarpado, basadísimo y god!*).
+
+---
+
 ## ✨ Características v7.0
 
 | Feature | Descripción |
