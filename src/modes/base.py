@@ -158,49 +158,44 @@ class HuntingMode:
 
     def _check_capture_result(self):
         """
-        Espera el resultado de la Pokébola con spamming activo de la interfaz para evitar UI overlap.
+        Espera el resultado de la Pokebola basandose en el estado de la UI
+        en lugar de leer texto, para evitar el cuelgue por OCR.
         """
         ball_wait   = float(self.config.get("timing_ball_wait", 0.5))
         settle_time = float(self.config.get("timing_capture_settle", 2.5))
         spam_delay  = float(self.config.get("timing_capture_spam_delay", 0.3))
 
-        self.log(f"⏳ Waiting {ball_wait}s for ball animation...", "DEBUG")
+        self.log(f"? Waiting {ball_wait}s for ball animation...", "DEBUG")
         time.sleep(ball_wait)
 
         for _ in range(60):
             if not self.bot.running:
                 return False
                 
-            # ACTIVE POLLING: Destruimos ventanas emergentes de stats para que el OCR pueda ver el "CAUGHT"
-            self.controller._press('x', duration=0.05)
-            time.sleep(0.05)
+            # Presionamos 'x' para saltar pokedex o stats de nivel
             self.controller._press('x', duration=0.05)
             
-            # Recién ahora tomamos captura, con el texto presumiblemente limpio
             fb = self.observer.capture_frame()
-            m = self.bot.check_msg_area(fb)
-
-            if m == "SUCCESS":
-                self.log("🎉 Message read: CAUGHT!", "SUCCESS")
+            
+            # 1. Si el menu de batalla vuelve a aparecer, la bola se rompio y es nuestro turno de nuevo.
+            if self.bot.is_menu_ready(fb):
+                self.log("? Ball broke free - retrying next turn.", "WARN")
+                time.sleep(0.5)
+                return False
+                
+            # 2. Si el nombre superior del enemigo desaparece de la pantalla, la batalla termino (Captura exitosa).
+            if not self.bot.check_any_name_visible(fb):
+                self.log("? Capture confirmed! Enemy name cleared from HUD.", "SUCCESS")
                 time.sleep(settle_time)
-                # Cerrar diálogos adicionales
+                # Cerrar cualquier dialogo residual (Pokedex, stats)
                 for _ in range(8):
                     self.controller._press('z', duration=0.05)
                     self.controller._press('x', duration=0.05)
                     time.sleep(0.3)
                 return True
 
-            if m == "FAILURE":
-                self.log("💨 Ball broke free — retrying next turn.", "WARN")
-                time.sleep(1.5)
-                return False
-
-            if self.bot.is_menu_ready(fb):
-                return False
-
-            time.sleep(spam_delay) # Delay del spam de captura
-
-        # TIMEOUT FIX: Si el loop terminó y no volvió el menú de batalla, deducimos captura
-        self.log("⏱️ No battle menu returned. Assuming CAUGHT due to UI overlap!", "SUCCESS")
-        return True
+            # Esperar antes de la siguiente iteracion (la bola sigue girando)
+            time.sleep(spam_delay)
+            
+        return False
 
