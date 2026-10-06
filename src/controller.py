@@ -131,7 +131,7 @@ class PokéController:
         """Press Z to enter the fight/move selection menu"""
         self.log("Opening Fight Menu (Z)")
         self._press('z')
-        time.sleep(random.uniform(0.4, 0.6))
+        time.sleep(random.uniform(0.2, 0.4))
 
     def execute_move(self, slot):
         """Navigates a 2x2 grid: 1=TL, 2=TR, 3=BL, 4=BR"""
@@ -146,7 +146,7 @@ class PokéController:
         # Reset cursor to Top-Left
         pydirectinput.press('up')
         pydirectinput.press('left')
-        time.sleep(0.2)
+        time.sleep(random.uniform(0.1, 0.2))
 
         if slot == '2': pydirectinput.press('right')
         elif slot == '3': pydirectinput.press('down')
@@ -154,16 +154,16 @@ class PokéController:
             pydirectinput.press('right')
             pydirectinput.press('down')
         
-        time.sleep(0.2)
+        time.sleep(random.uniform(0.1, 0.2))
         self.log("Confirming Move (Z)")
         self._press('z')
-        time.sleep(random.uniform(0.5, 1.0))
+        time.sleep(random.uniform(0.3, 0.6))
 
     def use_ball(self, key):
         """Use the quick-access ball (Hotkey)"""
         self.log(f"Using Pokeball Hotkey (Key {key})")
         self._press(key)
-        time.sleep(random.uniform(0.5, 1.0))
+        time.sleep(random.uniform(0.3, 0.6))
 
     def use_leppa_sequence(self, key):
         """Sequence to use Leppa Berries on slots 1, 2 and 4 (legacy/counter-based)"""
@@ -176,19 +176,19 @@ class PokéController:
         
         # 1. Use Leppa Hotkey
         pydirectinput.keyDown(key)
-        time.sleep(0.4)
+        time.sleep(random.uniform(0.1, 0.3))
         pydirectinput.keyUp(key)
-        time.sleep(1.0)
+        time.sleep(random.uniform(0.3, 0.8))
         
         # 2. Select first Pokemon (Z)
         self._press('z')
-        time.sleep(1.0)
+        time.sleep(random.uniform(0.3, 0.8))
         
         # 3. Navigate to Move Slot (1-4)
         # Reset cursor to top-left of the move list
         pydirectinput.press('up')
         pydirectinput.press('left')
-        time.sleep(0.3)
+        time.sleep(random.uniform(0.1, 0.25))
         
         slot = str(slot)
         if slot == '2': pydirectinput.press('right')
@@ -196,30 +196,30 @@ class PokéController:
         elif slot == '4': 
             pydirectinput.press('right')
             pydirectinput.press('down')
-        time.sleep(0.3)
+        time.sleep(random.uniform(0.1, 0.25))
         
         # 4. Confirm Move Selection
         self._press('z')
-        time.sleep(0.8)
+        time.sleep(random.uniform(0.2, 0.6))
 
         # 5. Handle Quantity Submenu
         if full_restore:
             # Navigate to 'Max'
             pydirectinput.press('up')
-            time.sleep(0.2)
+            time.sleep(random.uniform(0.1, 0.2))
             pydirectinput.press('right')
-            time.sleep(0.2)
+            time.sleep(random.uniform(0.1, 0.2))
             self._press('z') # Select Max
-            time.sleep(0.4)
+            time.sleep(random.uniform(0.1, 0.3))
             # Navigate to 'Use' and confirm
             pydirectinput.press('down')
-            time.sleep(0.2)
+            time.sleep(random.uniform(0.1, 0.2))
             self._press('z')
         else:
             # Just one more Z for single berry
             self._press('z')
             
-        time.sleep(2.0) # Animation delay
+        time.sleep(random.uniform(1.2, 1.8)) # Animation delay
         self.log(f"Slot {slot} restoration complete.")
 
 
@@ -230,29 +230,29 @@ class PokéController:
         
         # 1. Reset menu with micro-delays
         self._press('x', duration=0.05)
-        time.sleep(0.15)
+        time.sleep(random.uniform(0.05, 0.15))
         self._press('up', duration=0.05)
-        time.sleep(0.15)
+        time.sleep(random.uniform(0.05, 0.15))
         self._press('left', duration=0.05)
-        time.sleep(0.15)
+        time.sleep(random.uniform(0.05, 0.15))
 
         # 2. Routes
         if path_id == 0: # Direct
-            self._press('right', duration=0.05); time.sleep(0.1)
-            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
         elif path_id == 1: # Inverse
-            self._press('down', duration=0.05); time.sleep(0.1)
-            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
         elif path_id == 2: # Redundant
-            self._press('right', duration=0.05); time.sleep(0.1)
-            self._press('down', duration=0.05); time.sleep(0.1)
-            self._press('down', duration=0.05); time.sleep(0.1)
-            self._press('down', duration=0.05); time.sleep(0.1)
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
         else: # Doubt
-            self._press('down', duration=0.05); time.sleep(0.1)
-            self._press('right', duration=0.05); time.sleep(0.1)
-            self._press('right', duration=0.05); time.sleep(0.1)
-            self._press('right', duration=0.05); time.sleep(0.1)
+            self._press('down', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
+            self._press('right', duration=0.05); time.sleep(random.uniform(0.05, 0.1))
             
         self.log("CONFIRM: Running away (Z)")
         self._press('z')
