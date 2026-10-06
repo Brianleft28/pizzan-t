@@ -172,10 +172,9 @@ class HuntingMode:
                 return False
                 
             # ACTIVE POLLING: Destruimos ventanas emergentes de stats para que el OCR pueda ver el "CAUGHT"
-            self.controller._press('left', duration=0.02)
-            self.controller._press('x', duration=0.02)
-            self.controller._press('right', duration=0.02)
-            self.controller._press('x', duration=0.02)
+            self.controller._press('x', duration=0.05)
+            time.sleep(0.05)
+            self.controller._press('x', duration=0.05)
             
             # Recién ahora tomamos captura, con el texto presumiblemente limpio
             fb = self.observer.capture_frame()

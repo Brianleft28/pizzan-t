@@ -254,7 +254,10 @@ class ShinyHunterGUI(ctk.CTk):
                        command=self.stop_alarm).pack(side="left", padx=5)
 
     def _build_ditto_tab(self):
-        tab = self.tab_ditto
+        # Frame scrolleable para evitar que los configs queden fuera de pantalla
+        scroll = ctk.CTkScrollableFrame(self.tab_ditto, orientation="horizontal")
+        scroll.pack(fill="both", expand=True)
+        tab = scroll
         # Patrol Time
         ctk.CTkLabel(tab, text="Patrol Time (s):", font=ctk.CTkFont(weight="bold")).grid(
             row=0, column=0, padx=10, pady=4, sticky="w")
