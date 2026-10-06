@@ -171,30 +171,6 @@ class ShinyBot:
         crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
         return self.recognizer.check_status_sleep(crop)
 
-    def read_hunter_hp(self, frame_dummy=None):
-        r = self.config.get("hunter_hp_region")
-        if not r: return False, "??/??", 0
-        for attempt in range(4):
-            frame = self.observer.capture_frame()
-            if frame is None:
-                time.sleep(0.3)
-                continue
-            crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
-            if crop.size == 0:
-                time.sleep(0.3)
-                continue
-            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-            upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
-            res = self.recognizer.reader.readtext(upscaled)
-            txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5')
-            self.log(f"RAW HP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
-            nums = re.findall(r'(\d+)', txt)
-            if len(nums) >= 2:
-                self.reset_activity_timer() # Éxito en lectura = actividad
-                curr, total = int(nums[0]), int(nums[1])
-                return (total - curr >= 60), f"{curr}/{total}", (total - curr)
-            time.sleep(0.3)
-        return False, "??/??", 0
 
     def read_pp(self, slot_idx, move_name="Move"):
         pp_slots = self.config.get("pp_slots", {})
