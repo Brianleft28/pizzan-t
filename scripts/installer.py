@@ -39,7 +39,7 @@ def auto_sync_theme(pokemmo_dir=None):
     except Exception:
         return False
 
-    theme_source = os.path.join(os.path.dirname(__file__), "..", "assets", "pokemmo_theme")
+    theme_source = os.path.join(os.path.dirname(__file__), "..", "pizzatheme")
     theme_dest = os.path.join(pokemmo_dir, "data", "themes", "PizzantTheme")
     
     # Copiar archivos si existen en source, sino, solo actualizar el dest
@@ -74,17 +74,23 @@ def main():
     print("✨ Instalador de Tema Pizzant para PokeMMO")
     print("==============================================")
     
-    print("Arrastra la carpeta donde tienes instalado PokeMMO aqui")
-    print("(ejemplo: C:\\Program Files\\PokeMMO) y presiona Enter:")
-    pokemmo_dir = input("> ").strip('"').strip("'").strip()
-    
-    if auto_sync_theme(pokemmo_dir):
-        print("\n✅ ¡Plantilla instalada y parcheada exitosamente!")
-        print("1. Abre PokeMMO.")
-        print("2. Ve a Ajustes -> Interfaz -> Tema y selecciona 'PizzantTheme'.")
-        print("3. ¡IMPORTANTE! En Ajustes -> Video, desactiva la opcion de Fondos de Combate.")
+    # Try automatic detection first
+    if auto_sync_theme():
+        print("\n✅ ¡Plantilla detectada e instalada automáticamente!")
     else:
-        print("\n⚠️ Ocurrió un problema instalando el tema. Revisa la ruta o permisos.")
+        print("Arrastra la carpeta donde tienes instalado PokeMMO aqui")
+        print("(ejemplo: C:\\Program Files\\PokeMMO) y presiona Enter:")
+        pokemmo_dir = input("> ").strip('"').strip("'").strip()
+        
+        if auto_sync_theme(pokemmo_dir):
+            print("\n✅ ¡Plantilla instalada y parcheada exitosamente!")
+        else:
+            print("\n⚠️ Ocurrió un problema instalando el tema. Revisa la ruta o permisos.")
+            return
+
+    print("1. Abre PokeMMO.")
+    print("2. Ve a Ajustes -> Interfaz -> Tema y selecciona 'PizzantTheme'.")
+    print("3. ¡IMPORTANTE! En Ajustes -> Video, desactiva la opcion de Fondos de Combate.")
 
 if __name__ == "__main__":
     main()
