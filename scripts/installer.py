@@ -7,13 +7,13 @@ logger = logging.getLogger(__name__)
 
 def auto_sync_theme(pokemmo_dir=None):
     """
-    Sincroniza la versión del info.xml del juego con el custom theme de Pizzant.
-    Si pokemmo_dir no se proporciona, intenta buscar en ubicaciones comunes.
-    Falla silenciosamente devolviendo False si no puede hacerlo.
+    Sincroniza la versión del info.xml del custom theme con el revision.txt del juego.
+    Falla silenciosamente devolviendo False si no encuentra los archivos.
     """
     if not pokemmo_dir:
         # Rutas comunes por defecto en Windows
         common_paths = [
+            "C:\\Program Files\\PokeMMO",
             "C:\\PokeMMO",
             "D:\\PokeMMO",
             os.path.expanduser("~\\Desktop\\PokeMMO")
@@ -27,19 +27,15 @@ def auto_sync_theme(pokemmo_dir=None):
         logger.warning("[⚠️] Auto-Sync: Directorio PokeMMO no encontrado. Saltando parcheo.")
         return False
 
-    default_info_path = os.path.join(pokemmo_dir, "data", "themes", "default", "info.xml")
-    if not os.path.exists(default_info_path):
-        logger.warning("[⚠️] Auto-Sync: No se encontró el info.xml del tema default.")
+    # Extraer versión del juego usando revision.txt (la verdadera posta)
+    revision_path = os.path.join(pokemmo_dir, "revision.txt")
+    if not os.path.exists(revision_path):
+        logger.warning("[⚠️] Auto-Sync: No se encontró revision.txt en el juego.")
         return False
 
-    # Extraer versión del juego
     try:
-        tree_default = ET.parse(default_info_path)
-        root_default = tree_default.getroot()
-        version_element = root_default.find("version")
-        if version_element is None:
-            return False
-        current_version = version_element.text
+        with open(revision_path, "r", encoding="utf-8") as f:
+            current_version = f.read().strip()
     except Exception:
         return False
 
@@ -79,7 +75,7 @@ def main():
     print("==============================================")
     
     print("Arrastra la carpeta donde tienes instalado PokeMMO aqui")
-    print("(ejemplo: C:\\PokeMMO) y presiona Enter:")
+    print("(ejemplo: C:\\Program Files\\PokeMMO) y presiona Enter:")
     pokemmo_dir = input("> ").strip('"').strip("'").strip()
     
     if auto_sync_theme(pokemmo_dir):
