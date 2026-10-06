@@ -51,7 +51,7 @@ class ShinyBot:
             self.mode_instance = self._initialize_mode()
             
             self.logger.log("---------------------------------------")
-            self.logger.log("  THE HUMANOID HUNTER v6.9 - SENTINEL ", "SUCCESS")
+            self.logger.log("  THE HUMANOID HUNTER v7.0 - SENTINEL ", "SUCCESS")
             self.logger.log("---------------------------------------")
         except Exception as e: 
             self.logger.log(f"Bot initialization failed: {e}", "FATAL")

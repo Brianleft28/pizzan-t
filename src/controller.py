@@ -178,11 +178,11 @@ class PokéController:
         pydirectinput.keyDown(key)
         time.sleep(random.uniform(0.1, 0.3))
         pydirectinput.keyUp(key)
-        time.sleep(random.uniform(0.3, 0.8))
+        time.sleep(random.uniform(0.6, 0.9))
         
         # 2. Select first Pokemon (Z)
         self._press('z')
-        time.sleep(random.uniform(0.3, 0.8))
+        time.sleep(random.uniform(0.6, 1.0))
         
         # 3. Navigate to Move Slot (1-4)
         # Reset cursor to top-left of the move list
@@ -200,7 +200,7 @@ class PokéController:
         
         # 4. Confirm Move Selection
         self._press('z')
-        time.sleep(random.uniform(0.2, 0.6))
+        time.sleep(random.uniform(0.5, 0.8))
 
         # 5. Handle Quantity Submenu
         if full_restore:
