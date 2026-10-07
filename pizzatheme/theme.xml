@@ -2,4 +2,13 @@
 <themes>
     <!-- Cargamos el tema por defecto como base -->
     <include filename="default:theme.xml"/>
+    
+    <!-- Obligando al juego a usar TU fondo y no el checkerboard default -->
+    <images file="textures/login_bg.png">
+        <area name="login-background" xywh="*"/>
+    </images>
+    
+    <theme name="logingui">
+        <param name="background"><image>login-background</image></param>
+    </theme>
 </themes>

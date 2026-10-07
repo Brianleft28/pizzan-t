@@ -19,7 +19,6 @@ from src.modes.horda import HordeMode
 from src.modes.ditto import DittoMode
 from src.modes.single import SingleMode
 from src.notifications.webhook_notifier import WebhookNotifier
-from scripts.installer import auto_sync_theme
 
 class ShinyBot:
     def __init__(self, log_widget=None):
@@ -27,12 +26,6 @@ class ShinyBot:
         self.start_time = None
         self.last_activity_time = time.time()
         self._alarm_active = False
-        
-        # 0 Complacencia: Auto-Sync Theme
-        try:
-            auto_sync_theme()
-        except Exception:
-            pass
         
         self.logger = PokéLogger(log_widget)
         self.log_callback = self.logger.log
