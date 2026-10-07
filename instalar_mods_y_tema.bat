@@ -86,11 +86,14 @@ if (Test-Path $modSourceDir) {
     # Eliminar posibles versiones viejas o duplicadas
     $sourceMods = Get-ChildItem -Path $modSourceDir -File -Filter "*.mod"
     foreach ($mod in $sourceMods) {
-        $prefix = $mod.BaseName.Substring(0, [math]::Min(10, $mod.BaseName.Length))
+        # Usamos 15 caracteres o el largo completo para mayor precisión
+        $prefixLength = [math]::Min(15, $mod.BaseName.Length)
+        $prefix = $mod.BaseName.Substring(0, $prefixLength)
         Get-ChildItem -Path $modDest -Filter "$prefix*.mod" | Remove-Item -Force -ErrorAction SilentlyContinue
-        Copy-Item -Path $mod.FullName -Destination $modDest -Force
+        
+        Copy-Item -LiteralPath $mod.FullName -Destination $modDest -Force
     }
-    Write-Host "[OK] Mods copiados (y versiones antiguas depuradas)." -ForegroundColor Green
+    Write-Host "[OK] Todos los mods fueron copiados correctamente (y se depuraron duplicados locales)." -ForegroundColor Green
 } else {
     Write-Host "[!] No se encontraron mods locales para copiar." -ForegroundColor DarkYellow
 }
