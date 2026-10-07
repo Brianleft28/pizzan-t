@@ -8,7 +8,7 @@
         <area name="login-background" xywh="*"/>
     </images>
     
-    <theme name="logingui">
+    <theme name="logingui" ref="logingui">
         <param name="background"><image>login-background</image></param>
     </theme>
 </themes>
