@@ -81,10 +81,16 @@ if (-not (Test-Path $modDest)) {
     New-Item -ItemType Directory -Path $modDest | Out-Null
 }
 
-$modSource = Join-Path $scriptPath "mods\*"
-if (Test-Path (Join-Path $scriptPath "mods")) {
-    Copy-Item -Path $modSource -Destination $modDest -Force -Recurse
-    Write-Host "[OK] Mods instalados correctamente." -ForegroundColor Green
+$modSourceDir = Join-Path $scriptPath "mods"
+if (Test-Path $modSourceDir) {
+    # Eliminar posibles versiones viejas o duplicadas
+    $sourceMods = Get-ChildItem -Path $modSourceDir -File -Filter "*.mod"
+    foreach ($mod in $sourceMods) {
+        $prefix = $mod.BaseName.Substring(0, [math]::Min(10, $mod.BaseName.Length))
+        Get-ChildItem -Path $modDest -Filter "$prefix*.mod" | Remove-Item -Force -ErrorAction SilentlyContinue
+        Copy-Item -Path $mod.FullName -Destination $modDest -Force
+    }
+    Write-Host "[OK] Mods copiados (y versiones antiguas depuradas)." -ForegroundColor Green
 } else {
     Write-Host "[!] No se encontraron mods locales para copiar." -ForegroundColor DarkYellow
 }
