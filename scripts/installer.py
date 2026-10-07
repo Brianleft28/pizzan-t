@@ -39,8 +39,8 @@ def auto_sync_theme(pokemmo_dir=None):
     except Exception:
         return False
 
-    theme_source = os.path.join(os.path.dirname(__file__), "..", "pizzatheme")
-    theme_dest = os.path.join(pokemmo_dir, "data", "themes", "PizzantTheme")
+    theme_source = os.path.join(os.path.dirname(__file__), "..", "moontheme")
+    theme_dest = os.path.join(pokemmo_dir, "data", "themes", "MoonTheme")
     
     # Copiar archivos si existen en source, sino, solo actualizar el dest
     try:
@@ -52,18 +52,18 @@ def auto_sync_theme(pokemmo_dir=None):
         pass
 
     # Parchear XML con la versión correcta en el destino
-    pizzant_info_path = os.path.join(theme_dest, "info.xml")
-    if os.path.exists(pizzant_info_path):
+    moon_info_path = os.path.join(theme_dest, "info.xml")
+    if os.path.exists(moon_info_path):
         try:
-            tree_pizzant = ET.parse(pizzant_info_path)
-            root_pizzant = tree_pizzant.getroot()
-            p_version = root_pizzant.find("version")
+            tree_moon = ET.parse(moon_info_path)
+            root_moon = tree_moon.getroot()
+            p_version = root_moon.find("version")
             if p_version is not None:
                 p_version.text = current_version
             else:
-                new_v = ET.SubElement(root_pizzant, "version")
+                new_v = ET.SubElement(root_moon, "version")
                 new_v.text = current_version
-            tree_pizzant.write(pizzant_info_path, encoding="utf-8", xml_declaration=True)
+            tree_moon.write(moon_info_path, encoding="utf-8", xml_declaration=True)
             return True
         except Exception:
             return False
@@ -71,7 +71,7 @@ def auto_sync_theme(pokemmo_dir=None):
 
 def main():
     print("==============================================")
-    print("✨ Instalador de Tema Pizzant para PokeMMO")
+    print("✨ Instalador de Tema Moon para PokeMMO")
     print("==============================================")
     
     # Try automatic detection first
@@ -89,7 +89,7 @@ def main():
             return
 
     print("1. Abre PokeMMO.")
-    print("2. Ve a Ajustes -> Interfaz -> Tema y selecciona 'PizzantTheme'.")
+    print("2. Ve a Ajustes -> Interfaz -> Tema y selecciona 'MoonTheme'.")
     print("3. ¡IMPORTANTE! En Ajustes -> Video, desactiva la opcion de Fondos de Combate.")
 
 if __name__ == "__main__":
