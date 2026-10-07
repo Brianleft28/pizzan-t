@@ -8,7 +8,7 @@ exit /b
 $ErrorActionPreference = 'Stop'
 
 Write-Host "==============================================" -ForegroundColor Cyan
-Write-Host "   Instalador Definitivo: Mods y Tema Moon   " -ForegroundColor Cyan
+Write-Host "   Instalador Definitivo: Mods y Pizza Theme     " -ForegroundColor Cyan
 Write-Host "==============================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -38,19 +38,19 @@ Write-Host "[OK] PokeMMO encontrado en: " -NoNewline
 Write-Host $target -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "-> Instalando Tema Moon..." -ForegroundColor Yellow
-$themeDest = Join-Path $target 'data\themes\MoonTheme'
+Write-Host "-> Instalando Pizza Theme..." -ForegroundColor Yellow
+$themeDest = Join-Path $target 'data\themes\pizzatheme'
 if (Test-Path $themeDest) {
     Remove-Item -Recurse -Force $themeDest
 }
 
 $scriptPath = (Get-Location).Path
-$themeSource = Join-Path $scriptPath "moontheme"
+$themeSource = Join-Path $scriptPath "pizzatheme"
 
 if (Test-Path $themeSource) {
     Copy-Item -Path $themeSource -Destination $themeDest -Recurse -Force
 } else {
-    Write-Host "[!] No se encontro la carpeta 'moontheme' localmente." -ForegroundColor DarkYellow
+    Write-Host "[!] No se encontro la carpeta 'pizzatheme' localmente." -ForegroundColor DarkYellow
 }
 
 Write-Host "-> Parcheando version del tema XML..." -ForegroundColor Yellow
