@@ -45,58 +45,50 @@ foreach ($target in $targets) {
     $revision = Get-Content $revPath -Raw
     $revision = $revision.Trim()
 
-    Write-Host "-> Instalando Pizza Theme..." -ForegroundColor Yellow
-    $themeDest = Join-Path $target 'data\themes\pizzatheme'
-    if (Test-Path $themeDest) {
-        Remove-Item -Recurse -Force $themeDest
+    Write-Host "-> Limpiando instalacion antigua del tema (Legacy)..." -ForegroundColor Yellow
+    $legacyThemeDest = Join-Path $target 'data\themes\pizzatheme'
+    if (Test-Path $legacyThemeDest) {
+        Remove-Item -Recurse -Force $legacyThemeDest
+        Write-Host "[OK] Carpeta antigua en data\themes\pizzatheme eliminada." -ForegroundColor Green
     }
 
-    $themeSource = Join-Path $scriptPath "pizzatheme"
-    if (Test-Path $themeSource) {
-        Copy-Item -Path $themeSource -Destination $themeDest -Recurse -Force
-    } else {
-        Write-Host "[!] No se encontro la carpeta 'pizzatheme' localmente." -ForegroundColor DarkYellow
+    Write-Host "-> Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
+    $modDestDir = Join-Path $target 'data\mods'
+    if (-not (Test-Path $modDestDir)) {
+        New-Item -ItemType Directory -Path $modDestDir | Out-Null
     }
-
-    Write-Host "-> Parcheando version del tema XML..." -ForegroundColor Yellow
-    $infoXmlPath = Join-Path $themeDest 'info.xml'
-    if (Test-Path $infoXmlPath) {
-        [xml]$xml = Get-Content $infoXmlPath
-        if ($xml.theme.version) {
-            $xml.theme.version = $revision
+    
+    $modThemeFile = Join-Path $modDestDir 'PizzaTheme.mod'
+    $pythonPath = "python"
+    $buildScript = Join-Path $scriptPath "scripts\build_mod.py"
+    
+    if (Test-Path $buildScript) {
+        & $pythonPath $buildScript $modThemeFile
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "[OK] PizzaTheme.mod creado exitosamente en $modDestDir" -ForegroundColor Green
         } else {
-            $vNode = $xml.CreateElement('version')
-            $vNode.InnerText = $revision
-            $xml.theme.AppendChild($vNode) | Out-Null
+            Write-Host "[!] Hubo un error al compilar PizzaTheme.mod." -ForegroundColor Red
         }
-        $xml.Save($infoXmlPath)
-        Write-Host "[OK] Tema parcheado a la version: " -NoNewline
-        Write-Host $revision -ForegroundColor Green
     } else {
-        Write-Host "[!] No se encontro info.xml en el tema." -ForegroundColor DarkYellow
+        Write-Host "[!] No se encontro el script de construccion scripts\build_mod.py" -ForegroundColor Red
     }
 
-    Write-Host "-> Instalando Mods..." -ForegroundColor Yellow
-    $modDest = Join-Path $target 'data\mods'
-    if (-not (Test-Path $modDest)) {
-        New-Item -ItemType Directory -Path $modDest | Out-Null
-    }
-
+    Write-Host "-> Instalando otros Mods..." -ForegroundColor Yellow
     $modSourceDir = Join-Path $scriptPath "mods"
     if (Test-Path $modSourceDir) {
         $sourceMods = Get-ChildItem -Path $modSourceDir -File -Filter "*.mod"
         foreach ($mod in $sourceMods) {
             $prefixLength = [math]::Min(15, $mod.BaseName.Length)
             $prefix = $mod.BaseName.Substring(0, $prefixLength)
-            Get-ChildItem -Path $modDest -Filter "$prefix*.mod" | Remove-Item -Force -ErrorAction SilentlyContinue
-            Copy-Item -LiteralPath $mod.FullName -Destination $modDest -Force
+            Get-ChildItem -Path $modDestDir -Filter "$prefix*.mod" | Remove-Item -Force -ErrorAction SilentlyContinue
+            Copy-Item -LiteralPath $mod.FullName -Destination $modDestDir -Force
         }
         Write-Host "[OK] Todos los mods fueron copiados correctamente." -ForegroundColor Green
     } else {
-        Write-Host "[!] No se encontraron mods locales para copiar." -ForegroundColor DarkYellow
+        Write-Host "[!] No se encontraron mods locales adicionales para copiar." -ForegroundColor DarkYellow
     }
     Write-Host ""
 }
 
-Write-Host "[Exito] Todo listo! Ya podes abrir PokeMMO y seleccionar el tema/mods en los Ajustes." -ForegroundColor Green
+Write-Host "[Exito] Todo listo! Ya podes abrir PokeMMO y habilitar el PizzaTheme en Mod Management." -ForegroundColor Green
 Write-Host ""
