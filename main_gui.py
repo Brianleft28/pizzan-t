@@ -218,12 +218,15 @@ class ShinyHunterGUI(ctk.CTk):
             row=3, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
 
     def _build_horde_tab(self):
-        tab = self.tab_horde
+        scroll = ctk.CTkScrollableFrame(self.tab_horde, orientation="vertical")
+        scroll.pack(fill="both", expand=True)
+        tab = scroll
+
         ctk.CTkLabel(tab, text="Horde Size:", font=ctk.CTkFont(weight="bold")).grid(
-            row=0, column=0, padx=10, pady=10, sticky="w")
+            row=0, column=0, padx=10, pady=5, sticky="w")
         self.horde_size_switch = ctk.CTkSegmentedButton(
             tab, values=["3", "5"], command=self.save_all)
-        self.horde_size_switch.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+        self.horde_size_switch.grid(row=0, column=1, padx=10, pady=5, sticky="w")
         self.horde_size_switch.set(self.get_config_val("horde_size", "5"))
 
         # ZORUA CONFIG
@@ -238,9 +241,34 @@ class ShinyHunterGUI(ctk.CTk):
         self.zorua_wait_entry.grid(row=1, column=2, padx=10, pady=5, sticky="w")
         self.zorua_wait_entry.insert(0, self.get_config_val("zorua_wait", "3.0"))
 
+        # SWEET SCENT & LEPPA KEYS
+        ctk.CTkLabel(tab, text="Sweet Scent Key:", font=ctk.CTkFont(weight="bold")).grid(
+            row=2, column=0, padx=10, pady=5, sticky="w")
+        self.horde_sweet_key = ctk.CTkEntry(tab, width=40)
+        self.horde_sweet_key.grid(row=2, column=1, padx=10, pady=5, sticky="w")
+        self.horde_sweet_key.insert(0, self.get_config_val("horde_key_sweet_scent", "5"))
+
+        ctk.CTkLabel(tab, text="Leppa Key:", font=ctk.CTkFont(weight="bold")).grid(
+            row=2, column=2, padx=10, pady=5, sticky="w")
+        self.horde_leppa_key = ctk.CTkEntry(tab, width=40)
+        self.horde_leppa_key.grid(row=2, column=3, padx=10, pady=5, sticky="w")
+        self.horde_leppa_key.insert(0, self.get_config_val("horde_key_leppa", "4"))
+
+        ctk.CTkLabel(tab, text="Pokémon Slot (1-6):", font=ctk.CTkFont(weight="bold")).grid(
+            row=3, column=0, padx=10, pady=5, sticky="w")
+        self.horde_leppa_slot = ctk.CTkEntry(tab, width=40)
+        self.horde_leppa_slot.grid(row=3, column=1, padx=10, pady=5, sticky="w")
+        self.horde_leppa_slot.insert(0, self.get_config_val("horde_slot_sweet_scent", "1"))
+
+        ctk.CTkLabel(tab, text="Max PP (Sweet Scent):", font=ctk.CTkFont(weight="bold")).grid(
+            row=3, column=2, padx=10, pady=5, sticky="w")
+        self.pp_sweet_entry = ctk.CTkEntry(tab, width=40)
+        self.pp_sweet_entry.grid(row=3, column=3, padx=10, pady=5, sticky="w")
+        self.pp_sweet_entry.insert(0, self.get_config_val("pp_max_sweet_scent", "32"))
+
         ctk.CTkButton(tab, text="SAVE HORDE CONFIG", fg_color="#1f538d",
                        height=36, command=self.save_all).grid(
-            row=2, column=0, columnspan=3, padx=20, pady=8, sticky="ew")
+            row=4, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
 
         ctk.CTkLabel(tab, text="Alarm Testing:", font=ctk.CTkFont(weight="bold")).grid(
             row=3, column=0, padx=10, pady=8, sticky="w")
@@ -266,7 +294,7 @@ class ShinyHunterGUI(ctk.CTk):
         self.ditto_path_entry.insert(0, self.get_config_val("ditto_patrol_time", "2.5"))
 
         # Attack (Swipe)
-        ctk.CTkLabel(tab, text="1. Attack (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(
+        ctk.CTkLabel(tab, text="1. Attack (Key/Name/PP):", font=ctk.CTkFont(weight="bold")).grid(
             row=1, column=0, padx=10, pady=4, sticky="w")
         self.ditto_atk_entry = ctk.CTkEntry(tab, width=40)
         self.ditto_atk_entry.grid(row=1, column=1, padx=10, pady=4, sticky="w")
@@ -274,9 +302,13 @@ class ShinyHunterGUI(ctk.CTk):
         self.ditto_atk_name = ctk.CTkEntry(tab, width=120)
         self.ditto_atk_name.grid(row=1, column=2, padx=10, pady=4, sticky="w")
         self.ditto_atk_name.insert(0, self.get_config_val("ditto_name_attack", "False Swipe"))
+        
+        self.pp_swipe_entry = ctk.CTkEntry(tab, width=40, placeholder_text="PP")
+        self.pp_swipe_entry.grid(row=1, column=3, padx=10, pady=4, sticky="w")
+        self.pp_swipe_entry.insert(0, self.get_config_val("pp_max_swipe", "40"))
 
         # Sleep (Spora)
-        ctk.CTkLabel(tab, text="2. Sleep (Key/Name):", font=ctk.CTkFont(weight="bold")).grid(
+        ctk.CTkLabel(tab, text="2. Sleep (Key/Name/PP):", font=ctk.CTkFont(weight="bold")).grid(
             row=2, column=0, padx=10, pady=4, sticky="w")
         self.ditto_slp_entry = ctk.CTkEntry(tab, width=40)
         self.ditto_slp_entry.grid(row=2, column=1, padx=10, pady=4, sticky="w")
@@ -284,6 +316,10 @@ class ShinyHunterGUI(ctk.CTk):
         self.ditto_slp_name = ctk.CTkEntry(tab, width=120)
         self.ditto_slp_name.grid(row=2, column=2, padx=10, pady=4, sticky="w")
         self.ditto_slp_name.insert(0, self.get_config_val("ditto_name_sleep", "Spore"))
+
+        self.pp_spore_entry = ctk.CTkEntry(tab, width=40, placeholder_text="PP")
+        self.pp_spore_entry.grid(row=2, column=3, padx=10, pady=4, sticky="w")
+        self.pp_spore_entry.insert(0, self.get_config_val("pp_max_spore", "15"))
 
         # Balls & Utils
         ctk.CTkLabel(tab, text="3. Ball Hotkey:", font=ctk.CTkFont(weight="bold")).grid(
@@ -765,6 +801,12 @@ class ShinyHunterGUI(ctk.CTk):
                 config["mode_zorua"] = bool(self.mode_zorua_check.get())
                 config["zorua_wait"] = float(self.zorua_wait_entry.get())
 
+            if hasattr(self, 'horde_sweet_key'):
+                config["horde_key_sweet_scent"] = self.horde_sweet_key.get()
+                config["horde_key_leppa"] = self.horde_leppa_key.get()
+                config["horde_slot_sweet_scent"] = self.horde_leppa_slot.get()
+                config["pp_max_sweet_scent"] = self.pp_sweet_entry.get()
+
             # Ditto Settings
             config["ditto_patrol_time"] = float(self.ditto_path_entry.get())
             config["ditto_key_attack"] = self.ditto_atk_entry.get()
@@ -774,6 +816,10 @@ class ShinyHunterGUI(ctk.CTk):
             config["ditto_key_ball"] = self.ditto_ball_entry.get()
             config["ditto_key_potion"] = self.potion_key_entry.get()
             config["ditto_key_leppa"] = self.leppa_key_entry.get()
+            
+            if hasattr(self, 'pp_spore_entry'):
+                config["pp_max_spore"] = self.pp_spore_entry.get()
+                config["pp_max_swipe"] = self.pp_swipe_entry.get()
             config["auto_heal_hp"] = bool(self.heal_hp_check.get())
             config["auto_heal_pp"] = bool(self.heal_pp_check.get())
 

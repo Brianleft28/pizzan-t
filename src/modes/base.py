@@ -98,10 +98,12 @@ class HuntingMode:
             if mv_s:
                 self.controller.open_fight_menu()
                 time.sleep(0.6)
-                pp_curr, nr = self.bot.read_pp(mv_s, mv_n)
                 
-                if nr: 
-                    leppas.add((mv_s, True))
+                tracker_key = "swipe" if turn == 1 else "spore"
+                pp_curr = self.bot.pp_tracker.get_pp(tracker_key)
+                
+                if pp_curr <= 1: 
+                    leppas.add((mv_s, tracker_key))
                     self.log(f"[💊] PP for {mv_n} is {pp_curr}. Adding to restoration queue.", "HEAL")
 
                 if pp_curr == 0:
@@ -110,7 +112,8 @@ class HuntingMode:
 
                 if mv_s:
                     self.controller.navigate_and_confirm_move(mv_s)
-                    if mv_n == self.config.get("ditto_name_attack", "Swipe"):
+                    self.bot.pp_tracker.decrement_pp(tracker_key)
+                    if turn == 1:
                         swiped = True
                     time.sleep(2.0)
                     while self.bot.is_menu_ready(self.observer.capture_frame()) and self.bot.running:
@@ -145,7 +148,7 @@ class HuntingMode:
             self.bot.reset_activity_timer()
             self.log(f"Restoring {len(leppas)} move(s) from PP queue...", "HEAL")
             for slot_data in list(leppas):
-                self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), slot_data[0], slot_data[1])
+                self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), slot_data[0], True); self.bot.pp_tracker.restore_pp(slot_data[1])
                 time.sleep(1.0)
 
         # Limpieza final por si quedó algún diálogo abierto

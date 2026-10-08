@@ -14,6 +14,8 @@ from src.recognizer import PokéRecognizer
 from src.controller import PokéController
 from src.logger import PokéLogger
 
+from src.pp_tracker import PPTracker
+
 # Importar los modos
 from src.modes.horda import HordeMode
 from src.modes.ditto import DittoMode
@@ -40,6 +42,7 @@ class ShinyBot:
             self.session_encounters = 0
             self.session_dittos = 0
             self.notifier = WebhookNotifier(self)
+            self.pp_tracker = PPTracker(self.log_callback)
             
             self.mode_instance = self._initialize_mode()
             
@@ -164,36 +167,6 @@ class ShinyBot:
         crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
         return self.recognizer.check_status_sleep(crop)
 
-
-    def read_pp(self, slot_idx, move_name="Move"):
-        pp_slots = self.config.get("pp_slots", {})
-        slot_key = f"slot_{slot_idx}"
-        if slot_key not in pp_slots: return 99, False
-        r = pp_slots[slot_key]
-        for attempt in range(4):
-            frame = self.observer.capture_frame()
-            if frame is None:
-                time.sleep(0.3)
-                continue
-            crop = frame[r['y1']:r['y2'], r['x1']:r['x2']]
-            if crop.size == 0:
-                time.sleep(0.3)
-                continue
-            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-            upscaled = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
-            res = self.recognizer.reader.readtext(upscaled)
-            txt = "".join([rm[1] for rm in res]).upper().replace('O', '0').replace('I', '1').replace('S', '5').replace('B', '8')
-            self.log(f"RAW PP OCR [Att {attempt+1}]: '{txt}'", "DEBUG")
-            nums = re.findall(r'(\d+)', txt)
-            if len(nums) >= 2:
-                self.reset_activity_timer() # Éxito en lectura = actividad
-                curr, total = int(nums[0]), int(nums[1])
-                
-                # MANDATO: Encolar si los PP caen al umbral (1 por defecto)
-                threshold = self.config.get("leppa_threshold", 1)
-                return curr, (curr <= threshold)
-            time.sleep(0.3)
-        return 99, False
 
     def check_msg_area(self, frame):
         r = self.config.get("battle_msg_region")

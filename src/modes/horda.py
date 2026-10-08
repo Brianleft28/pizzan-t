@@ -7,19 +7,31 @@ class HordeMode(HuntingMode):
         super().__init__(bot)
 
     def execute(self, frame):
-        # 1. Mapa — usar Sweet Scent
+        # 1. Mapa - usar Sweet Scent o curarlo
         if not self.bot.is_menu_ready(frame) and not self.bot.check_any_name_visible(frame):
-            self.log("━━━━━ 🌺 SWEET SCENT ━━━━━", "PHASE")
+            pp = self.bot.pp_tracker.get_pp("sweet_scent")
+            if pp <= 0 and self.bot.config.get("auto_heal_pp", True):
+                self.log("🧰 🧪 RESTORING SWEET SCENT PP 🧪 🧰", "HEAL")
+                # En horda usamos leppa_key_horde y slot designado (usualmente slot 1 de la party tiene el sweet scent)
+                leppa_key = self.bot.config.get("horde_key_leppa", "4")
+                slot = self.bot.config.get("horde_slot_sweet_scent", "1")
+                self.controller.use_leppa_sequence_single(leppa_key, slot, True)
+                self.bot.pp_tracker.restore_pp("sweet_scent")
+                time.sleep(2.0)
+                return
+
+            self.log("🌺 ✨ SWEET SCENT ✨ 🌺", "PHASE")
             self.controller.use_sweet_scent()
+            self.bot.pp_tracker.decrement_pp("sweet_scent")
             time.sleep(5.0)
             return
 
-        # 2. Batalla — esperar menú
+        # 2. Batalla - esperar menú
         if not self.bot.is_menu_ready(frame):
             if not self._wait_for_menu(): return
 
         # 3. ESCANEO UNIVERSAL (MANDATO 6)
-        self.log("━━━━━ ⚔️ HORDE BATTLE ━━━━━", "PHASE")
+        self.log("⚔️ 🐺 HORDE BATTLE 🐺 ⚔️", "PHASE")
         
         # Pausa extra si se caza Zorua (por animaciones de disfraz/ilusión)
         if self.bot.config.get("mode_zorua", False):
@@ -33,11 +45,11 @@ class HordeMode(HuntingMode):
         # Log compacto del scan
         preview = ", ".join([n.upper() for n in all_names[:3]])
         suffix = "..." if len(all_names) > 3 else ""
-        self.log(f"Scan: {len(all_names)} target(s) → {preview}{suffix}", "BATTLE")
+        self.log(f"Scan: {len(all_names)} target(s)   {preview}{suffix}", "BATTLE")
 
         if shiny_found:
-            self.log(f"━━━━━ ✨ SHINY IN HORDE! ━━━━━", "PHASE")
-            self.log(f"✨ SHINY: {target_name.upper()} (Slot: {slot_id}) ✨", "SUCCESS")
+            self.log(f"✨ 🚨 SHINY IN HORDE! 🚨 ✨", "PHASE")
+            self.log(f"💎 SHINY: {target_name.upper()} (Slot: {slot_id}) 💎", "SUCCESS")
             cv2.imwrite("shiny_detected.png", f_bat)
             self.bot.send_discord_alert("HORDE", f"SHINY {target_name}!", "shiny_detected.png")
             self.bot.panic_stop()
