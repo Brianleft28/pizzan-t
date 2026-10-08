@@ -1,2 +1,0 @@
-Created file file:///C:/Users/Brian/Desktop/workspace/pizzant/assets/pokemmo_theme/info.xml with requested content.
-If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.

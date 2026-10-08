@@ -1,18 +1,0 @@
-
-The command exited with code 0.
-Output:
-Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
-Line |
-  12 |  Set-PSReadLineOption -PredictionSource History
-     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal
-     | processing or it's redirected.
-
-                           ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
-
-warning: in the working copy of 'scripts/installer.py', LF will be replaced by CRLF the next time Git touches it
-[main 6abb13c] fix: Resolve auto-sync warnings by reading revision.txt and scanning Program Files
- 1 file changed, 10 insertions(+), 14 deletions(-)
-To https://github.com/Brianleft28/pizzan-t
-   d584472..6abb13c  main -> main
-

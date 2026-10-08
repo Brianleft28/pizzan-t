@@ -1,3 +1,0 @@
-Created file file:///C:/Users/Brian/.gemini/antigravity-cli/brain/dab6a3d4-72ff-45ea-898a-cdc9ce4a7ca1/plan_leppa_speed.md with requested content.
-If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
-Note: You have just created an artifact and requested user feedback. Stop calling tools to end your turn, and allow the user to review the artifact, approve it, or provide feedback

@@ -1,16 +1,0 @@
-
-The command exited with code 0.
-Output:
-Set-PSReadLineOption: C:\Users\Brian\Documents\PowerShell\Microsoft.PowerShell_profile.ps1:12
-Line |
-  12 |  Set-PSReadLineOption -PredictionSource History
-     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     | The predictive suggestion feature cannot be enabled because the console output doesn't support virtual terminal processing or it's redirected.
-
-                                                                     ???? Bienvenido, Master! Tu entorno PowerShell est� listo para la magia
-
-[main 64e7ac2] fix: overworld spinning bug after capture and add horizontal scroll to ditto tab
- 2 files changed, 7 insertions(+), 5 deletions(-)
-To https://github.com/Brianleft28/pizzan-t
-   e93d866..64e7ac2  main -> main
-
