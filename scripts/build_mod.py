@@ -30,7 +30,7 @@ def build_mod(target_path: str):
 
         for root, dirs, files in os.walk(PIZZA_THEME_DIR):
             for file in files:
-                if file in ["info.xml", "theme.xml"] and Path(root) == PIZZA_THEME_DIR:
+                if file == "info.xml" and Path(root) == PIZZA_THEME_DIR:
                     continue 
                 
                 file_path = Path(root) / file
