@@ -52,28 +52,12 @@ foreach ($target in $targets) {
         Write-Host "[OK] Carpeta antigua en data\themes\pizzatheme eliminada." -ForegroundColor Green
     }
 
-    Write-Host "-> Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
+    Write-Host "-> Instalando Mods (incluyendo Pizza Theme)..." -ForegroundColor Yellow
     $modDestDir = Join-Path $target 'data\mods'
     if (-not (Test-Path $modDestDir)) {
         New-Item -ItemType Directory -Path $modDestDir | Out-Null
     }
-    
-    $modThemeFile = Join-Path $modDestDir 'PizzaTheme.mod'
-    $pythonPath = "python"
-    $buildScript = Join-Path $scriptPath "scripts\build_mod.py"
-    
-    if (Test-Path $buildScript) {
-        & $pythonPath $buildScript $modThemeFile
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "[OK] PizzaTheme.mod creado exitosamente en $modDestDir" -ForegroundColor Green
-        } else {
-            Write-Host "[!] Hubo un error al compilar PizzaTheme.mod." -ForegroundColor Red
-        }
-    } else {
-        Write-Host "[!] No se encontro el script de construccion scripts\build_mod.py" -ForegroundColor Red
-    }
 
-    Write-Host "-> Instalando otros Mods..." -ForegroundColor Yellow
     $modSourceDir = Join-Path $scriptPath "mods"
     if (Test-Path $modSourceDir) {
         $sourceMods = Get-ChildItem -Path $modSourceDir -File -Filter "*.mod"
