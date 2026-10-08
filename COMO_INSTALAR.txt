@@ -1,24 +1,25 @@
 ==================================================
- GUIA DE INSTALACION - PIZZA THEME & MODS
+ GUIA DE INSTALACION - PIZZA THEME
 ==================================================
 
-¡Hola! Gracias por descargar el PizzaTheme y los mods.
-Para que tu compu esté 100% segura, usamos el método de 
-instalación oficial de PokeMMO. 
+¡Hola! Gracias por descargar el PizzaTheme.
+Ahora la instalación es mucho más limpia y segura,
+usando la arquitectura de Mods oficial de PokeMMO.
 
 Sigue estos pasos simples:
 
-1. En este ZIP vas a encontrar dos carpetas: "mods" y "themes".
-2. Copia ambas carpetas (mods y themes).
-3. Pégalas en la carpeta principal de tu juego PokeMMO (normalmente "C:\Program Files\PokeMMO" o donde lo hayas instalado). Si te pide combinar o reemplazar carpetas, dile que sí.
+1. Ejecuta el archivo "instalar_pizza_theme.bat".
+   Esto construirá automáticamente tu tema como Mod y lo pondrá
+   en la carpeta data/mods de tu juego, limpiando cualquier archivo viejo.
+
+(Si en lugar del repositorio descargaste el archivo .mod suelto):
+1. Copia el archivo "PizzaTheme.mod".
+2. Pégalo en tu carpeta de PokeMMO dentro de "data\mods\".
+3. Si tenías una carpeta vieja en "data\themes\pizzatheme", ¡bórrala!
+
 4. Abre el juego.
-5. Ve a "Administración de Mods" y activa los mods.
-6. Ve a "Opciones" -> "Interfaz" y selecciona "PizzaTheme" en la lista de temas.
-7. ¡Reinicia el juego y listo!
+5. Ve a "Administración de Mods" en el menú.
+6. Marca la casilla de "PizzaTheme" para activarlo.
+7. Guarda y reinicia el juego cuando te lo pida.
 
-NOTA PARA USUARIOS VIEJOS: Si ya tenías el tema viejo, asegúrate de borrar la carpeta "pizzatheme" que tenías en "data/themes" antes de hacer esto.
-
-NOTA: El "PizzaTheme" ahora es nativo.
-No necesitas meterte en las carpetas del sistema ni ejecutar scripts raros.
-
-¡Disfruta!
+¡Disfruta sin crasheos!

@@ -73,15 +73,14 @@ pip install -r requirements.txt
 
 ### 5. Instalar Tema Visual (Requisito Obligatorio)
 
-El bot usa visin artificial calibrada para una **plantilla especfica** y requiere que los fondos de combate estn desactivados.
+El bot usa visión artificial calibrada para una **plantilla específica** y requiere que los fondos de combate estén desactivados. El tema ahora está estructurado de forma moderna como un Mod (.mod).
 
-1. Coloca los archivos de tu tema dentro de `assets/pokemmo_theme/`
-2. Ejecuta el archivo instalador:
+1. Ejecuta el archivo instalador rápido desde la raíz del proyecto:
 ```powershell
-.\install_theme.bat
+.\instalar_pizza_theme.bat
 ```
-3. Dentro de PokMMO, ve a **Ajustes -^> Interfaz -^> Tema** y elige `PizzantTheme`.
-4. En **Ajustes -^> Video**, **desactiva** la opcin de fondos de combate para que el OCR funcione.
+2. Dentro de PokéMMO, ve a **Administración de Mods** y activa `PizzaTheme`.
+3. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR funcione.
 
 ### 6. Iniciar el bot
 
@@ -149,6 +148,8 @@ Cada botón abre una pantalla de selección: arrastrá para marcar la región y 
 
 ```
 pizzan-t/
+├─ instalar_pizza_theme.bat # Instalador del tema (.mod format)
+├─ pizzatheme/          # Archivos crudos del tema visual
 ├── main_gui.py          # Interfaz gráfica (CustomTkinter)
 ├── config.json          # Configuración y calibración (auto-generado)
 ├── selector.py          # Herramienta de calibración de regiones
