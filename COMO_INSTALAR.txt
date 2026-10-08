@@ -8,14 +8,17 @@ instalación oficial de PokeMMO.
 
 Sigue estos pasos simples:
 
-1. Abre el PokeMMO e inicia sesión normalmente.
-2. En el menú principal, busca el botón de "Administración de Mods" (Mod Management).
-3. Haz clic en "Importar Mod" (Import Mod).
-4. Selecciona TODOS los archivos ".mod" que vienen en esta carpeta (puedes seleccionarlos de a uno o todos juntos dependiendo de tu PC).
-5. Asegúrate de marcarlos con la palomita (checkmark) para activarlos.
-6. ¡Reinicia el juego y listo!
+1. En este ZIP vas a encontrar dos carpetas: "mods" y "themes".
+2. Copia ambas carpetas (mods y themes).
+3. Pégalas en la carpeta principal de tu juego PokeMMO (normalmente "C:\Program Files\PokeMMO" o donde lo hayas instalado). Si te pide combinar o reemplazar carpetas, dile que sí.
+4. Abre el juego.
+5. Ve a "Administración de Mods" y activa los mods.
+6. Ve a "Opciones" -> "Interfaz" y selecciona "PizzaTheme" en la lista de temas.
+7. ¡Reinicia el juego y listo!
 
-NOTA: El "PizzaTheme" ahora funciona como un Mod visual.
+NOTA PARA USUARIOS VIEJOS: Si ya tenías el tema viejo, asegúrate de borrar la carpeta "pizzatheme" que tenías en "data/themes" antes de hacer esto.
+
+NOTA: El "PizzaTheme" ahora es nativo.
 No necesitas meterte en las carpetas del sistema ni ejecutar scripts raros.
 
 ¡Disfruta!

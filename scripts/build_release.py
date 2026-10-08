@@ -13,8 +13,6 @@ def build_release():
     with zipfile.ZipFile(RELEASE_ZIP, 'w', zipfile.ZIP_DEFLATED) as zipf:
         if INSTRUCTIONS.exists():
             zipf.write(INSTRUCTIONS, "COMO_INSTALAR.txt")
-        else:
-            print("[!] Advertencia: No se encontro COMO_INSTALAR.txt")
             
         if MODS_DIR.exists():
             for root, dirs, files in os.walk(MODS_DIR):
@@ -22,8 +20,14 @@ def build_release():
                     if file.endswith(".mod"):
                         file_path = Path(root) / file
                         zipf.write(file_path, f"mods/{file}")
-        else:
-            print("[!] Advertencia: No se encontro la carpeta mods/")
+                        
+        PIZZA_THEME_DIR = WORKSPACE_DIR / "pizzatheme"
+        if PIZZA_THEME_DIR.exists():
+            for root, dirs, files in os.walk(PIZZA_THEME_DIR):
+                for file in files:
+                    file_path = Path(root) / file
+                    rel_path = file_path.relative_to(PIZZA_THEME_DIR)
+                    zipf.write(file_path, f"themes/PizzaTheme/{rel_path}")
             
     print("[OK] Release generado exitosamente. Listo para distribuir.")
 
