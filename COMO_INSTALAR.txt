@@ -1,0 +1,21 @@
+==================================================
+ GUIA DE INSTALACION - PIZZA THEME & MODS
+==================================================
+
+¡Hola! Gracias por descargar el PizzaTheme y los mods.
+Para que tu compu esté 100% segura, usamos el método de 
+instalación oficial de PokeMMO. 
+
+Sigue estos pasos simples:
+
+1. Abre el PokeMMO e inicia sesión normalmente.
+2. En el menú principal, busca el botón de "Administración de Mods" (Mod Management).
+3. Haz clic en "Importar Mod" (Import Mod).
+4. Selecciona TODOS los archivos ".mod" que vienen en esta carpeta (puedes seleccionarlos de a uno o todos juntos dependiendo de tu PC).
+5. Asegúrate de marcarlos con la palomita (checkmark) para activarlos.
+6. ¡Reinicia el juego y listo!
+
+NOTA: El "PizzaTheme" ahora funciona como un Mod visual.
+No necesitas meterte en las carpetas del sistema ni ejecutar scripts raros.
+
+¡Disfruta!
