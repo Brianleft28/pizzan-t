@@ -63,3 +63,11 @@ Este documento es la **Única Fuente de Verdad**.
 16. **ARQUITECTURA DE DECISIONES (.md):**
     - Todo cambio grande, explicación arquitectónica o resolución de bugs complejos DEBE quedar documentado y cerrado mediante artefactos Markdown (como los generados por `/plan` y `walkthrough.md`). 
     - Esto mantiene la trazabilidad del desarrollo sin ensuciar el código fuente.
+
+17. **MANEJO DE CREDENCIALES GIT EN NUEVAS PCs**:
+    - Si el usuario trabaja en una PC diferente donde no está logueado en Git, la IA no debe intentar forzar comandos sin autenticación. Debe guiar al usuario a generar un Personal Access Token (PAT) de GitHub (o configurar Git Credential Manager) y configurar la URL remota con las credenciales embebidas (ej. `git remote set-url origin https://<TOKEN>@github.com/usuario/repo.git`) para evitar bloqueos de push.
+
+18. **CONTEXTO MULTI-PC Y ROMS MODIFICADAS (OCR)**:
+    - **Contexto:** El usuario (bebito) opera en **2 PCs distintas** (una de trabajo y una "PC Gamer"). Siempre asumir que el progreso o los archivos pueden estar desfasados entre ellas.
+    - **ROMs:** El bot depende de **ROMs modificadas** (en particular la ROM de Pokémon Black/White) que eliminan el fondo de batalla. Estas ROMs facilitan la lectura del OCR (EasyOCR) porque dejan el fondo limpio.
+    - **Disponibilidad:** La IA siempre debe recordar al usuario que las ROMs modificadas NO se suben a Git por peso/copyright, y debe asegurarse de que el usuario las transfiera manualmente (por pendrive o nube) a la carpeta `roms/` de su PokéMMO en cada PC nueva para que el bot no quede ciego.
