@@ -54,6 +54,10 @@ def build_mod(target_path: str):
                 rel_path = file_path.relative_to(PIZZA_THEME_DIR)
                 zip_path = f"pizzatheme/{rel_path}".replace("\\", "/")
                 zipf.write(file_path, zip_path)
+                
+                # Copy icon.png to the root so PokeMMO Mod Manager displays the logo
+                if file == "icon.png" and Path(root) == PIZZA_THEME_DIR:
+                    zipf.write(file_path, "icon.png")
 
     print(f"Mod construido y copiado exitosamente en: {mod_dest}")
 
