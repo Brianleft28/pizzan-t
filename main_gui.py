@@ -387,9 +387,13 @@ class ShinyHunterGUI(ctk.CTk):
         self.timing_ball_press_entry.insert(0, self.get_config_val("timing_ball_press_wait", "0.7"))
         # ────────────────────────────────────────────────────────────────
 
+        # Row 3: Optimize Button
+        self.opt_btn = ctk.CTkButton(tab, text="Optimize PokeMMO UI (Vision)", command=self.optimize_pokemmo_ui, fg_color="#8e44ad", height=32)
+        self.opt_btn.grid(row=7, column=0, columnspan=4, padx=20, pady=4, sticky="ew")
+
         ctk.CTkButton(tab, text="SAVE DITTO CONFIG", fg_color="#1f538d",
                        height=36, command=self.save_all).grid(
-            row=7, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
+            row=8, column=0, columnspan=4, padx=20, pady=8, sticky="ew")
 
     def _build_brain_tab(self):
         """Pestaña Brain Viewer — muestra el código Python del modo activo"""
@@ -885,6 +889,49 @@ class ShinyHunterGUI(ctk.CTk):
             self.add_log("📸 Debug frame saved → debug_view.png", "SUCCESS")
         except Exception as e:
             self.add_log(f"❌ Debug Error: {e}", "FATAL")
+
+    def optimize_pokemmo_ui(self):
+        import os
+        paths = [
+            r"C:\Program Files\PokeMMO\config\main.properties",
+            r"C:\PokeMMO\config\main.properties",
+            r"D:\PokeMMO\config\main.properties",
+            os.path.expanduser(r"~\Desktop\PokeMMO\config\main.properties")
+        ]
+        found = None
+        for p in paths:
+            if os.path.exists(p):
+                found = p
+                break
+        
+        if not found:
+            self.add_log("[!] No se encontro main.properties de PokeMMO. No se pudo optimizar.", "ERROR")
+            return
+            
+        try:
+            with open(found, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                
+            modified = False
+            new_lines = []
+            for line in lines:
+                if line.startswith("client.ui.nameplate.") and "true" in line:
+                    line = line.replace("true", "false")
+                    modified = True
+                elif line.startswith("client.gui.showchatbubbles") and "true" in line:
+                    line = line.replace("true", "false")
+                    modified = True
+                new_lines.append(line)
+                
+            if modified:
+                with open(found, 'w', encoding='utf-8') as f:
+                    f.writelines(new_lines)
+                self.add_log("[OK] PokeMMO UI optimizada para Visión (Nombres y Chats OFF).", "SUCCESS")
+            else:
+                self.add_log("[OK] PokeMMO UI ya estaba optimizada. No se requirieron cambios.", "SUCCESS")
+                
+        except Exception as e:
+            self.add_log(f"[!] Error al optimizar PokeMMO: {e}", "FATAL")
 
     def toggle_bot(self):
         if not self.bot or not self.bot.running:
