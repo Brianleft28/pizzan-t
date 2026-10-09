@@ -1,6 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 import os
+import subprocess
 import json
 import threading
 import selector
@@ -216,6 +217,24 @@ class ShinyHunterGUI(ctk.CTk):
         ctk.CTkButton(tab, text="SAVE GENERAL CONFIG", fg_color="#1f538d",
                        height=36, command=self.save_all).grid(
             row=3, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
+
+        ctk.CTkButton(tab, text="🎨 SYNC PIZZA THEME (MOD)", fg_color="#d35400", hover_color="#e67e22",
+                       height=36, command=self._sync_theme).grid(
+            row=4, column=0, columnspan=2, padx=20, pady=(0, 10), sticky="ew")
+
+    def _sync_theme(self):
+        self.add_log("⏳ Iniciando compilación de PizzaTheme...", "ACTION")
+        threading.Thread(target=self._run_sync_theme, daemon=True).start()
+
+    def _run_sync_theme(self):
+        try:
+            result = subprocess.run(["instalar_pizza_theme.bat"], shell=True, capture_output=True, text=True)
+            if result.returncode == 0:
+                self.add_log("✅ ¡PizzaTheme sincronizado y copiado! Reinicia PokéMMO.", "SUCCESS")
+            else:
+                self.add_log(f"❌ Error al sincronizar: {result.stderr}", "FATAL")
+        except Exception as e:
+            self.add_log(f"❌ Error fatal al sincronizar: {e}", "FATAL")
 
     def _build_horde_tab(self):
         scroll = ctk.CTkScrollableFrame(self.tab_horde, orientation="vertical")
