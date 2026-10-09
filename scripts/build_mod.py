@@ -6,10 +6,10 @@ from pathlib import Path
 WORKSPACE_DIR = Path(__file__).resolve().parent.parent
 PIZZA_THEME_DIR = WORKSPACE_DIR / "pizzatheme"
 
-INFO_XML_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
+INFO_XML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 <resource>
     <name>PizzaTheme</name>
-    <version>1</version>
+    <version>{revision}</version>
     <description>Pizza Theme para PokeMMO</description>
     <author>Brian/Pizzant</author>
     <themes theme_revision="8">
@@ -18,6 +18,16 @@ INFO_XML_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
 </resource>
 """
 
+def get_revision(mod_dest: Path) -> str:
+    # PokeMMO root is normally 3 directories up from data/mods/ (i.e. mod_dest.parent.parent.parent)
+    rev_path = mod_dest.parent.parent.parent / "revision.txt"
+    if rev_path.exists():
+        rev = rev_path.read_text(encoding="utf-8").strip()
+        print(f"[*] Revision detectada: {rev}")
+        return rev
+    print("[!] No se encontro revision.txt. Usando version 1 por defecto.")
+    return "1"
+
 def build_mod(target_path: str):
     mod_dest = Path(target_path)
     print(f"Empaquetando PizzaTheme en: {mod_dest} ...")
@@ -25,8 +35,11 @@ def build_mod(target_path: str):
     if not mod_dest.parent.exists():
         mod_dest.parent.mkdir(parents=True, exist_ok=True)
         
+    revision = get_revision(mod_dest)
+    info_xml_content = INFO_XML_TEMPLATE.replace("{revision}", revision)
+        
     with zipfile.ZipFile(mod_dest, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.writestr('info.xml', INFO_XML_CONTENT)
+        zipf.writestr('info.xml', info_xml_content)
         
         if not PIZZA_THEME_DIR.exists():
             print("Error: No existe el directorio pizzatheme en el workspace.")
