@@ -7,13 +7,9 @@ WORKSPACE_DIR = Path(__file__).resolve().parent.parent
 PIZZA_THEME_DIR = WORKSPACE_DIR / "pizzatheme"
 
 INFO_XML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
-<resource>
-    <name>PizzaTheme</name>
-    <version>{revision}</version>
-    <description>Pizza Theme para PokeMMO</description>
-    <author>Brian/Pizzant</author>
-    <themes theme_revision="8">
-        <theme path="pizzatheme" name="PizzaTheme" is_mobile="false"/>
+<resource name="PizzaTheme" version="{revision}" description="Pizza Theme para PokeMMO" author="Brian/Pizzant">
+    <themes>
+        <theme path="pizzatheme" name="PizzaTheme" revision="{revision}" is_mobile="false" sprite_atlas="pizzatheme/atlas/main.atlas"/>
     </themes>
 </resource>
 """

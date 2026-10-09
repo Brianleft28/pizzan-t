@@ -62,7 +62,7 @@ foreach ($target in $targets) {
     }
 
     Write-Host "-> Validando integridad del tema antes de compilar..." -ForegroundColor Yellow
-    & $pythonPath (Join-Path $scriptPath "scripts\validate_theme.py")
+    python.exe (Join-Path $scriptPath "scripts\validate_theme.py")
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[!] ALERTA: El tema contiene errores. Instalacion abortada para prevenir crasheos." -ForegroundColor Red
         exit 1
@@ -71,7 +71,7 @@ foreach ($target in $targets) {
     Write-Host "-> Construyendo e Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
     Write-Host -NoNewline "[" -ForegroundColor Cyan
     for ($i = 0; $i -lt 30; $i++) {
-        Write-Host -NoNewline "█" -ForegroundColor Green
+        Write-Host -NoNewline "#" -ForegroundColor Green
         Start-Sleep -Milliseconds 40
     }
     Write-Host "] Completado!" -ForegroundColor Cyan
@@ -81,11 +81,10 @@ foreach ($target in $targets) {
     }
     
     $modThemeFile = Join-Path $modDestDir 'PizzaTheme.mod'
-    $pythonPath = "python"
     $buildScript = Join-Path $scriptPath "scripts\build_mod.py"
     
     if (Test-Path $buildScript) {
-        & $pythonPath $buildScript $modThemeFile
+        python.exe $buildScript $modThemeFile
         if ($LASTEXITCODE -eq 0) {
             Write-Host "[OK] PizzaTheme.mod compilado exitosamente en $modDestDir" -ForegroundColor Green
         } else {
