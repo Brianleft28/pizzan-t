@@ -40,12 +40,14 @@ Este proyecto está construido bajo una **filosofía AuDHD estricta (0 complacen
 
 ## 🚀 Instalación (PC nueva)
 
-### 1. Clonar el repositorio
+### 1. Clonar el repositorio y Rom Packs
 
 ```powershell
 git clone https://github.com/Brianleft28/pizzan-t
 cd pizzan-t
 ```
+
+> ⚠️ **Importante (ROMs modificadas):** Recordá copiar tu carpeta de `roms/` (o los archivos de las ROMs modificadas que quitan el fondo de batalla) desde tu PC anterior a la carpeta de tu cliente de PokéMMO en esta nueva PC. Esto es CRÍTICO para que el OCR del bot funcione correctamente al tener un fondo limpio.
 
 ### 2. Crear el entorno virtual
 
