@@ -62,6 +62,12 @@ foreach ($target in $targets) {
     }
 
     Write-Host "-> Construyendo e Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
+    Write-Host -NoNewline "[" -ForegroundColor Cyan
+    for ($i = 0; $i -lt 30; $i++) {
+        Write-Host -NoNewline "█" -ForegroundColor Green
+        Start-Sleep -Milliseconds 40
+    }
+    Write-Host "] Completado!" -ForegroundColor Cyan
     $modDestDir = Join-Path $target 'data\mods'
     if (-not (Test-Path $modDestDir)) {
         New-Item -ItemType Directory -Path $modDestDir | Out-Null
