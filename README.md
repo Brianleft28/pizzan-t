@@ -75,12 +75,11 @@ pip install -r requirements.txt
 
 El bot usa visión artificial calibrada para una **plantilla específica** y requiere que los fondos de combate estén desactivados. El tema ahora está estructurado de forma moderna como un Mod (.mod).
 
-1. Ejecuta el archivo instalador rápido desde la raíz del proyecto:
-```powershell
-.\instalar_pizza_theme.bat
-```
-2. Dentro de PokéMMO, ve a **Administración de Mods** y activa `PizzaTheme`.
-3. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR funcione.
+1. Inicia la interfaz del bot (`python main_gui.py`).
+2. Ve a la pestaña **⚙️ General** y presiona el botón **"🎨 SYNC PIZZA THEME (MOD)"**.
+3. Espera a que el log interno te confirme que se copió correctamente.
+4. Abre PokéMMO, ve a **Administración de Mods** y activa `PizzaTheme`.
+5. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR funcione.
 
 ### 6. Iniciar el bot
 

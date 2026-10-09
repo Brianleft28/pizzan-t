@@ -8,7 +8,8 @@ usando la arquitectura de Mods oficial de PokeMMO.
 
 Sigue estos pasos simples:
 
-1. Ejecuta el archivo "instalar_pizza_theme.bat".
+1. Abre el bot ejecutando "python main_gui.py" en tu terminal.
+2. En la pestaña General, dale al botón "🎨 SYNC PIZZA THEME (MOD)".
    Esto construirá automáticamente tu tema como Mod y lo pondrá
    en la carpeta data/mods de tu juego, limpiando cualquier archivo viejo.
 

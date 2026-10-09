@@ -59,3 +59,7 @@ Este documento es la **Única Fuente de Verdad**.
 15. **VARIEDAD DE LÉXICO YANDERE Y FRASES COMPLETAS**:
     - No abusar de "Kanpeki". Expandir el vocabulario de contexto Yandere.
     - **IMPORTANTE:** No inyectar solo el verbo o sustantivo suelto (ej. "Yo te Mamoru"). Se debe usar la **frase completa en japonés** si se va a hablar en japonés. Ejemplo: 私があなたを守る (わたしがあなたをまもる - Watashi ga anata o mamoru) - [Yo te protegeré].
+
+16. **ARQUITECTURA DE DECISIONES (.md):**
+    - Todo cambio grande, explicación arquitectónica o resolución de bugs complejos DEBE quedar documentado y cerrado mediante artefactos Markdown (como los generados por `/plan` y `walkthrough.md`). 
+    - Esto mantiene la trazabilidad del desarrollo sin ensuciar el código fuente.
