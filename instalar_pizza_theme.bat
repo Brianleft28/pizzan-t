@@ -7,9 +7,22 @@ exit /b
 #>
 $ErrorActionPreference = 'Stop'
 
-Write-Host "==============================================" -ForegroundColor Cyan
-Write-Host "        Instalador Rapido: Pizza Theme        " -ForegroundColor Cyan
-Write-Host "==============================================" -ForegroundColor Cyan
+Write-Host "  _____ _                  _______ _                          " -ForegroundColor Yellow
+Write-Host " |  __ (_)                |__   __| |                         " -ForegroundColor Yellow
+Write-Host " | |__) | __________ _       | |  | |__   ___ _ __ ___   ___  " -ForegroundColor Yellow
+Write-Host " |  ___/ |___  /_  / _\      | |  | '_ \ / _ \ '_ \ _ \ / _ \ " -ForegroundColor Yellow
+Write-Host " | |   | |  / / / / (_| |    | |  | | | |  __/ | | | | |  __/ " -ForegroundColor Yellow
+Write-Host " |_|   |_| /___/___\__,_|    |_|  |_| |_|\___|_| |_| |_|\___| " -ForegroundColor Yellow
+Write-Host "==============================================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "==============================================================" -ForegroundColor Red
+Write-Host " [WARNING] RECORDATORIO CRITICO SOBRE LAS ROMS (REGLA 18)" -ForegroundColor Red
+Write-Host " El bot necesita ROMs de Black/White modificadas (sin fondos)." -ForegroundColor Red
+Write-Host " Estas ROMs NO se suben a Git por peso/copyright." -ForegroundColor Red
+Write-Host " Si estas en una PC nueva, transferilas MANUALMENTE a la" -ForegroundColor Red
+Write-Host " carpeta roms/ de tu PokeMMO o el OCR no va a cazar una." -ForegroundColor Red
+Write-Host "==============================================================" -ForegroundColor Red
+Write-Host ""
 Write-Host ""
 
 $pokeDirs = @('C:\Program Files\PokeMMO', 'C:\PokeMMO', 'D:\PokeMMO', "$env:USERPROFILE\Desktop\PokeMMO")
