@@ -61,6 +61,13 @@ foreach ($target in $targets) {
         Write-Host "[OK] Carpeta antigua en data\themes\pizzatheme eliminada." -ForegroundColor Green
     }
 
+    Write-Host "-> Validando integridad del tema antes de compilar..." -ForegroundColor Yellow
+    & $pythonPath (Join-Path $scriptPath "scripts\validate_theme.py")
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[!] ALERTA: El tema contiene errores. Instalacion abortada para prevenir crasheos." -ForegroundColor Red
+        exit 1
+    }
+
     Write-Host "-> Construyendo e Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
     Write-Host -NoNewline "[" -ForegroundColor Cyan
     for ($i = 0; $i -lt 30; $i++) {
