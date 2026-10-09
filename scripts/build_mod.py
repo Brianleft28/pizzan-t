@@ -12,7 +12,7 @@ INFO_XML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
     <version>{revision}</version>
     <description>Pizza Theme para PokeMMO</description>
     <author>Brian/Pizzant</author>
-    <themes theme_revision="8">
+    <themes theme_revision="9">
         <theme path="pizzatheme" name="PizzaTheme" is_mobile="false"/>
     </themes>
 </resource>
