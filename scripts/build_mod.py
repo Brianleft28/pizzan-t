@@ -47,8 +47,9 @@ def build_mod(target_path: str):
 
         for root, dirs, files in os.walk(PIZZA_THEME_DIR):
             for file in files:
-                if file == "info.xml" and Path(root) == PIZZA_THEME_DIR:
-                    continue 
+                # We must include the theme's own info.xml inside its folder
+                # so PokeMMO recognizes it as a valid theme inside the mod.
+                pass
                 
                 file_path = Path(root) / file
                 rel_path = file_path.relative_to(PIZZA_THEME_DIR)
