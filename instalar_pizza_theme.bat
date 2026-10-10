@@ -98,6 +98,24 @@ if (Test-Path $patcherConfigPath) {
     Write-Host "[OK] patcher_config.json actualizado con la ruta del juego." -ForegroundColor Green
 }
 
+$sourceRoms = Join-Path $scriptPath "roms"
+$destRoms = Join-Path $target "roms"
+
+if (Test-Path $sourceRoms) {
+    Write-Host "-> Se detectó una carpeta local de ROMs. Preparando para transferir..." -ForegroundColor Yellow
+    if (Test-Path $destRoms) {
+        Write-Host "[-] Borrando ROMs antiguas en el destino..." -ForegroundColor Yellow
+        Remove-Item -Path "$destRoms\*" -Recurse -Force -ErrorAction SilentlyContinue
+    } else {
+        New-Item -ItemType Directory -Path $destRoms | Out-Null
+    }
+    
+    Copy-Item -Path "$sourceRoms\*" -Destination $destRoms -Recurse -Force
+    Write-Host "[OK] ROMs transferidas y reemplazadas exitosamente en $destRoms" -ForegroundColor Green
+} else {
+    Write-Host "[i] No se encontró carpeta 'roms' local. Se omite la transferencia de ROMs (Regla 18)." -ForegroundColor Cyan
+}
+
 Write-Host "-> Ejecutando el mod de las medidas (Patcher)..." -ForegroundColor Yellow
 $patcherScript = Join-Path $scriptPath "scripts\patcher\main.py"
 python.exe $patcherScript
