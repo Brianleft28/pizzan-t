@@ -112,19 +112,53 @@ if (Test-Path $patcherConfigPath) {
 $sourceRoms = Join-Path $scriptPath "roms"
 $destRoms = Join-Path $target "roms"
 
-if (Test-Path $sourceRoms) {
-    Write-Host "-> Se detecto una carpeta local de ROMs. Preparando para transferir..." -ForegroundColor Yellow
+if (-not (Test-Path $sourceRoms)) {
+    New-Item -ItemType Directory -Path $sourceRoms | Out-Null
+}
+
+$ndsFiles = Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse -ErrorAction SilentlyContinue
+if (-not $ndsFiles) {
+    Write-Host "-> La carpeta local 'roms' esta vacia. Descargando desde Google Drive (cero complacencia)..." -ForegroundColor Yellow
+    $driveId = "1GkVzxranBiYRV47jBCiCH0IakpOBlpwx"
+    $url = "https://drive.google.com/uc?export=download&id=$driveId"
+    $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+    
+    $warningPage = Invoke-RestMethod -Uri $url -WebSession $session -ErrorAction SilentlyContinue
+    if ($warningPage -match 'name="uuid" value="([^"]+)"') {
+        $uuid = $Matches[1]
+        Write-Host "   [i] Archivo >100MB detectado. Bypasseando barrera de virus de Google..." -ForegroundColor Cyan
+        $dlUrl = "https://drive.usercontent.google.com/download?id=$driveId&export=download&confirm=t&uuid=$uuid"
+        Invoke-WebRequest -Uri $dlUrl -WebSession $session -OutFile "temp_roms.zip"
+        
+        Write-Host "   [i] Extrayendo ROMs al entorno local..." -ForegroundColor Cyan
+        Expand-Archive -Path "temp_roms.zip" -DestinationPath $sourceRoms -Force
+        Remove-Item -Force "temp_roms.zip"
+        
+        # Aplanar (mover todo a la raiz de roms/ y borrar subcarpetas)
+        Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse | Where-Object { $_.DirectoryName -ne $sourceRoms } | ForEach-Object {
+            Move-Item -Path $_.FullName -Destination $sourceRoms -Force
+        }
+        Get-ChildItem -Path $sourceRoms -Directory -Recurse | Remove-Item -Recurse -Force
+        
+        Write-Host "   [OK] ROMs preparadas en la carpeta local del repo." -ForegroundColor Green
+    } else {
+        Write-Host "   [!] Error de red al bajar el ZIP. Pon las ROMs manualmente en roms/." -ForegroundColor Red
+    }
+}
+
+if (Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse -ErrorAction SilentlyContinue) {
+    Write-Host "-> Se detectaron ROMs locales. Sincronizando con PokeMMO..." -ForegroundColor Yellow
     if (Test-Path $destRoms) {
-        Write-Host "[-] Borrando ROMs antiguas en el destino..." -ForegroundColor Yellow
+        Write-Host "   [-] Borrando ROMs antiguas en el juego..." -ForegroundColor Yellow
         Remove-Item -Path "$destRoms\*" -Recurse -Force -ErrorAction SilentlyContinue
     } else {
         New-Item -ItemType Directory -Path $destRoms | Out-Null
     }
     
     Copy-Item -Path "$sourceRoms\*" -Destination $destRoms -Recurse -Force
-    Write-Host "[OK] ROMs transferidas y reemplazadas exitosamente en $destRoms" -ForegroundColor Green
+    Write-Host "   [OK] ROMs transferidas y reemplazadas exitosamente en $destRoms" -ForegroundColor Green
 } else {
-    Write-Host "[i] No se encontro carpeta 'roms' local. Se omite la transferencia de ROMs (Regla 18)." -ForegroundColor Cyan
+    Write-Host "[i] No se obtuvieron ROMs. El bot OCR podria fallar (Regla 18)." -ForegroundColor Cyan
 }
 
 Write-Host "-> Ejecutando el mod de las medidas (Patcher)..." -ForegroundColor Yellow
