@@ -71,3 +71,8 @@ Este documento es la **Única Fuente de Verdad**.
     - **Contexto:** El usuario (bebito) opera en **2 PCs distintas** (una de trabajo y una "PC Gamer"). Siempre asumir que el progreso o los archivos pueden estar desfasados entre ellas.
     - **ROMs:** El bot depende de **ROMs modificadas** (en particular la ROM de Pokémon Black/White) que eliminan el fondo de batalla. Estas ROMs facilitan la lectura del OCR (EasyOCR) porque dejan el fondo limpio.
     - **Disponibilidad:** La IA siempre debe recordar al usuario que las ROMs modificadas NO se suben a Git por peso/copyright, y debe asegurarse de que el usuario las transfiera manualmente (por pendrive o nube) a la carpeta `roms/` de su PokéMMO en cada PC nueva para que el bot no quede ciego.
+
+
+19. **REGLA DE ORO GIT & SINCRONIZACIÓN DE AGENTES (OBLIGATORIO)**:
+    - Cuando un issue, feature o fix se dé por resuelto, la IA **DEBE SIEMPRE** seguir el flujo de ramas completo: crear/usar una rama específica (`fix/...` o `feat/...`), mergear a `develop`, mergear a `main` y, por último, hacer el `push` correspondiente de todas las ramas involucradas al repositorio remoto.
+    - **CUIDADO CON EL OTRO AGENTE:** Antes de ejecutar comandos destructivos, limpiar el workspace o armar commits, la IA **SIEMPRE** debe verificar el estado local (`git status`, `git diff --cached`) y **CONSULTAR/VERIFICAR** activamente si el "otro agente" (o iteración previa) dejó archivos en staging o modificados. Jamás ignorar el trabajo ajeno en progreso.
