@@ -40,14 +40,14 @@ Este proyecto está construido bajo una **filosofía AuDHD estricta (0 complacen
 
 ## 🚀 Instalación (PC nueva)
 
-### 1. Clonar el repositorio y Rom Packs
+### 1. Clonar el repositorio
 
 ```powershell
 git clone https://github.com/Brianleft28/pizzan-t
 cd pizzan-t
 ```
 
-> ⚠️ **Importante (ROMs modificadas):** Recordá copiar tu carpeta de `roms/` (o los archivos de las ROMs modificadas que quitan el fondo de batalla) desde tu PC anterior a la carpeta de tu cliente de PokéMMO en esta nueva PC. Esto es CRÍTICO para que el OCR del bot funcione correctamente al tener un fondo limpio.
+> ⚠️ **Importante (ROMs modificadas):** Necesitás tener tus ROMs modificadas (las que quitan el fondo de batalla) a mano. Simplemente metelas en un archivo ZIP (ej. `Pokemmo Roms.zip`) y dejalo en tu Escritorio. El instalador automático se encargará de extraerlas y meterlas en tu cliente de PokéMMO. Esto es CRÍTICO para que el OCR lea fondo negro.
 
 ### 2. Crear el entorno virtual
 
@@ -75,11 +75,14 @@ pip install -r requirements.txt
 
 ### 5. Instalar Tema Visual y ROMs (Requisito Obligatorio)
 
-El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados.
+El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados. Todo el proceso de inyección, sincronización de versiones XML y parcheo de UI se hace con nuestro Wizard Interactivo.
 
 1. Hacé doble click en el instalador automático `instalar_pizza_theme.bat`.
-2. El script detectará la versión de tu juego. Si tu carpeta `roms/` está vacía, **descargará automáticamente tus ROMs modificadas desde la nube (Drive)**, las extraerá y sincronizará el tema visual en un solo paso.
-3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `pizzatheme`.
+2. El script iniciará un **Wizard Interactivo en la consola**. Te guiará paso a paso para:
+   - Encontrar la carpeta de tu PokéMMO y leer su `revision.txt`.
+   - Extraer automáticamente tus ROMs modificadas y el fondo negro desde un archivo ZIP (ej: `Pokemmo Roms.zip` en tu escritorio).
+   - Inyectar el tema visual `PizzaTheme` y el mod de medidas `pokemmo_ui_patcher`, sincronizando los XML dinámicamente para que no tire error de "Incompatible".
+3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `PizzaTheme`.
 4. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR lea texto limpio.
 
 ### 6. Iniciar el bot
