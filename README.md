@@ -78,7 +78,7 @@ pip install -r requirements.txt
 El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados.
 
 1. Hacé doble click en el instalador automático `instalar_pizza_theme.bat`.
-2. El script detectará la versión actual de tu juego, copiará las ROMs de tu carpeta `roms/` y sincronizará el tema visual automáticamente.
+2. El script detectará la versión de tu juego. Si tu carpeta `roms/` está vacía, **descargará automáticamente tus ROMs modificadas desde la nube (Drive)**, las extraerá y sincronizará el tema visual en un solo paso.
 3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `pizzatheme`.
 4. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR lea texto limpio.
 
