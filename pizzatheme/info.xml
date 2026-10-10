@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<theme>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<theme revision="8">
     <name>Pizza Theme</name>
     <author>Pizzant</author>
     <version>32920</version>
     <description>Pizza Theme for PokeMMO</description>
 </theme>
+

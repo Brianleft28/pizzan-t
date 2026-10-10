@@ -32,53 +32,6 @@ if (-not (Test-Path $sourceTheme)) {
     exit 1
 }
 
-# Sincronización de Versión de Moonlyze (0 complacencia)
-Write-Host "[?] Actualizacion de version desde el tema original (Moonlyze)" -ForegroundColor Cyan
-$baseZip = Read-Host "[+] Arrastra aca el .zip del tema base (ej. Moonlyze99.zip) y presiona Enter"
-$baseZip = $baseZip -replace '"', ''
-
-if (Test-Path $baseZip) {
-    Write-Host "-> Leyendo info.xml desde el zip base..." -ForegroundColor Yellow
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    $zip = [System.IO.Compression.ZipFile]::OpenRead($baseZip)
-    $infoEntry = $zip.Entries | Where-Object { $_.FullName -match 'info\.xml$' } | Select-Object -First 1
-
-    if ($infoEntry) {
-        $stream = $infoEntry.Open()
-        $reader = New-Object System.IO.StreamReader($stream)
-        $moonXml = $reader.ReadToEnd()
-        $reader.Close()
-        
-        $moonRevMatch = [regex]::Match($moonXml, 'revision="([^"]*)"')
-        $moonVerMatch = [regex]::Match($moonXml, '<version>([^<]*)</version>')
-        
-        if ($moonRevMatch.Success -and $moonVerMatch.Success) {
-            $moonRev = $moonRevMatch.Groups[1].Value
-            $moonVer = $moonVerMatch.Groups[1].Value
-            
-            $miInfoPath = Join-Path $sourceTheme "info.xml"
-            if (Test-Path $miInfoPath) {
-                $miXml = Get-Content $miInfoPath -Raw
-                # Eliminar revision vieja si existe
-                $miXml = $miXml -replace '\s*revision="[^"]*"', ''
-                # Inyectar la nueva revision en la etiqueta theme
-                $miXml = $miXml -replace '<theme([^>]*)>', "<theme revision=""$moonRev""`$1>"
-                $miXml = $miXml -replace '<version>[^<]*</version>', "<version>$moonVer</version>"
-                Set-Content -Path $miInfoPath -Value $miXml -Encoding UTF8
-                Write-Host "[OK] Tu carpeta pizzatheme fue actualizada a Version: $moonVer y Revision: $moonRev" -ForegroundColor Green
-            }
-        } else {
-            Write-Host "[!] No se pudieron parsear las versiones del info.xml base." -ForegroundColor Yellow
-        }
-    } else {
-        Write-Host "[!] No se encontro info.xml en el zip." -ForegroundColor Yellow
-    }
-    $zip.Dispose()
-} else {
-    Write-Host "[!] Archivo zip no valido, se omite la actualizacion de version." -ForegroundColor Yellow
-}
-Write-Host ""
-
 $pokeDirs = @('C:\Program Files\PokeMMO', 'C:\PokeMMO', 'D:\PokeMMO', "$env:USERPROFILE\Desktop\PokeMMO")
 $target = $null
 
@@ -104,6 +57,25 @@ Write-Host "==============================================" -ForegroundColor Cya
 Write-Host "[OK] Trabajando en: " -NoNewline
 Write-Host $target -ForegroundColor Cyan
 Write-Host "==============================================" -ForegroundColor Cyan
+
+# Autenticando version (Opcion B)
+$gameRevisionPath = Join-Path $target "revision.txt"
+$gameVer = (Get-Content $gameRevisionPath -Raw).Trim()
+
+$miInfoPath = Join-Path $sourceTheme "info.xml"
+if (Test-Path $miInfoPath) {
+    Write-Host "-> Sincronizando version del tema con la version del juego ($gameVer)..." -ForegroundColor Yellow
+    $miXml = Get-Content $miInfoPath -Raw
+    
+    # Inyectar revision 8 por defecto si no existe, o mantener la que haya
+    if ($miXml -notmatch 'revision="') {
+        $miXml = $miXml -replace '<theme([^>]*)>', "<theme revision=""8""`$1>"
+    }
+    
+    $miXml = $miXml -replace '<version>[^<]*</version>', "<version>$gameVer</version>"
+    Set-Content -Path $miInfoPath -Value $miXml -Encoding UTF8
+    Write-Host "[OK] Tu carpeta pizzatheme fue actualizada para soportar la version $gameVer" -ForegroundColor Green
+}
 
 $modDestDir = Join-Path $target 'data\mods'
 $badModFile = Join-Path $modDestDir 'PizzaTheme.mod'
@@ -141,7 +113,7 @@ $sourceRoms = Join-Path $scriptPath "roms"
 $destRoms = Join-Path $target "roms"
 
 if (Test-Path $sourceRoms) {
-    Write-Host "-> Se detectó una carpeta local de ROMs. Preparando para transferir..." -ForegroundColor Yellow
+    Write-Host "-> Se detecto una carpeta local de ROMs. Preparando para transferir..." -ForegroundColor Yellow
     if (Test-Path $destRoms) {
         Write-Host "[-] Borrando ROMs antiguas en el destino..." -ForegroundColor Yellow
         Remove-Item -Path "$destRoms\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -152,7 +124,7 @@ if (Test-Path $sourceRoms) {
     Copy-Item -Path "$sourceRoms\*" -Destination $destRoms -Recurse -Force
     Write-Host "[OK] ROMs transferidas y reemplazadas exitosamente en $destRoms" -ForegroundColor Green
 } else {
-    Write-Host "[i] No se encontró carpeta 'roms' local. Se omite la transferencia de ROMs (Regla 18)." -ForegroundColor Cyan
+    Write-Host "[i] No se encontro carpeta 'roms' local. Se omite la transferencia de ROMs (Regla 18)." -ForegroundColor Cyan
 }
 
 Write-Host "-> Ejecutando el mod de las medidas (Patcher)..." -ForegroundColor Yellow
