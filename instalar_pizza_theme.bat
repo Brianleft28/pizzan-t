@@ -1,10 +1,11 @@
 <# :
 @echo off
 setlocal
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-Command -ScriptBlock ([scriptblock]::Create((Get-Content -Path '%~f0' -Raw)))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-Command -ScriptBlock ([scriptblock]::Create((Get-Content -Path '%~f0' -Raw -Encoding UTF8))) -ArgumentList '%~dp0'"
 pause
 exit /b
 #>
+param([string]$ScriptDir)
 $ErrorActionPreference = 'Stop'
 
 Write-Host "==============================================================" -ForegroundColor Magenta
@@ -30,7 +31,7 @@ Write-Host ""
 Read-Host " [💖] Presiona ENTER para desatar la magia, bebito..." | Out-Null
 Write-Host ""
 
-$scriptPath = (Get-Location).Path
+$scriptPath = $ScriptDir.TrimEnd('\')
 $sourceTheme = Join-Path $scriptPath "pizzatheme"
 
 if (-not (Test-Path $sourceTheme)) {
@@ -175,7 +176,13 @@ Read-Host " [🖌️] Presiona ENTER para aplicar el Patcher de UI..." | Out-Nul
 
 Write-Host " [🔥] Ejecutando el mod de las medidas (Patcher)..." -ForegroundColor Magenta
 $patcherScript = Join-Path $scriptPath "scripts\patcher\main.py"
-python.exe $patcherScript
+
+$pythonExe = "python.exe"
+$venvPython = Join-Path $scriptPath "venv\Scripts\python.exe"
+if (Test-Path $venvPython) {
+    $pythonExe = $venvPython
+}
+& $pythonExe $patcherScript
 if ($LASTEXITCODE -ne 0) {
     Write-Host " [X] ALERTA: Fallo en el Patcher. Revisa si falta Python." -ForegroundColor Red
 } else {
