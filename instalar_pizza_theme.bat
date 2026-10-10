@@ -1,7 +1,7 @@
 <# :
 @echo off
 setlocal
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-Command -ScriptBlock ([scriptblock]::Create((Get-Content -Path '%~f0' -Raw)))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$env:BASE_ZIP='%~1'; Invoke-Command -ScriptBlock ([scriptblock]::Create((Get-Content -Path '%~f0' -Raw)))"
 pause
 exit /b
 #>
@@ -23,7 +23,30 @@ Write-Host " Si estas en una PC nueva, transferilas MANUALMENTE a la" -Foregroun
 Write-Host " carpeta roms/ de tu PokeMMO o el OCR no va a cazar una." -ForegroundColor Red
 Write-Host "==============================================================" -ForegroundColor Red
 Write-Host ""
-Write-Host ""
+
+$baseZip = $env:BASE_ZIP
+if ([string]::IsNullOrWhiteSpace($baseZip)) {
+    Write-Host "[?] Se requiere el tema base para inyectar tus configuraciones." -ForegroundColor Cyan
+    $baseZip = Read-Host "[+] Arrastra aca el .zip del tema base (ej. Moonlyze99.zip) y presiona Enter"
+    $baseZip = $baseZip -replace '"', ''
+}
+
+if (-not (Test-Path $baseZip)) {
+    Write-Host "[X] No se encontro el archivo base: $baseZip" -ForegroundColor Red
+    exit 1
+}
+
+$scriptPath = (Get-Location).Path
+$builderScript = Join-Path $scriptPath "scripts\build_theme_package.py"
+
+Write-Host "-> Forjando PizzaTheme.zip desde la base..." -ForegroundColor Yellow
+python.exe $builderScript "$baseZip"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[!] ALERTA: Hubo un error al forjar el tema. Revisa los logs." -ForegroundColor Red
+    exit 1
+}
+
+$generatedZip = Join-Path $scriptPath "PizzaTheme.zip"
 
 $pokeDirs = @('C:\Program Files\PokeMMO', 'C:\PokeMMO', 'D:\PokeMMO', "$env:USERPROFILE\Desktop\PokeMMO")
 $targets = @()
@@ -35,66 +58,33 @@ foreach ($dir in $pokeDirs) {
 }
 
 if ($targets.Count -eq 0) {
-    Write-Host "[X] No se pudo encontrar PokeMMO automaticamente." -ForegroundColor Red
-    $manualTarget = Read-Host "[+] Por favor, arrastra aca la carpeta de PokeMMO (y presiona Enter)"
-    $manualTarget = $manualTarget -replace '"', ''
-    if (Test-Path (Join-Path $manualTarget "revision.txt")) {
-        $targets += $manualTarget
-    } else {
-        Write-Host "[X] Ruta invalida. No se encontro revision.txt en: $manualTarget" -ForegroundColor Red
-        exit 1
-    }
-}
-
-$scriptPath = (Get-Location).Path
-
-foreach ($target in $targets) {
-    Write-Host "==============================================" -ForegroundColor Cyan
-    Write-Host "[OK] Instalando en: " -NoNewline
-    Write-Host $target -ForegroundColor Cyan
-    Write-Host "==============================================" -ForegroundColor Cyan
-    
-    Write-Host "-> Limpiando instalacion antigua del tema (Legacy)..." -ForegroundColor Yellow
-    $legacyThemeDest = Join-Path $target 'data\themes\pizzatheme'
-    if (Test-Path $legacyThemeDest) {
-        Remove-Item -Recurse -Force $legacyThemeDest
-        Write-Host "[OK] Carpeta antigua en data\themes\pizzatheme eliminada." -ForegroundColor Green
-    }
-
-    Write-Host "-> Validando integridad del tema antes de compilar..." -ForegroundColor Yellow
-    python.exe (Join-Path $scriptPath "scripts\validate_theme.py")
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "[!] ALERTA: El tema contiene errores. Instalacion abortada para prevenir crasheos." -ForegroundColor Red
-        exit 1
-    }
-
-    Write-Host "-> Construyendo e Instalando Pizza Theme (Mod format)..." -ForegroundColor Yellow
-    Write-Host -NoNewline "[" -ForegroundColor Cyan
-    for ($i = 0; $i -lt 30; $i++) {
-        Write-Host -NoNewline "#" -ForegroundColor Green
-        Start-Sleep -Milliseconds 40
-    }
-    Write-Host "] Completado!" -ForegroundColor Cyan
-    $modDestDir = Join-Path $target 'data\mods'
-    if (-not (Test-Path $modDestDir)) {
-        New-Item -ItemType Directory -Path $modDestDir | Out-Null
-    }
-    
-    $modThemeFile = Join-Path $modDestDir 'PizzaTheme.mod'
-    $buildScript = Join-Path $scriptPath "scripts\build_mod.py"
-    
-    if (Test-Path $buildScript) {
-        python.exe $buildScript $modThemeFile
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "[OK] PizzaTheme.mod compilado exitosamente en $modDestDir" -ForegroundColor Green
-        } else {
-            Write-Host "[!] Hubo un error al compilar PizzaTheme.mod." -ForegroundColor Red
+    Write-Host "[!] No se encontro PokeMMO automaticamente para instalarlo." -ForegroundColor Yellow
+    Write-Host "[+] Tu PizzaTheme.zip esta listo en la carpeta del proyecto para instalar manualmente." -ForegroundColor Green
+} else {
+    foreach ($target in $targets) {
+        Write-Host "==============================================" -ForegroundColor Cyan
+        Write-Host "[OK] Instalando en: " -NoNewline
+        Write-Host $target -ForegroundColor Cyan
+        Write-Host "==============================================" -ForegroundColor Cyan
+        
+        $modDestDir = Join-Path $target 'data\mods'
+        $badModFile = Join-Path $modDestDir 'PizzaTheme.mod'
+        if (Test-Path $badModFile) {
+            Remove-Item -Force $badModFile
+            Write-Host "[-] Se elimino el viejo PizzaTheme.mod defectuoso." -ForegroundColor Yellow
         }
-    } else {
-        Write-Host "[!] No se encontro el script de construccion scripts\build_mod.py" -ForegroundColor Red
+
+        $themeDestDir = Join-Path $target 'data\themes'
+        if (-not (Test-Path $themeDestDir)) {
+            New-Item -ItemType Directory -Path $themeDestDir | Out-Null
+        }
+        
+        $finalThemeZip = Join-Path $themeDestDir 'PizzaTheme.zip'
+        Copy-Item -Path $generatedZip -Destination $finalThemeZip -Force
+        Write-Host "[OK] PizzaTheme.zip instalado exitosamente en $themeDestDir" -ForegroundColor Green
     }
-    Write-Host ""
 }
 
-Write-Host "[Exito] El Pizza Theme ha sido actualizado." -ForegroundColor Green
+Write-Host ""
+Write-Host "[Exito] El Pizza Theme ha sido actualizado y empaquetado." -ForegroundColor Green
 Write-Host ""

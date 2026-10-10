@@ -1,0 +1,31 @@
+{
+    "game_path": "C:\\Program Files\\PokeMMO",
+    "themes": [
+        "default",
+        "PizzaTheme"
+    ],
+    "patches": {
+        "inventory": {
+            "enabled": true,
+            "minWidth": 530,
+            "minHeight": 567
+        },
+        "mods_panel": {
+            "enabled": true,
+            "minHeight": 1000
+        },
+        "encounter_frame": {
+            "enabled": true,
+            "minWidth": 540,
+            "maxHeight": 600
+        },
+        "encounter_history_scroll": {
+            "enabled": true,
+            "minHeight": 620
+        },
+        "encounter_summary_scroll": {
+            "enabled": true,
+            "minHeight": 420
+        }
+    }
+}
