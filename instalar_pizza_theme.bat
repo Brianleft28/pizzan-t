@@ -137,6 +137,14 @@ if (-not (Test-Path $sourceRoms)) {
 }
 
 $ndsFiles = Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse -ErrorAction SilentlyContinue
+
+$desktopRomsPath = Join-Path $env:USERPROFILE "Desktop\mods and roms pokemmo"
+if (-not $ndsFiles -and (Test-Path $desktopRomsPath)) {
+    Write-Host " [🚀] ROMs negras detectadas en el escritorio. Skipiando Drive..." -ForegroundColor Green
+    Copy-Item -Path "$desktopRomsPath\*.nds" -Destination $sourceRoms -Force -ErrorAction SilentlyContinue
+    $ndsFiles = Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse -ErrorAction SilentlyContinue
+}
+
 if (-not $ndsFiles) {
     Write-Host " [☁️] Carpeta local 'roms' vacia. Bajando de Drive (cero complacencia)..." -ForegroundColor Yellow
     $driveId = "1GkVzxranBiYRV47jBCiCH0IakpOBlpwx"
@@ -181,7 +189,19 @@ if (Get-ChildItem -Path $sourceRoms -Filter "*.nds" -Recurse -ErrorAction Silent
 }
 
 Write-Host ""
-Read-Host " [🖌️] Presiona ENTER para aplicar el Patcher de UI..." | Out-Null
+Read-Host " [🎮] Presiona ENTER para aplicar el Patcher de UI..." | Out-Null
+
+Write-Host " [⚙️] Sincronizando versiones de metadatos XML (Moonlyze99/PizzaTheme)..." -ForegroundColor Yellow
+$syncScript = Join-Path $scriptPath "scripts\patcher\sync_versions.py"
+$pythonExe = "python.exe"
+$venvPython = Join-Path $scriptPath "venv\Scripts\python.exe"
+if (Test-Path $venvPython) { $pythonExe = $venvPython }
+& $pythonExe $syncScript $target
+
+$patcherModDest = Join-Path $modDestDir "pokemmo_ui_patcher"
+if (Test-Path $patcherModDest) { Remove-Item -Recurse -Force $patcherModDest }
+Copy-Item -Path (Join-Path $scriptPath "scripts\patcher") -Destination $patcherModDest -Recurse -Force
+Write-Host " [OK] Mod patcher_ui copiado a mods." -ForegroundColor Green
 
 Write-Host " [🔥] Ejecutando el mod de las medidas (Patcher)..." -ForegroundColor Magenta
 $patcherScript = Join-Path $scriptPath "scripts\patcher\main.py"
@@ -199,3 +219,5 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
+
+
