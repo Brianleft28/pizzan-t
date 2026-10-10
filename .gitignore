@@ -153,3 +153,6 @@ config.json
 roms/
 *.nds
 *.gba
+
+# PizzaHunter Brain Backup
+.pizzahunter/

@@ -94,7 +94,7 @@ def run_bot():
     if not os.path.exists(bot_main):
         console.print("[bold red][ERR] No se encontró el bot (main_gui.py).[/]")
         return
-    console.print("[bold green][..] Arrancando WaifuMMO Bot...[/]")
+    console.print("[bold green][..] Arrancando PizzaHunter Bot...[/]")
     try:
         subprocess.run([sys.executable, bot_main])
     except KeyboardInterrupt:
@@ -104,7 +104,7 @@ def main():
     os.system("color")
     while True:
         console.print("\n")
-        console.print(Panel("[bold cyan]Pizza-Dittos CLI Orchestrator[/bold cyan]\n[italic]Seleccioná la herramienta que querés correr:[/italic]", border_style="blue"))
+        console.print(Panel("[bold cyan]PizzaHunter CLI Orchestrator[/bold cyan]\n[italic]Seleccioná la herramienta que querés correr:[/italic]", border_style="blue"))
         
         choices = [
             questionary.Choice("1. Extraer ZIP de ROMs y Mods al juego", "extract_zip"),
