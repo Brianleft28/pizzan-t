@@ -9,7 +9,7 @@ PIZZA_THEME_DIR = WORKSPACE_DIR / "pizzatheme"
 INFO_XML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 <resource name="PizzaTheme" version="{revision}" description="Pizza Theme para PokeMMO" author="Brian/Pizzant">
     <themes>
-        <theme path="pizzatheme" name="PizzaTheme" revision="{revision}" is_mobile="false" sprite_atlas="pizzatheme/atlas/main.atlas"/>
+        <theme path="pizzatheme" name="PizzaTheme" revision="8" is_mobile="false" sprite_atlas="pizzatheme/atlas/main.atlas"/>
     </themes>
 </resource>
 """
