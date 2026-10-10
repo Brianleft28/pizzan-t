@@ -109,15 +109,24 @@ def main():
         rom_dest = os.path.join(target, "roms")
         os.makedirs(rom_dest, exist_ok=True)
         
+        local_roms_dir = os.path.join(base_dir, "roms")
+        os.makedirs(local_roms_dir, exist_ok=True)
+        
         try:
             with zipfile.ZipFile(rom_zip, 'r') as zip_ref:
                 for file_info in zip_ref.infolist():
-                    # Ignorar directorios, solo extraer archivos (nds, gba) a la raiz de roms
+                    # Ignorar directorios, solo extraer archivos (nds, gba)
                     if not file_info.is_dir() and file_info.filename.lower().endswith(('.nds', '.gba')):
                         file_info.filename = os.path.basename(file_info.filename)
                         if file_info.filename:
-                            zip_ref.extract(file_info, rom_dest)
-            print_yandere("  [OK] ROMs inyectadas (NDS y GBA).", "green")
+                            # Extraer a la "carpeta magica" local
+                            zip_ref.extract(file_info, local_roms_dir)
+                            
+                            # Luego copiar al cliente de PokeMMO
+                            src_file = os.path.join(local_roms_dir, file_info.filename)
+                            dst_file = os.path.join(rom_dest, file_info.filename)
+                            shutil.copy2(src_file, dst_file)
+            print_yandere("  [OK] ROMs guardadas en la carpeta mágica local y sincronizadas en PokéMMO.", "green")
         except Exception as e:
             print_yandere(f"  [X] Hubo un re bardo extrayendo el ZIP: {e}", "red")
             
