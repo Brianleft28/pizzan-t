@@ -33,7 +33,7 @@ El proyecto está construido sobre las siguientes tecnologías:
 
 ## 🔄 Flujo de Trabajo (Workflow)
 
-Para evitar problemas, todo el proyecto está centralizado alrededor de `manage.py` (el orquestador).
+Para evitar problemas, todo el proyecto está centralizado alrededor del archivo [manage.py](manage.py) (el orquestador).
 El ciclo normal es:
 
 1.  **Ejecutar el Orquestador:** (Abrir `pizza.bat`)
@@ -49,18 +49,18 @@ A continuación, los pasos para dejar el bot listo en tu PC. Hacé click en cada
 
 <details>
 <summary><b>1. Pre-requisitos (Las ROMs Modificadas)</b></summary>
-<br>
+
 El bot <b>necesita leer texto con fondo negro</b> durante los combates. Por ello, se requieren unas ROMs modificadas que quitan el escenario 3D de fondo.
 
 > **Importante:** Por temas de Copyright, las ROMs no están en GitHub.
 > Escribí a **contactobrianleft@gmail.com** para pedir el Drive con los ZIPs modificados.
 
 Una vez que tengas el `.zip`, dejalo en tu Escritorio.
+
 </details>
 
 <details>
 <summary><b>2. Instalación del Repositorio</b></summary>
-<br>
 
 Cloná el repo y prepará el entorno de Python:
 
@@ -77,31 +77,33 @@ python -m venv venv
 # Instalar las librerías (tardará un poco por EasyOCR/PyTorch)
 pip install -r requirements.txt
 ```
+
 </details>
 
 <details>
 <summary><b>3. Uso del Orquestador (pizza.bat)</b></summary>
-<br>
-El proyecto incluye un script facilitador. Simplemente hacé doble click en <b><code>pizza.bat</code></b>.
 
-Aparecerá un menú interactivo (`manage.py`) con opciones numeradas:
+El proyecto incluye un script facilitador. Simplemente hacé doble click en **[`pizza.bat`](pizza.bat)**.
 
-1.  **Extraer ZIP de ROMs:** Selecciona esta opción y el script buscará el `.zip` en tu escritorio para instalarlo en el PokéMMO automáticamente.
+Aparecerá un menú interactivo (**[`manage.py`](manage.py)**) con opciones numeradas:
+
+1.  **Extraer ZIP de ROMs:** Selecciona esta opción y el script buscará el `.zip` en tu escritorio para instalarlo en el PokéMMO automáticamente. *(Usa [`scripts/core/extractor.py`](scripts/core/extractor.py))*
 2.  **Instalar PizzaTheme:** Aplica el tema visual con los fondos negros que necesita el bot.
-3.  **Modificar medidas de UI (Patcher):** Parcheador de layouts para monitores específicos.
-4.  **Arrancar el Bot:** Abre la interfaz gráfica `main_gui.py`.
-5.  **Sincronizar XMLs:** Mantiene la compatibilidad con actualizaciones del juego.
+3.  **Modificar medidas de UI (Patcher):** Parcheador de layouts para monitores específicos. *(Usa [`scripts/patcher/main.py`](scripts/patcher/main.py))*
+4.  **Arrancar el Bot:** Abre la interfaz gráfica del bot. *(Abre [`main_gui.py`](main_gui.py))*
+5.  **Sincronizar XMLs:** Mantiene la compatibilidad con actualizaciones del juego. *(Usa [`scripts/core/xml_sync.py`](scripts/core/xml_sync.py))*
 
 Sigue el orden del 1 al 4 para tener la experiencia completa.
+
 </details>
 
 <details>
 <summary><b>4. Ingame Setup (Dentro de PokéMMO)</b></summary>
-<br>
 
 *   Andá a **Ajustes -> Interfaz -> Tema** y seleccioná `PizzaTheme`.
 *   En **Ajustes -> Video**, desactivá los fondos de combate.
 *   Tu PokéMMO tiene que estar visible en pantalla (no minimizado ni cubierto por otras ventanas).
+
 </details>
 
 ---
