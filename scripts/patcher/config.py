@@ -29,7 +29,7 @@ def resolve_theme_path(game_path: Path, theme_name: str) -> Path:
     Args:
         game_path: Ruta raiz de instalacion de PokeMMO.
         theme_name: "default" para el tema base, o el nombre del
-                    mod/tema custom (ej: "Moonlyze99").
+                    mod/tema custom (ej: "PizzaTheme").
 
     Returns:
         Ruta absoluta al directorio que contiene theme.xml y los XMLs de UI.
@@ -37,19 +37,27 @@ def resolve_theme_path(game_path: Path, theme_name: str) -> Path:
     if theme_name.lower() == "default":
         return game_path / DEFAULT_THEME_REL
 
-    # Tema custom: data/mods/<nombre>/<nombre>/
-    mod_dir = game_path / MODS_BASE_REL / theme_name
-    if not mod_dir.is_dir():
-        raise FileNotFoundError(f"Mod no encontrado: {mod_dir}")
+    # Tema custom: data/themes/<nombre>/
+    theme_dir = game_path / "data" / "themes" / theme_name
+    if theme_dir.is_dir() and (theme_dir / "theme.xml").exists():
+        return theme_dir
+        
+    # Check if there is a subdirectory (some people package them weirdly)
+    if theme_dir.is_dir():
+        for sub in theme_dir.iterdir():
+            if sub.is_dir() and (sub / "theme.xml").exists():
+                return sub
 
-    # Buscar subdirectorio con theme.xml
-    for sub in mod_dir.iterdir():
-        if sub.is_dir() and (sub / "theme.xml").exists():
-            return sub
+    # Check fallback for older mods
+    mod_dir = game_path / "data" / "mods" / theme_name
+    if mod_dir.is_dir():
+        if (mod_dir / "theme.xml").exists():
+            return mod_dir
+        for sub in mod_dir.iterdir():
+            if sub.is_dir() and (sub / "theme.xml").exists():
+                return sub
 
-    raise FileNotFoundError(
-        f"No se encontro theme.xml dentro de {mod_dir}"
-    )
+    raise FileNotFoundError(f"Tema no encontrado en data/themes ni data/mods: {theme_name}")
 
 
 # ---------------------------------------------------------------------------
@@ -203,7 +211,7 @@ def load_config(config_path: Path | None = None) -> dict:
         save_config(DEFAULT_CONFIG, config_path)
         return DEFAULT_CONFIG
 
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, "r", encoding="utf-8-sig") as f:
         return json.load(f)
 
 
