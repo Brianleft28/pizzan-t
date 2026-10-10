@@ -24,6 +24,61 @@ Write-Host " carpeta roms/ de tu PokeMMO o el OCR no va a cazar una." -Foregroun
 Write-Host "==============================================================" -ForegroundColor Red
 Write-Host ""
 
+$scriptPath = (Get-Location).Path
+$sourceTheme = Join-Path $scriptPath "pizzatheme"
+
+if (-not (Test-Path $sourceTheme)) {
+    Write-Host "[X] No se encontro la carpeta pizzatheme en el repositorio." -ForegroundColor Red
+    exit 1
+}
+
+# Sincronización de Versión de Moonlyze (0 complacencia)
+Write-Host "[?] Actualizacion de version desde el tema original (Moonlyze)" -ForegroundColor Cyan
+$baseZip = Read-Host "[+] Arrastra aca el .zip del tema base (ej. Moonlyze99.zip) y presiona Enter"
+$baseZip = $baseZip -replace '"', ''
+
+if (Test-Path $baseZip) {
+    Write-Host "-> Leyendo info.xml desde el zip base..." -ForegroundColor Yellow
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $zip = [System.IO.Compression.ZipFile]::OpenRead($baseZip)
+    $infoEntry = $zip.Entries | Where-Object { $_.FullName -match 'info\.xml$' } | Select-Object -First 1
+
+    if ($infoEntry) {
+        $stream = $infoEntry.Open()
+        $reader = New-Object System.IO.StreamReader($stream)
+        $moonXml = $reader.ReadToEnd()
+        $reader.Close()
+        
+        $moonRevMatch = [regex]::Match($moonXml, 'revision="([^"]*)"')
+        $moonVerMatch = [regex]::Match($moonXml, '<version>([^<]*)</version>')
+        
+        if ($moonRevMatch.Success -and $moonVerMatch.Success) {
+            $moonRev = $moonRevMatch.Groups[1].Value
+            $moonVer = $moonVerMatch.Groups[1].Value
+            
+            $miInfoPath = Join-Path $sourceTheme "info.xml"
+            if (Test-Path $miInfoPath) {
+                $miXml = Get-Content $miInfoPath -Raw
+                # Eliminar revision vieja si existe
+                $miXml = $miXml -replace '\s*revision="[^"]*"', ''
+                # Inyectar la nueva revision en la etiqueta theme
+                $miXml = $miXml -replace '<theme([^>]*)>', "<theme revision=""$moonRev""`$1>"
+                $miXml = $miXml -replace '<version>[^<]*</version>', "<version>$moonVer</version>"
+                Set-Content -Path $miInfoPath -Value $miXml -Encoding UTF8
+                Write-Host "[OK] Tu carpeta pizzatheme fue actualizada a Version: $moonVer y Revision: $moonRev" -ForegroundColor Green
+            }
+        } else {
+            Write-Host "[!] No se pudieron parsear las versiones del info.xml base." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "[!] No se encontro info.xml en el zip." -ForegroundColor Yellow
+    }
+    $zip.Dispose()
+} else {
+    Write-Host "[!] Archivo zip no valido, se omite la actualizacion de version." -ForegroundColor Yellow
+}
+Write-Host ""
+
 $pokeDirs = @('C:\Program Files\PokeMMO', 'C:\PokeMMO', 'D:\PokeMMO', "$env:USERPROFILE\Desktop\PokeMMO")
 $target = $null
 
@@ -64,28 +119,12 @@ if (Test-Path $badZipFile) {
     Write-Host "[-] Basura eliminada: PizzaTheme.zip en data\themes." -ForegroundColor Yellow
 }
 
-$scriptPath = (Get-Location).Path
-$sourceTheme = Join-Path $scriptPath "pizzatheme"
-
-if (-not (Test-Path $sourceTheme)) {
-    Write-Host "[X] No se encontro la carpeta pizzatheme en el repositorio." -ForegroundColor Red
-    exit 1
-}
-
 if (Test-Path $themeDestDir) {
     Remove-Item -Recurse -Force $themeDestDir
 }
 New-Item -ItemType Directory -Path $themeDestDir | Out-Null
 Copy-Item -Path "$sourceTheme\*" -Destination $themeDestDir -Recurse -Force
 Write-Host "[OK] PizzaTheme copiado a data\themes\PizzaTheme." -ForegroundColor Green
-
-$infoXmlPath = Join-Path $themeDestDir "info.xml"
-if (Test-Path $infoXmlPath) {
-    $xmlContent = Get-Content $infoXmlPath -Raw
-    $xmlContent = $xmlContent -replace 'revision="[^"]*"', 'revision="8"'
-    Set-Content -Path $infoXmlPath -Value $xmlContent -Encoding UTF8
-    Write-Host "[OK] info.xml actualizado con revision=8." -ForegroundColor Green
-}
 
 $patcherConfigPath = Join-Path $scriptPath "scripts\patcher\patcher_config.json"
 if (Test-Path $patcherConfigPath) {
