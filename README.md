@@ -73,15 +73,14 @@ pip install -r requirements.txt
 
 > ⏳ La primera vez puede tardar varios minutos porque descarga PyTorch y EasyOCR (~2GB).
 
-### 5. Instalar Tema Visual (Requisito Obligatorio)
+### 5. Instalar Tema Visual y ROMs (Requisito Obligatorio)
 
-El bot usa visión artificial calibrada para una **plantilla específica** y requiere que los fondos de combate estén desactivados. El tema ahora está estructurado de forma moderna como un Mod (.mod).
+El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados.
 
-1. Inicia la interfaz del bot (`python main_gui.py`).
-2. Ve a la pestaña **⚙️ General** y presiona el botón **"🎨 SYNC PIZZA THEME (MOD)"**.
-3. Espera a que el log interno te confirme que se copió correctamente.
-4. Abre PokéMMO, ve a **Administración de Mods** y activa `PizzaTheme`.
-5. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR funcione.
+1. Hacé doble click en el instalador automático `instalar_pizza_theme.bat`.
+2. El script detectará la versión actual de tu juego, copiará las ROMs de tu carpeta `roms/` y sincronizará el tema visual automáticamente.
+3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `pizzatheme`.
+4. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR lea texto limpio.
 
 ### 6. Iniciar el bot
 
@@ -149,7 +148,7 @@ Cada botón abre una pantalla de selección: arrastrá para marcar la región y 
 
 ```
 pizzan-t/
-├─ instalar_pizza_theme.bat # Instalador del tema (.mod format)
+├─ instalar_pizza_theme.bat # Auto-Instalador del tema y ROMs (escritorio)
 ├─ pizzatheme/          # Archivos crudos del tema visual
 ├── main_gui.py          # Interfaz gráfica (CustomTkinter)
 ├── config.json          # Configuración y calibración (auto-generado)

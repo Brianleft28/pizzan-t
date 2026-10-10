@@ -1,26 +1,32 @@
-==================================================
- GUIA DE INSTALACION - PIZZA THEME
-==================================================
+# 🚀 CÓMO INSTALAR EL BOT Y EL TEMA (FILOSOFÍA 0 COMPLACENCIA)
 
-¡Hola! Gracias por descargar el PizzaTheme.
-Ahora la instalación es mucho más limpia y segura,
-usando la arquitectura de Mods oficial de PokeMMO.
+Bienvenido, bebito. Si estás en una PC nueva y querés dejar el bot andando de ruta, seguí estos pasos al pie de la letra.
+Acá no hay vueltas, automatizamos todo lo que se podía para que la instalación sea god.
 
-Sigue estos pasos simples:
+## 1. PREPARAR EL REPOSITORIO
+1. Cloná el repositorio: `git clone https://github.com/Brianleft28/pizzan-t`
+2. Entrá a la carpeta: `cd pizzan-t`
+3. Pegá tus ROMs modificadas (las de Pokémon Black/White que no tienen fondo de batalla) adentro de la carpeta `roms/` de este repositorio. (Nota: Git las ignora automáticamente para no saturar el repo).
 
-1. Abre el bot ejecutando "python main_gui.py" en tu terminal.
-2. En la pestaña General, dale al botón "🎨 SYNC PIZZA THEME (MOD)".
-   Esto construirá automáticamente tu tema como Mod y lo pondrá
-   en la carpeta data/mods de tu juego, limpiando cualquier archivo viejo.
+## 2. INSTALAR EL TEMA Y LAS ROMS AUTOMÁTICAMENTE
+Se acabó el infierno de editar versiones a mano o crear archivos `.mod`.
+1. Hacé doble click en el archivo `instalar_pizza_theme.bat`.
+2. El script va a:
+   - Buscar tu instalación de PokéMMO y leer su `revision.txt`.
+   - Sincronizar el `info.xml` del tema para que encaje perfecto y no tire error de "Incompatible".
+   - Copiar las ROMs de tu carpeta `roms/` directo a la carpeta de ROMs del juego.
+   - Instalar el tema visual en `data/themes/pizzatheme`.
+   - Aplicar los parches de dimensiones UI usando nuestro script en Python.
+3. Abrí el juego, andá a **Ajustes -> Interfaz -> Tema** y seleccioná `pizzatheme`. Reiniciá el juego si te lo pide.
+4. **CRÍTICO:** Andá a **Ajustes -> Video** y asegurate de **DESACTIVAR** los fondos de combate. Esto es lo que permite que el OCR lea texto puro.
 
-(Si en lugar del repositorio descargaste el archivo .mod suelto):
-1. Copia el archivo "PizzaTheme.mod".
-2. Pégalo en tu carpeta de PokeMMO dentro de "data\mods\".
-3. Si tenías una carpeta vieja en "data\themes\pizzatheme", ¡bórrala!
+## 3. INICIAR EL ENTORNO Y EL BOT
+1. Creá el entorno virtual: `python -m venv venv`
+2. Activalo: `.\venv\Scripts\activate`
+3. Instalá todo: `pip install -r requirements.txt` (Paciencia, pibe, PyTorch pesa lo suyo).
+4. Ejecutá el bot: `python main_gui.py`
 
-4. Abre el juego.
-5. Ve a "Administración de Mods" en el menú.
-6. Marca la casilla de "PizzaTheme" para activarlo.
-7. Guarda y reinicia el juego cuando te lo pida.
-
-¡Disfruta sin crasheos!
+## 4. CALIBRAR (Si es la primera vez en la PC)
+1. Andá a la pestaña **🎯 Calib** en la GUI.
+2. Mapeá las áreas de la pantalla (Single Slot, Horde HUD, Status, etc.).
+3. ¡Y listo, a farmear Dittos en su prime!
