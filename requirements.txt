@@ -6,3 +6,4 @@ customtkinter
 requests
 numpy
 Pillow
+questionary
