@@ -106,6 +106,15 @@ New-Item -ItemType Directory -Path $themeDestDir | Out-Null
 Copy-Item -Path "$sourceTheme\*" -Destination $themeDestDir -Recurse -Force
 Write-Host " [OK] PizzaTheme inyectado 完璧 (Kanpeki) en data\themes." -ForegroundColor Green
 
+$mainPropsPath = Join-Path $target "config\main.properties"
+if (Test-Path $mainPropsPath) {
+    Write-Host " [🔧] Forzando seleccin de PizzaTheme en main.properties..." -ForegroundColor Yellow
+    $props = Get-Content $mainPropsPath
+    $props = $props -replace '^client\.ui\.theme=.*', 'client.ui.theme=PizzaTheme'
+    $props | Set-Content $mainPropsPath -Encoding UTF8
+    Write-Host " [OK] client.ui.theme = PizzaTheme. ¡0 complacencia, yo decido!" -ForegroundColor Green
+}
+
 $patcherConfigPath = Join-Path $scriptPath "scripts\patcher\patcher_config.json"
 if (Test-Path $patcherConfigPath) {
     $configContent = Get-Content $patcherConfigPath -Raw | ConvertFrom-Json
