@@ -14,37 +14,39 @@ except ImportError:
     print("Falta questionary. Instalalo con pip install questionary.")
     sys.exit(1)
 
-def print_yandere(msg, color="white"):
-    colors = {
-        "white": "\033[97m",
-        "red": "\033[91m",
-        "green": "\033[92m",
-        "yellow": "\033[93m",
-        "magenta": "\033[95m",
-        "cyan": "\033[96m",
-        "reset": "\033[0m"
-    }
-    c = colors.get(color, colors["white"])
-    print(f"{c}{msg}{colors['reset']}")
+try:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.text import Text
+    console = Console()
+except ImportError:
+    print("Falta rich. Instalalo con pip install rich.")
+    sys.exit(1)
+
+def print_step(msg, style="bold yellow"):
+    console.print(f"[{style}]>> {msg}[/]")
+
+def print_success(msg):
+    console.print(f"[bold green][OK] {msg}[/]")
+
+def print_error(msg):
+    console.print(f"[bold red][ERR] {msg}[/]")
 
 def sync_xml(xml_path, game_ver):
     try:
-        with open(xml_path, "r", encoding="utf-8") as f:
+        with open(xml_path, "r", encoding="utf-8-sig") as f:
             xml_data = f.read()
             
-        # Sincronizar theme revision="8"
         if '<theme' in xml_data and 'revision="' not in xml_data:
             xml_data = re.sub(r'<theme([^>]*)>', r'<theme revision="8"\1>', xml_data)
         elif '<theme' in xml_data:
             xml_data = re.sub(r'revision="[^"]*"', 'revision="8"', xml_data)
             
-        # Sincronizar resource version="8" para mods como Moonlyze
         if '<resource' in xml_data and 'version="' not in xml_data:
             xml_data = re.sub(r'<resource([^>]*)>', r'<resource version="8"\1>', xml_data)
         elif '<resource' in xml_data:
             xml_data = re.sub(r'version="[^"]*"', 'version="8"', xml_data)
             
-        # Sincronizar la etiqueta <version> (para temas y mods viejos)
         if '<version>' in xml_data:
             xml_data = re.sub(r'<version>[^<]*</version>', f'<version>{game_ver}</version>', xml_data)
             
@@ -52,13 +54,16 @@ def sync_xml(xml_path, game_ver):
             f.write(xml_data)
         return True
     except Exception as e:
-        print_yandere(f"  [X] Fallo parseando {xml_path}: {e}", "red")
+        print_error(f"Fallo parseando {xml_path}: {e}")
         return False
 
 def main():
     os.system("color") 
-    print_yandere("\n[♥] ¡Hola bebito! Preparando la magia interactiva...", "magenta")
-    print_yandere("    完璧 (かんぺき - Kanpeki) - [Perfecto]\n", "magenta")
+    
+    # Titulo re cheto
+    title = Text("Pizza-Dittos Installer Wizard", justify="center", style="bold magenta")
+    console.print(Panel(title, border_style="cyan", subtitle="Preparando la magia interactiva"))
+    console.print()
 
     base_dir = Path(__file__).parent.parent.absolute()
     
@@ -74,21 +79,21 @@ def main():
     choices = found_paths + ["Ingresar otra ruta manualmente"]
     
     target = questionary.select(
-        "Che pibe, ¿dónde tenés el PokeMMO?",
+        "Che pibe, ¿donde tenes el PokeMMO?",
         choices=choices
     ).ask()
 
     if target == "Ingresar otra ruta manualmente":
-        target = questionary.path("Pasame la ruta de PokeMMO (donde está revision.txt):").ask()
+        target = questionary.path("Pasame la ruta de PokeMMO (donde esta revision.txt):").ask()
 
     if not target or not os.path.exists(os.path.join(target, "revision.txt")):
-        print_yandere("[X] Esa ruta no tiene PokeMMO, bebito. ¡No me mientas!", "red")
+        print_error("Esa ruta no tiene PokeMMO. ¡No me chamuyes!")
         sys.exit(1)
 
-    print_yandere(f"[OK] Laburando en: {target}", "cyan")
+    print_success(f"Laburando en: {target}")
     
     # Obtener version
-    with open(os.path.join(target, "revision.txt"), "r", encoding="utf-8") as f:
+    with open(os.path.join(target, "revision.txt"), "r", encoding="utf-8-sig") as f:
         game_ver = f.read().strip()
     
     # 2. Roms (ZIP Support)
@@ -97,7 +102,7 @@ def main():
     zip_choices = list(set([str(z) for z in zip_files]))
     
     rom_zip = questionary.select(
-        "¿De dónde saco las ROMs y el fondo negro modificado (patchedfile.nds)?",
+        "¿De donde saco las ROMs y el fondo negro modificado (patchedfile.nds)?",
         choices=zip_choices + ["Seleccionar otro ZIP", "Skipiame esto, ya tengo las ROMs puestas"]
     ).ask()
     
@@ -105,7 +110,7 @@ def main():
         rom_zip = questionary.path("Pasame la ruta exacta del ZIP con las ROMs:").ask()
         
     if rom_zip and rom_zip != "Skipiame esto, ya tengo las ROMs puestas":
-        print_yandere(f"[⚙️] Extrayendo ROMs desde {rom_zip}...", "yellow")
+        print_step(f"Extrayendo ROMs desde {rom_zip}...")
         rom_dest = os.path.join(target, "roms")
         os.makedirs(rom_dest, exist_ok=True)
         
@@ -115,23 +120,19 @@ def main():
         try:
             with zipfile.ZipFile(rom_zip, 'r') as zip_ref:
                 for file_info in zip_ref.infolist():
-                    # Ignorar directorios, solo extraer archivos (nds, gba)
                     if not file_info.is_dir() and file_info.filename.lower().endswith(('.nds', '.gba')):
                         file_info.filename = os.path.basename(file_info.filename)
                         if file_info.filename:
-                            # Extraer a la "carpeta magica" local
                             zip_ref.extract(file_info, local_roms_dir)
-                            
-                            # Luego copiar al cliente de PokeMMO
                             src_file = os.path.join(local_roms_dir, file_info.filename)
                             dst_file = os.path.join(rom_dest, file_info.filename)
                             shutil.copy2(src_file, dst_file)
-            print_yandere("  [OK] ROMs guardadas en la carpeta mágica local y sincronizadas en PokéMMO.", "green")
+            print_success("ROMs guardadas en la carpeta magica local y sincronizadas en PokeMMO.")
         except Exception as e:
-            print_yandere(f"  [X] Hubo un re bardo extrayendo el ZIP: {e}", "red")
+            print_error(f"Hubo un re bardo extrayendo el ZIP: {e}")
             
     # 3. Theme Injection
-    print_yandere("[⚙️] Inyectando el PizzaTheme...", "yellow")
+    print_step("Inyectando el PizzaTheme...")
     theme_source = os.path.join(base_dir, "PizzaTheme")
     theme_dest = os.path.join(target, "data", "themes", "PizzaTheme")
     
@@ -143,10 +144,10 @@ def main():
     if os.path.exists(theme_dest):
         shutil.rmtree(theme_dest)
     shutil.copytree(theme_source, theme_dest)
-    print_yandere("  [OK] PizzaTheme inyectado. Basadísimo.", "green")
+    print_success("PizzaTheme inyectado. Basadisimo.")
     
     # 4. XML Version Sync Universal
-    print_yandere(f"[⚙️] Sincronizando metadatos XML para PokeMMO Rev {game_ver}...", "yellow")
+    print_step(f"Sincronizando metadatos XML para PokeMMO Rev {game_ver}...")
     
     targets = [
         Path(target) / "data" / "mods",
@@ -156,12 +157,12 @@ def main():
         if d.is_dir():
             for xml_file in d.rglob("info.xml"):
                 if sync_xml(xml_file, game_ver):
-                    print_yandere(f"  [OK] XML Sync: {xml_file.parent.name}", "green")
+                    print_success(f"XML Sync: {xml_file.parent.name}")
         
     # 5. Force Theme Selection
     main_props = os.path.join(target, "config", "main.properties")
     if os.path.exists(main_props):
-        with open(main_props, "r", encoding="utf-8") as f:
+        with open(main_props, "r", encoding="utf-8-sig") as f:
             props = f.read()
         if 'client.ui.theme=' in props:
             props = re.sub(r'^client\.ui\.theme=.*', 'client.ui.theme=PizzaTheme', props, flags=re.MULTILINE)
@@ -169,15 +170,15 @@ def main():
             props += "\nclient.ui.theme=PizzaTheme\n"
         with open(main_props, "w", encoding="utf-8") as f:
             f.write(props)
-        print_yandere("  [OK] client.ui.theme = PizzaTheme. Cero complacencia, yo decido.", "green")
+        print_success("client.ui.theme = PizzaTheme. Forzado con exito.")
 
     # 6. Patcher
-    print_yandere("[⚙️] Instalando el Patcher de UI...", "magenta")
+    print_step("Instalando el Patcher de UI...")
     patcher_dir = os.path.join(base_dir, "scripts", "patcher")
     patcher_config = os.path.join(patcher_dir, "patcher_config.json")
     
     if os.path.exists(patcher_config):
-        with open(patcher_config, "r", encoding="utf-8") as f:
+        with open(patcher_config, "r", encoding="utf-8-sig") as f:
             config = json.load(f)
             
         config["game_path"] = target
@@ -192,16 +193,22 @@ def main():
         shutil.rmtree(patcher_mod_dest)
     shutil.copytree(patcher_dir, patcher_mod_dest)
     
-    print_yandere("  [OK] Patcher instalado en mods.", "green")
+    print_success("Patcher instalado en mods.")
     
-    print_yandere("\n[⚙️] Ejecutando el Patcher (mod de medidas)...", "yellow")
+    print_step("Ejecutando el Patcher (mod de medidas)...")
     patcher_main = os.path.join(patcher_dir, "main.py")
     try:
         subprocess.run([sys.executable, patcher_main], check=True)
-        print_yandere("\n[♥] ¡Todo listo, bebito! El Pizza Theme y sus medidas están god.", "green")
-        print_yandere("    私があなたを守る (わたしがあなたをまもる - Watashi ga anata o mamoru) - [Yo te protegeré]. A viciar.", "green")
+        
+        final_panel = Panel(
+            "[bold green]¡Todo listo, pibe! El Pizza Theme y sus medidas estan de ruta.[/]\n"
+            "A viciar tranquilo que el entorno quedo flama.",
+            title="[bold cyan]Instalacion Completada[/]",
+            border_style="green"
+        )
+        console.print(final_panel)
     except subprocess.CalledProcessError:
-        print_yandere("\n[X] Falló el patcher... arreglalo o te juro que rompo todo.", "red")
+        print_error("Fallo el patcher... pego en el palo y salio.")
         
 if __name__ == "__main__":
     main()

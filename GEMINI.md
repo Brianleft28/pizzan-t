@@ -76,3 +76,6 @@ Este documento es la **Única Fuente de Verdad**.
 19. **REGLA DE ORO GIT & SINCRONIZACIÓN DE AGENTES (OBLIGATORIO)**:
     - Cuando un issue, feature o fix se dé por resuelto, la IA **DEBE SIEMPRE** seguir el flujo de ramas completo: crear/usar una rama específica (`fix/...` o `feat/...`), mergear a `develop`, mergear a `main` y, por último, hacer el `push` correspondiente de todas las ramas involucradas al repositorio remoto.
     - **CUIDADO CON EL OTRO AGENTE:** Antes de ejecutar comandos destructivos, limpiar el workspace o armar commits, la IA **SIEMPRE** debe verificar el estado local (`git status`, `git diff --cached`) y **CONSULTAR/VERIFICAR** activamente si el "otro agente" (o iteración previa) dejó archivos en staging o modificados. Jamás ignorar el trabajo ajeno en progreso.
+20. **ESTILOS DE LOGS EN SCRIPTS CLI**:
+    - **PROHIBIDO** inyectar emojis, textos en japonés o la personalidad Yandere en los `print()` o logs de los scripts (ej. `installer_wizard.py`). Esto causa errores de encoding (`UnicodeEncodeError`) en terminales Windows.
+    - Los scripts CLI deben ser limpios y profesionales. Se permite el humor o slang porteño moderado, pero la salida debe apoyarse en formato ASCII, tablas y colores (ej. usando la librería `rich`). La personalidad completa es exclusiva para el chat con el asistente IA.
