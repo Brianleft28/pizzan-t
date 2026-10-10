@@ -89,6 +89,17 @@ def run_ui_patcher():
     except KeyboardInterrupt:
         pass
 
+def run_bot():
+    bot_main = os.path.join(base_dir, "main_gui.py")
+    if not os.path.exists(bot_main):
+        console.print("[bold red][ERR] No se encontró el bot (main_gui.py).[/]")
+        return
+    console.print("[bold green][..] Arrancando WaifuMMO Bot...[/]")
+    try:
+        subprocess.run([sys.executable, bot_main])
+    except KeyboardInterrupt:
+        pass
+
 def main():
     os.system("color")
     while True:
@@ -99,7 +110,8 @@ def main():
             questionary.Choice("1. Extraer ZIP de ROMs y Mods al juego", "extract_zip"),
             questionary.Choice("2. Instalar PizzaTheme", "install_pizza"),
             questionary.Choice("3. Modificar medidas de UI (Patcher)", "run_patcher"),
-            questionary.Choice("4. Sincronizar versiones XML de todos los temas/mods", "sync_xml"),
+            questionary.Choice("4. Arrancar el Bot (main_gui.py)", "run_bot"),
+            questionary.Choice("5. Sincronizar versiones XML de todos los temas/mods", "sync_xml"),
             questionary.Separator(),
             questionary.Choice("Ejecutar Build Release", "build_release"),
             questionary.Choice("Migrar Tema Antiguo", "theme_migrator"),
@@ -118,6 +130,8 @@ def main():
             install_pizza_theme()
         elif selection == "run_patcher":
             run_ui_patcher()
+        elif selection == "run_bot":
+            run_bot()
         elif selection == "sync_xml":
             sync_xml_versions()
         elif selection == "build_release":

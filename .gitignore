@@ -2,7 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.gitignore
 # C extensions
 *.so
 
@@ -149,7 +148,6 @@ cython_debug/
 
 # Project specific
 config.json
-a/
 
 # Ignorar ROMs para evitar problemas de peso/copyright (Regla 18)
 roms/

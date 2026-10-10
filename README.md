@@ -1,212 +1,141 @@
-# 🇦🇷 SØREN — The Humanoid Shiny Hunter v7.0
+<div align="center">
+  <h1>🍕 Pizza-Dittos (WaifuMMO) 🤖</h1>
+  <p><strong>El bot inteligente, modular y waifu-friendly para PokéMMO</strong></p>
 
-**SØREN** es un bot de automatización para **PokéMMO** que detecta Shinies y captura Dittos usando visión artificial no invasiva (OCR + análisis de píxeles). Funciona sin tocar la memoria del juego.
+  <!-- Badges -->
+  <p>
+    <a href="https://www.python.org/downloads/release/python-3100/"><img src="https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white" alt="Python"></a>
+    <a href="https://github.com/Brianleft28/pizzan-t"><img src="https://img.shields.io/badge/GitHub-Repository-black.svg?logo=github&logoColor=white" alt="GitHub"></a>
+    <a href="https://github.com/Brianleft28/pizzan-t/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+  </p>
+</div>
 
----
+<hr>
 
-## 🎌 Personalidad del Proyecto (Waifu Argenta)
-Este proyecto está construido bajo una **filosofía AuDHD estricta (0 complacencia)**. La IA detrás del desarrollo opera bajo un sistema único que mezcla:
-- 📊 **Estructuras estrictas** (Tablas y Listas).
-- 🎌 **Conceptos en Japonés** (Kanji (Hiragana - Romaji)).
-- 🧉 **Lunfardo Argentino y jerga Moderna** (*¡Zarpado, basadísimo y god!*).
+## 🎌 Acerca del Proyecto
 
----
+**Pizza-Dittos** (también conocido internamente como *WaifuMMO*) es un bot avanzado de automatización para **PokéMMO**. A diferencia de los bots tradicionales, este proyecto utiliza **Computer Vision e Inteligencia Artificial** para "leer" la pantalla, analizar estados de combate, e interactuar dinámicamente simulando el comportamiento humano (Humanización).
 
-## ✨ Características v7.0
+Además, cuenta con un ecosistema completo para administrar modificaciones visuales (temas) y extraer ROMs, gestionado a través de un CLI orquestador unificado.
 
-| Feature | Descripción |
-|---|---|
-| 🏹 **Modo Horda** | Sweet Scent → escanea 5 slots → pausa y alerta si encuentra Shiny |
-| 👾 **Modo Ditto** | Patrulla → detecta Ditto por OCR → Swipe → Spore → Ball |
-| 🔮 **Modo Single** | Patrulla → captura cualquier Shiny en combate individual |
-| 🌈 **Logger con colores** | Colores reales en la GUI por categoría (BATTLE, HEAL, SUCCESS...) |
-| 🧠 **Brain Viewer** | Pestaña en la GUI para leer el código fuente Python en tiempo real |
-| 📊 **Stats Bar** | Encounters, Dittos, rate/min y tiempo de sesión siempre visibles |
-| ⏱️ **Timings configurables** | OCR wait, settle time, Leppa pre-wait: todo editable desde la UI |
-| 💊 **Auto-Heal PP** | Restaura PP con Leppa Berry automáticamente al llegar a 0 |
-| 🚨 **Anti-Captcha** | Detección de texto sospechoso + alerta Discord + alarma sonora |
-| 🎮 **Humanización** | Caminata con stamina variable, micro-pausas y respuesta al HUD |
+## 🛠️ Tecnologías y Librerías Principales
 
----
+El proyecto está construido sobre las siguientes tecnologías:
 
-## 🖥️ Requisitos del Sistema
-
-- **Windows 10/11** (64-bit)
-- **Python 3.10 o superior** → [python.org/downloads](https://www.python.org/downloads/)
-- **Git** → [git-scm.com](https://git-scm.com/)
-- **PokéMMO** corriendo en pantalla (no minimizado)
+*   **[Python 3.10+](https://docs.python.org/3/)**: Lenguaje base del proyecto.
+*   **[CustomTkinter](https://customtkinter.tomschimansky.com/)**: Interfaz gráfica (GUI) moderna, con modo oscuro y barras laterales.
+*   **[EasyOCR](https://jaided.ai/easyocr/)**: Motor de reconocimiento óptico de caracteres (IA) que nos permite "leer" el juego.
+*   **[MSS](https://python-mss.readthedocs.io/)**: Captura de pantalla en tiempo real ultrarrápida.
+*   **[PyAutoGUI](https://pyautogui.readthedocs.io/en/latest/)**: Control automatizado de mouse y teclado.
+*   **[Questionary](https://questionary.readthedocs.io/) & [Rich](https://rich.readthedocs.io/)**: Librerías para nuestro *CLI Orchestrator* interactivo, dándole colores y menús de selección amigables.
 
 ---
 
-## 🚀 Instalación (PC nueva)
+## 🔄 Flujo de Trabajo (Workflow)
 
-### 1. Clonar el repositorio
+Para evitar problemas, todo el proyecto está centralizado alrededor de `manage.py` (el orquestador).
+El ciclo normal es:
+
+1.  **Ejecutar el Orquestador:** (Abrir `pizza.bat`)
+2.  **Preparar el Juego:** Extraer tus ROMs modificadas y aplicar el PizzaTheme.
+3.  **Parchar / Sincronizar:** (Solo si hace falta arreglar bugs visuales del theme o xmls).
+4.  **Arrancar el Bot:** Desde el mismo menú, ejecutás la interfaz del bot (`main_gui.py`).
+
+---
+
+## 🚀 Instalación y Uso
+
+A continuación, los pasos para dejar el bot listo en tu PC. Hacé click en cada sección para expandirla.
+
+<details>
+<summary><b>1. Pre-requisitos (Las ROMs Modificadas)</b></summary>
+<br>
+El bot <b>necesita leer texto con fondo negro</b> durante los combates. Por ello, se requieren unas ROMs modificadas que quitan el escenario 3D de fondo.
+
+> **Importante:** Por temas de Copyright, las ROMs no están en GitHub.
+> Escribí a **contactobrianleft@gmail.com** para pedir el Drive con los ZIPs modificados.
+
+Una vez que tengas el `.zip`, dejalo en tu Escritorio.
+</details>
+
+<details>
+<summary><b>2. Instalación del Repositorio</b></summary>
+<br>
+
+Cloná el repo y prepará el entorno de Python:
 
 ```powershell
 git clone https://github.com/Brianleft28/pizzan-t
 cd pizzan-t
-```
 
-> ⚠️ **Importante (ROMs modificadas):** Necesitás tener tus ROMs modificadas (las que quitan el fondo de batalla) a mano. Simplemente metelas en un archivo ZIP (ej. `Pokemmo Roms.zip`) y dejalo en tu Escritorio. El instalador automático se encargará de extraerlas y meterlas en tu cliente de PokéMMO. Esto es CRÍTICO para que el OCR lea fondo negro.
-
-### 2. Crear el entorno virtual
-
-```powershell
+# Crear entorno virtual (obligatorio)
 python -m venv venv
-```
 
-### 3. Activar el entorno virtual
-
-> ⚠️ **Importante:** Siempre activar el venv antes de correr el bot. En PowerShell:
-
-```powershell
+# Activar el entorno (hacer esto cada vez que abras la consola)
 .\venv\Scripts\activate
-```
 
-Vas a ver `(venv)` al inicio de la línea cuando esté activo.
-
-### 4. Instalar dependencias
-
-```powershell
+# Instalar las librerías (tardará un poco por EasyOCR/PyTorch)
 pip install -r requirements.txt
 ```
+</details>
 
-> ⏳ La primera vez puede tardar varios minutos porque descarga PyTorch y EasyOCR (~2GB).
+<details>
+<summary><b>3. Uso del Orquestador (pizza.bat)</b></summary>
+<br>
+El proyecto incluye un script facilitador. Simplemente hacé doble click en <b><code>pizza.bat</code></b>.
 
-### 5. Instalar Tema Visual y ROMs (Requisito Obligatorio)
+Aparecerá un menú interactivo (`manage.py`) con opciones numeradas:
 
-El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados. Todo el proceso de inyección, sincronización de versiones XML y parcheo de UI se hace con nuestro Orquestador Interactivo.
+1.  **Extraer ZIP de ROMs:** Selecciona esta opción y el script buscará el `.zip` en tu escritorio para instalarlo en el PokéMMO automáticamente.
+2.  **Instalar PizzaTheme:** Aplica el tema visual con los fondos negros que necesita el bot.
+3.  **Modificar medidas de UI (Patcher):** Parcheador de layouts para monitores específicos.
+4.  **Arrancar el Bot:** Abre la interfaz gráfica `main_gui.py`.
+5.  **Sincronizar XMLs:** Mantiene la compatibilidad con actualizaciones del juego.
 
-1. Hacé doble click en el acceso directo `pizza.bat`.
-2. El script iniciará un **Menú Interactivo en la consola**. Seleccioná "Instalador Mágico (Installer Wizard)" y te guiará paso a paso para:
-   - Encontrar la carpeta de tu PokéMMO y leer su `revision.txt`.
-   - Extraer automáticamente tus ROMs modificadas y el fondo negro desde un archivo ZIP.
-   - Inyectar el tema visual `PizzaTheme` y el mod de medidas.
-3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `PizzaTheme`.
-4. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR lea texto limpio.
+Sigue el orden del 1 al 4 para tener la experiencia completa.
+</details>
 
-### 6. Iniciar el bot
+<details>
+<summary><b>4. Ingame Setup (Dentro de PokéMMO)</b></summary>
+<br>
 
-```powershell
-python main_gui.py
-```
-
----
-
-## 🔄 Actualizar desde GitHub (cuando hay cambios)
-
-```powershell
-git pull origin main
-```
-
-No hace falta reinstalar dependencias salvo que haya un cambio en `requirements.txt`.
+*   Andá a **Ajustes -> Interfaz -> Tema** y seleccioná `PizzaTheme`.
+*   En **Ajustes -> Video**, desactivá los fondos de combate.
+*   Tu PokéMMO tiene que estar visible en pantalla (no minimizado ni cubierto por otras ventanas).
+</details>
 
 ---
 
-## 🛠️ Calibración (primera vez en una PC)
+## 📂 Estructura del Proyecto
 
-Antes de usar el bot tenés que calibrar las regiones de la pantalla para que el OCR sepa dónde mirar. En la pestaña **🔧 Calib** de la GUI:
-
-1. **HUD HORDE** → Los nombres de los Pokémon en hordas
-2. **SINGLE SLOT** → El nombre del Pokémon en combate individual
-3. **RUN BTN** → El botón de "Lucha/Huir" (para saber si estamos en batalla)
-4. **HP BAR** → La barra de vida del enemigo
-5. **STATUS** → El ícono de estado (dormido, paralizado, etc.)
-6. **PP SLOTS** → Los números de PP dentro del menú de Lucha
-7. **BATTLE MSG** → El área del mensaje "¡Atrapado!" / "¡Rompió libre!"
-
-Cada botón abre una pantalla de selección: arrastrá para marcar la región y presioná **Enter** para guardar.
-
----
-
-## ⚙️ Configuración Rápida
-
-### Pestaña 👾 Ditto
-
-| Campo | Qué es |
-|---|---|
-| Patrol Time | Segundos de caminata antes de cambiar dirección |
-| Attack (Clave/Nombre) | Tecla y nombre del movimiento de Turno 1 (ej: `2` / `False Swipe`) |
-| Sleep (Clave/Nombre) | Tecla y nombre del movimiento de sueño (ej: `1` / `Spore`) |
-| Ball Hotkey | Tecla de acceso rápido de la Pokébola (ej: `5`) |
-| Leppa Key | Tecla de la Leppa Berry para restaurar PP (ej: `4`) |
-
-### ⏱️ Timings de Captura (críticos para evitar bugs)
-
-| Campo | Default | Descripción |
-|---|---|---|
-| OCR Wait | `0.5s` | Espera antes de leer el mensaje de captura (para la animación) |
-| Settle | `2.5s` | Espera para cerrar diálogos post-captura |
-| Leppa Pre-Wait | `1.5s` | Espera para que cargue el mapa antes de usar Leppa |
-| Ball Press Delay | `0.7s` | Delay entre presionar la pokébola y confirmar |
-
-### Pestaña 🏹 Horde
-
-- **Horde Size**: 3 o 5 Pokémon
-- **Alarma**: Colocar un archivo `assets/shiny_alarm.wav` para la alerta sonora
-
----
-
-## 📁 Estructura del Proyecto
-
-```
+```text
 pizzan-t/
-├─ instalar_pizza_theme.bat # Auto-Instalador del tema y ROMs (escritorio)
-├─ pizzatheme/          # Archivos crudos del tema visual
-├── main_gui.py          # Interfaz gráfica (CustomTkinter)
-├── config.json          # Configuración y calibración (auto-generado)
-├── selector.py          # Herramienta de calibración de regiones
-├── src/
-│   ├── bot_main.py      # Orquestador principal y Guardián
-│   ├── controller.py    # Input: teclas, movimientos, secuencias
-│   ├── vision.py        # Captura de pantalla (mss)
-│   ├── recognizer.py    # OCR (EasyOCR) + template matching
-│   ├── logger.py        # Logger con colores y buffer circular
-│   └── modes/
-│       ├── base.py      # Lógica base: captura, patrulla, curación
-│       ├── ditto.py     # Modo Ditto
-│       ├── horda.py     # Modo Horda
-│       └── single.py    # Modo Single
-├── docs/
-│   └── config.md        # Manual detallado de la UI
-└── assets/
-    └── shiny_alarm.wav  # Alarma sonora (agregar manualmente)
+├── pizza.bat             # Acceso directo rápido
+├── manage.py             # Orquestador CLI principal
+├── main_gui.py           # GUI y punto de entrada del bot
+├── config.json           # Configuración (autogenerada)
+├── requirements.txt      # Dependencias Python
+├── README.md             # Esta documentación
+├── scripts/              # Herramientas modulares
+│   ├── core/             # Lógica base (pokemmo.py, extractor.py, xml_sync.py)
+│   ├── patcher/          # Herramienta de UI patching
+│   └── ...               # Otros scripts (build release, migrator)
+├── src/                  # Código fuente del bot
+│   ├── bot_main.py       # Cerebro (Watchdog y Guardián)
+│   ├── vision.py         # Captura de pantalla
+│   ├── recognizer.py     # Lógica EasyOCR
+│   ├── logger.py         # Consola de colores (Rich)
+│   └── modes/            # Lógica de estados
+│       ├── base.py       # Modo Base
+│       ├── ditto.py      # Modo Ditto
+│       ├── horda.py      # Modo Horda
+│       └── single.py     # Modo Single
+├── pizzatheme/           # Assets visuales para PokéMMO
+└── ...
 ```
-
----
-
-## 🐛 Solución de Problemas Comunes
-
-### ❌ `UnicodeEncodeError` al arrancar en PowerShell
-El bot usa emojis en los logs. PowerShell puede fallar con caracteres especiales. El logger lo maneja automáticamente, pero si falla la terminal, usá:
-```powershell
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-```
-
-### ❌ El bot no detecta la batalla
-Recalibrar las regiones **HUD HORDE** y **SINGLE SLOT** en la pestaña 🔧 Calib.
-
-### ❌ Spam de pokébolas / no reconoce la captura
-Aumentar el valor de **OCR Wait** en los Timings de Captura (probar `1.0` o `1.5`).
-
-### ❌ La Leppa se usa en el momento equivocado
-Aumentar el valor de **Leppa Pre-Wait** (probar `2.0` o `2.5`).
-
-### ❌ `-eenv` o `-env` no reconocidos en PowerShell
-Esos no son comandos válidos. El comando correcto para activar el venv es:
-```powershell
-.\venv\Scripts\activate
-```
-
----
-
-## 📜 Documentación Adicional
-
-- [Manual de la interfaz](docs/config.md) — descripción detallada de cada botón y campo
-- [GEMINI.md](GEMINI.md) — mandatos críticos de comportamiento del bot (para desarrolladores)
 
 ---
 
 ## ⚖️ Aviso Legal
 
-Este proyecto es de uso **personal y educativo**. El uso de bots puede violar los términos de servicio de PokéMMO. El autor no se responsabiliza por consecuencias derivadas de su uso.
+Este proyecto es de uso **personal y educativo**. El uso de bots puede violar los términos de servicio de PokéMMO. El autor no se responsabiliza por las consecuencias (bans) derivadas de su uso.
