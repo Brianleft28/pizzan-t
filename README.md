@@ -75,13 +75,13 @@ pip install -r requirements.txt
 
 ### 5. Instalar Tema Visual y ROMs (Requisito Obligatorio)
 
-El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados. Todo el proceso de inyección, sincronización de versiones XML y parcheo de UI se hace con nuestro Wizard Interactivo.
+El bot usa visión artificial calibrada para el tema **PizzaTheme** y requiere que los fondos de combate estén desactivados. Todo el proceso de inyección, sincronización de versiones XML y parcheo de UI se hace con nuestro Orquestador Interactivo.
 
-1. Hacé doble click en el instalador automático `instalar_pizza_theme.bat`.
-2. El script iniciará un **Wizard Interactivo en la consola**. Te guiará paso a paso para:
+1. Hacé doble click en el acceso directo `pizza.bat`.
+2. El script iniciará un **Menú Interactivo en la consola**. Seleccioná "Instalador Mágico (Installer Wizard)" y te guiará paso a paso para:
    - Encontrar la carpeta de tu PokéMMO y leer su `revision.txt`.
-   - Extraer automáticamente tus ROMs modificadas y el fondo negro desde un archivo ZIP (ej: `Pokemmo Roms.zip` en tu escritorio).
-   - Inyectar el tema visual `PizzaTheme` y el mod de medidas `pokemmo_ui_patcher`, sincronizando los XML dinámicamente para que no tire error de "Incompatible".
+   - Extraer automáticamente tus ROMs modificadas y el fondo negro desde un archivo ZIP.
+   - Inyectar el tema visual `PizzaTheme` y el mod de medidas.
 3. Abre PokéMMO, ve a **Ajustes -> Interfaz -> Tema** y selecciona `PizzaTheme`.
 4. En **Ajustes -> Video**, **desactiva** la opción de fondos de combate para que el OCR lea texto limpio.
 
