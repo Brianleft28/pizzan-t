@@ -76,15 +76,19 @@ def main():
     ]
     
     found_paths = [p for p in default_paths if os.path.exists(os.path.join(p, "revision.txt"))]
-    choices = found_paths + ["Ingresar otra ruta manualmente"]
     
-    target = questionary.select(
-        "Che pibe, ¿donde tenes el PokeMMO?",
-        choices=choices
-    ).ask()
+    if len(found_paths) == 1:
+        target = found_paths[0]
+        print_success(f"PokeMMO detectado automáticamente en: {target}")
+    else:
+        choices = found_paths + ["Ingresar otra ruta manualmente"]
+        target = questionary.select(
+            "Che pibe, ¿donde tenes el PokeMMO?",
+            choices=choices
+        ).ask()
 
-    if target == "Ingresar otra ruta manualmente":
-        target = questionary.path("Pasame la ruta de PokeMMO (donde esta revision.txt):").ask()
+        if target == "Ingresar otra ruta manualmente":
+            target = questionary.path("Pasame la ruta de PokeMMO (donde esta revision.txt):").ask()
 
     if not target or not os.path.exists(os.path.join(target, "revision.txt")):
         print_error("Esa ruta no tiene PokeMMO. ¡No me chamuyes!")
@@ -97,20 +101,31 @@ def main():
         game_ver = f.read().strip()
     
     # 2. Roms (ZIP Support)
-    desktop = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
-    zip_files = list(desktop.glob("*okemmo*.zip")) + list(desktop.glob("*rom*.zip")) + list(desktop.glob("*.zip"))
-    zip_choices = list(set([str(z) for z in zip_files]))
+    rom_dest = os.path.join(target, "roms")
     
-    rom_zip = questionary.select(
-        "¿De donde saco las ROMs y el fondo negro modificado (patchedfile.nds)?",
-        choices=zip_choices + ["Seleccionar otro ZIP", "Skipiame esto, ya tengo las ROMs puestas"]
-    ).ask()
-    
-    if rom_zip == "Seleccionar otro ZIP":
-        rom_zip = questionary.path("Pasame la ruta exacta del ZIP con las ROMs:").ask()
+    # Auto-detect si ya hay roms (.nds)
+    has_roms = False
+    if os.path.exists(rom_dest):
+        if any(f.lower().endswith('.nds') for f in os.listdir(rom_dest)):
+            has_roms = True
+
+    if has_roms:
+        print_success("¡Ya tenés ROMs instaladas en el cliente! Salteando extracción de ROMs.")
+    else:
+        desktop = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
+        zip_files = list(desktop.glob("*okemmo*.zip")) + list(desktop.glob("*rom*.zip")) + list(desktop.glob("*.zip"))
+        zip_choices = list(set([str(z) for z in zip_files]))
         
-    if rom_zip and rom_zip != "Skipiame esto, ya tengo las ROMs puestas":
-        print_step(f"Extrayendo ROMs desde {rom_zip}...")
+        rom_zip = questionary.select(
+            "¿De donde saco las ROMs y el fondo negro modificado (patchedfile.nds)?",
+            choices=zip_choices + ["Seleccionar otro ZIP", "Skipiame esto, ya tengo las ROMs puestas"]
+        ).ask()
+        
+        if rom_zip == "Seleccionar otro ZIP":
+            rom_zip = questionary.path("Pasame la ruta exacta del ZIP con las ROMs:").ask()
+            
+        if rom_zip and rom_zip != "Skipiame esto, ya tengo las ROMs puestas":
+            print_step(f"Extrayendo ROMs desde {rom_zip}...")
         rom_dest = os.path.join(target, "roms")
         os.makedirs(rom_dest, exist_ok=True)
         
