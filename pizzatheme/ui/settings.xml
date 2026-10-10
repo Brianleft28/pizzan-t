@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <themes>
 	<theme name="settings-label-area" ref="-defaults">
 		<param name="background"><image>none</image></param>
@@ -7,7 +7,7 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 	</theme>
 	
 	<theme name="settings-panel" ref="base-frame" allowWildcard="true">
@@ -35,8 +35,8 @@
 				<theme name="container" ref="container">
 					<param name="border"><border>45,0,0,0</border></param>
 					<theme name="settings-scrollpane" ref="-defaults" allowWildcard="true">
-						<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-						<theme name="vscrollbar" ref="vscrollbar-white"/>
+						<theme name="hscrollbar" ref="hscrollbar" />  
+						<theme name="vscrollbar" ref="vscrollbar-white" />
 						<param name="minWidth"><int>500</int></param>
 						<param name="minHeight"><int>418</int></param>
 						<param name="maxWidth"><int>32767</int></param>
@@ -52,7 +52,7 @@
 							<param name="smallGap"><dimension>8,8</dimension></param>
 							<param name="mediumGap"><dimension>10,10</dimension></param>
 							<param name="largeGap"><dimension>15,15</dimension></param>
-							<param name="namedGaps"><map/></param>
+							<param name="namedGaps"><map /></param>
 						</theme>
 					</theme>
 					<theme name="settings-scrollpane-small" ref="settings-scrollpane" allowWildcard="true">
@@ -65,7 +65,7 @@
 						<param name="smallGap"><dimension>8,8</dimension></param>
 						<param name="mediumGap"><dimension>10,10</dimension></param>
 						<param name="largeGap"><dimension>15,15</dimension></param>
-						<param name="namedGaps"><map/></param>
+						<param name="namedGaps"><map /></param>
 					</theme>
 				</theme>
 				<param name="inputMap"><inputMapDef>
@@ -76,7 +76,7 @@
 		</theme>
 	</theme>
 	
-	<!-- Settings GUI -->
+	
 	<theme name="translate-link" ref="button">
 		<param name="font"><font>main-orange-shadow</font></param>
 		<param name="minWidth"><int>455</int></param>
@@ -111,7 +111,7 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<theme name="label" ref="label">
 			<param name="font"><font>pb-dark</font></param>
 		</theme>
@@ -145,7 +145,7 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 	</theme>
 	
 	<theme name="label-settings-vai" ref="valueadjuster" allowWildcard="true">
@@ -194,7 +194,7 @@
 	<theme name="mods-panel" ref="base-frame" allowWildcard="true">
 		<param name="fadeDurationShow"><int>200</int></param>
 		<param name="fadeDurationHide"><int>200</int></param>
-		<param name="minHeight"><int>300</int></param>
+		<param name="minHeight"><int>1000</int></param>
 		<theme name="dialoglayout" ref="-dialog">
 			<param name="defaultGap"><dimension>5,5</dimension></param>
 			<param name="border"><border>40,10,5,7</border></param>
@@ -203,7 +203,7 @@
 				<theme name="settings-label-area" ref="-dialog">
 					<param name="defaultGap"><dimension>5,5</dimension></param>
 					
-					<!-- each instance of mod -->
+					
 					<theme name="dialoglayout" ref="-dialog">
 						<param name="defaultGap"><dimension>5,2</dimension></param>
 						<theme name="label-settings-value-modbuttons" ref="-dialog">
@@ -250,7 +250,7 @@
 				<theme name="settings-label-area" ref="-dialog">
 					<param name="defaultGap"><dimension>5,5</dimension></param>
 					
-					<!-- each instance of mod -->
+					
 					<theme name="dialoglayout" ref="-dialog">
 						<param name="defaultGap"><dimension>5,2</dimension></param>
 						<theme name="label-settings-value-modbuttons" ref="-dialog">

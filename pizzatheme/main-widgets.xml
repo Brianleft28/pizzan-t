@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <themes>
-	<!-- Main GUI Holder, nothing to touch here -->
+	
 	<theme name="maingui" ref="-defaults">
 		<param name="overlay"><image>none</image></param>
 		<param name="defaultGap"><dimension>5,5</dimension></param>
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 	</theme>
 
 	<theme name="debugimpl" ref="-defaults">
@@ -16,7 +16,7 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<theme name="label" ref="label">
       <param name="background">
         <image>chat-bubble.background</image>
@@ -51,7 +51,7 @@
     </param>
   </theme>
 
-  <!-- Login Frame -->
+  
   <theme name="logingui" ref="-defaults">
     <theme name="logo" ref="-defaults">
       <param name="background">
@@ -127,7 +127,7 @@
         <dimension>15,15</dimension>
       </param>
       <param name="namedGaps">
-        <map/>
+        <map />
       </param>
       <theme name="button" ref="button">
         <param name="minWidth"><int>100</int></param>
@@ -148,8 +148,8 @@
 			<theme name="tos-content">
 				<param name="background"><image>none</image></param>
 				<param name="overlay"><image>none</image></param>
-				<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-				<theme name="vscrollbar" ref="vscrollbar"/>
+				<theme name="hscrollbar" ref="hscrollbar" />  
+				<theme name="vscrollbar" ref="vscrollbar" />
 				<param name="border"><border>0</border></param>
 				<param name="minWidth"><int>600</int></param>
 				<param name="maxWidth"><int>32767</int></param>
@@ -168,8 +168,8 @@
             <param name="bold"><font>main-yellow</font></param>
 						<param name="link"><font>main-blue</font></param>
 					</map></param>
-					<param name="classes"><map/></param>
-					<param name="images"><map/></param>
+					<param name="classes"><map /></param>
+					<param name="images"><map /></param>
 				</theme>
 			</theme>
 			<theme name="editfield" ref="editfield">
@@ -181,7 +181,7 @@
 		</theme>
 	</theme>
 
-	<!-- Character Select GUI -->
+	
 	<theme name="characterselectgui" ref="logingui">
 		<param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
 		<theme name="login-panel" ref="base-frame" allowWildcard="true">
@@ -189,7 +189,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<param name="border"><border>40,7,7,7</border></param>
 			<theme name="container" ref="-dialog" allowWildcard="true">
 				<param name="border"><border>7,7</border></param>
@@ -221,11 +221,11 @@
 		</theme>
 	</theme>
 
-	<theme name="queuegui" ref="logingui"/>
+	<theme name="queuegui" ref="logingui" />
 
-	<theme name="notificationgui" ref="-defaults"/>
+	<theme name="notificationgui" ref="-defaults" />
 
-  <theme name="shopgui" ref="-defaults"/>
+  <theme name="shopgui" ref="-defaults" />
 
   <theme name="event-tracker" ref="-defaults">
     <theme name="label" ref="label">
@@ -289,7 +289,7 @@
     </theme>
   </theme>
   
-  <theme name="encounter-counter-expanded" ref="encounter-counter"/>
+  <theme name="encounter-counter-expanded" ref="encounter-counter" />
 
   <theme name="encounter-counter-shiny" ref="resizableframe">
     <param name="background"><image>monster-caught.background</image></param>
@@ -347,7 +347,7 @@
     <param name="titleAreaBottom"><int>20</int></param>
     <param name="border"><border>20,0,0,0</border></param>
     <param name="minWidth"><int>540</int></param>
-    <param name="maxHeight"><int>340</int></param>
+    <param name="maxHeight"><int>600</int></param>
     <theme name="tabbedpane" ref="base-tabbed-pane">
       <theme name="tabbox" ref="tabbox">
         <theme name="tabbutton" ref="tabbutton">
@@ -364,7 +364,7 @@
             <param name="minWidth"><int>100</int></param>
           </theme>
           <theme name="scrollpane" ref="scrollpane">
-            <param name="minHeight"><int>260</int></param>
+            <param name="minHeight"><int>420</int></param>
             <theme name="cell" ref="cell">
               <param name="border"><border>5,7,3,0</border></param>
             </theme>
@@ -381,7 +381,7 @@
             <param name="minWidth"><int>100</int></param>
           </theme>
           <theme name="scrollpane" ref="scrollpane">
-            <param name="minHeight"><int>260</int></param>
+            <param name="minHeight"><int>620</int></param>
           </theme>
         </theme>
       </theme>
@@ -458,7 +458,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 
 			<theme name="button" ref="button">
 				<param name="minWidth"><int>120</int></param>
@@ -478,7 +478,7 @@
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
 
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<theme name="button" ref="popup-button">
 				<param name="minWidth"><int>140</int></param>
 				<param name="minHeight"><int>32</int></param>
@@ -490,9 +490,9 @@
 		</theme>
 	</theme>
 
-	<theme name="settingmenugui" ref="-defaults"/>
+	<theme name="settingmenugui" ref="-defaults" />
 
-	<!-- Nameplates - names above player heads. -->
+	
 	<theme name="tag-admin" ref="-defaults">
 		<param name="background"><image>icon-admin</image></param>
 		<param name="minWidth"><int>32</int></param>
@@ -564,7 +564,7 @@
 		</theme>
 
 		<theme name="nameplate" ref="-defaults" allowWildcard="true">
-			<theme name="widget" ref="-defaults"/>
+			<theme name="widget" ref="-defaults" />
 			<theme name="moisture-level0" ref="-defaults">
 				<param name="background"><image>water-level.dry</image></param>
 				<param name="minWidth"><int>50</int></param>
@@ -631,7 +631,7 @@
 			<param name="background"><image>chatframe.background</image></param>
 			<param name="font"><font>pb-dark</font></param>
 		</theme>
-		<!-- Chat Bubbles -->
+		
 		<theme name="chat-bubble">
 			<param name="font"><font>tooltip-font</font></param>
 			<param name="background"><image>chat-bubble.background</image></param>
@@ -646,7 +646,7 @@
 					<param name="default"><font>tooltip-font</font></param>
 				</map>
 			</param>
-			<param name="images"><map/></param>
+			<param name="images"><map /></param>
 		</theme>
 	</theme>
 
@@ -658,7 +658,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<theme name="button" ref="button" allowWildcard="true">
 				<param name="minWidth"><int>120</int></param>
 			</theme>
@@ -671,7 +671,7 @@
 		<param name="row.dropmarker"><image>none</image></param>
 		<param name="border"><border>3,1,0,0</border></param>
 		<param name="background"><image>none</image></param>
-		<param name="rowHeight"><int>32</int></param> <!-- the font line height is 14 -->
+		<param name="rowHeight"><int>32</int></param> 
 		<theme name="stringcellrenderer" ref="-defaults">
 			<param name="border"><border>8</border></param>
 			<param name="minHeight"><int>32</int></param>
@@ -685,7 +685,7 @@
 		<theme name="TreeNodeCellRenderer" ref="-treecellrenderer">
       <param name="treeButtonSize"><dimension>32,32</dimension></param>
     </theme>
-		<theme name="spanrenderer" ref="-defaults"/>
+		<theme name="spanrenderer" ref="-defaults" />
 		<theme name="treeButton" ref="button">
       <param name="border"><border>1</border></param>
       <param name="background"><image>icon.folder.background</image></param>
@@ -704,7 +704,7 @@
 		<param name="columnDividerDragableDistance"><int>0</int></param>
 		<param name="columnResizeCursor"><cursor>mouseCursor.left</cursor></param>
 		<param name="columnDivider"><image>none</image></param>
-		<param name="columnWidths"><map/></param>
+		<param name="columnWidths"><map /></param>
 		<param name="ensureColumnHeaderMinWidth"><bool>true</bool></param>
 		<param name="inputMap"><inputMapDef ref="-defaultInputMap">
 			<action name="toggleSelectionOnLeadRow">ctrl SPACE</action>
@@ -724,7 +724,7 @@
 	<theme name="color-picker" ref="dialoglayout">
 		<param name="border"><border>10,10,10,10</border></param>
 		<theme name="colorselector" ref="dialoglayout">
-	        <theme name="label" ref="label"/>
+	        <theme name="label" ref="label" />
 	        <theme name="colorarea1d" ref="-defaults">
             	<param name="background"><image>label5.background</image></param>
             	<param name="cursor"><image>label6.background</image></param>
@@ -787,7 +787,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 
 			<theme name="dialoglayout" ref="-defaults">
 				<param name="border"><border>0</border></param>
@@ -795,7 +795,7 @@
 				<param name="smallGap"><dimension>8,8</dimension></param>
 				<param name="mediumGap"><dimension>10,10</dimension></param>
 				<param name="largeGap"><dimension>15,15</dimension></param>
-				<param name="namedGaps"><map/></param>
+				<param name="namedGaps"><map /></param>
 				<theme name="label-black" ref="-defaults" allowWildcard="true">
 					<param name="font"><font>pb-dark</font></param>
 				</theme>
@@ -812,14 +812,14 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 
 			<theme name="scrollpane" ref="scrollpane" allowWildcard="true">
 					<param name="border"><border>0,0</border></param>
 					<theme name="maptextureview" ref="resizableframe" allowWildcard="true">
 						<param name="font"><font>pb-dark</font></param>
 						<param name="border"><border>10,10</border></param>
-						<!--<param name="border"><border>0,10</border></param>-->
+						
 						<param name="background"><image>label1.background</image></param>
 						<param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
 						<param name="maxHeight"><int>450</int></param>
@@ -840,7 +840,7 @@
 				<param name="smallGap"><dimension>8,8</dimension></param>
 				<param name="mediumGap"><dimension>10,10</dimension></param>
 				<param name="largeGap"><dimension>15,15</dimension></param>
-				<param name="namedGaps"><map/></param>
+				<param name="namedGaps"><map /></param>
 				<theme name="label-black" ref="-defaults" allowWildcard="true">
 					<param name="font"><font>pb-dark</font></param>
 				</theme>
@@ -858,7 +858,7 @@
 	<theme name="messagebox-bubble" ref="-defaults">
 		<theme name="scrollpane-transparent" ref="scrollpane" allowWildcard="true">
 			<param name="background"><image>none</image></param>
-			<theme name="vscrollbar" ref="vscrollbar-white"/>
+			<theme name="vscrollbar" ref="vscrollbar-white" />
 			<theme name="dialoglayout" ref="-dialog">
 				<theme name="button" ref="button">
 					<param name="border"><border>5</border></param>
@@ -878,7 +878,7 @@
 			<param name="minHeight"><int>100</int></param>
 			<param name="maxHeight"><int>400</int></param>
 			<param name="background"><image>ui-popup.background</image></param>
-			<theme name="vscrollbar" ref="vscrollbar-white"/>
+			<theme name="vscrollbar" ref="vscrollbar-white" />
 			<theme name="dialoglayout" ref="-dialog">
 				<param name="border"><border>0</border></param>
 				<theme name="button" ref="button">
@@ -909,13 +909,13 @@
 
 	<theme name="messagebox" ref="-defaults">
 		<theme name="scrollpane-transparent" ref="scrollpane" allowWildcard="true">
-			<theme name="vscrollbar" ref="vscrollbar-white"/>
+			<theme name="vscrollbar" ref="vscrollbar-white" />
 		</theme>
 		<theme name="scrollpane" ref="scrollpane" allowWildcard="true">
-			<theme name="vscrollbar" ref="vscrollbar-white"/>
+			<theme name="vscrollbar" ref="vscrollbar-white" />
 			<theme name="dialoglayout" ref="-dialog">
-				<theme name="button-ok" ref="button"/>
-				<theme name="button" ref="button"/>
+				<theme name="button-ok" ref="button" />
+				<theme name="button" ref="button" />
 			</theme>
 		</theme>
 	</theme>
@@ -927,14 +927,14 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<theme name="dialoglayout" ref="-defaults">
 			<param name="border"><border>0</border></param>
 			<param name="defaultGap"><dimension>5,5</dimension></param>
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 		</theme>
 		<theme name="labelanimation" ref="label" allowWildcard="true">
 			<param name="font"><font>messagebox</font></param>
@@ -948,14 +948,14 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<theme name="dialoglayout" ref="-defaults">
 			<param name="border"><border>0</border></param>
 			<param name="defaultGap"><dimension>5,5</dimension></param>
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 		</theme>
 	</theme>
 
@@ -1115,8 +1115,8 @@
 	<theme name="text-scrollpane">
 		<param name="background"><image>none</image></param>
 		<param name="overlay"><image>none</image></param>
-		<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-		<theme name="vscrollbar" ref="vscrollbar-white"/>
+		<theme name="hscrollbar" ref="hscrollbar" />  
+		<theme name="vscrollbar" ref="vscrollbar-white" />
 		<param name="border"><border>0,0,0,0</border></param>
 
 		<param name="maxHeight"><int>32767</int></param>
@@ -1134,13 +1134,13 @@
 			<param name="columns"><int>118</int></param>
 			<param name="cursor"><image>-editfield.cursor</image></param>
 			<param name="mouseCursor"><cursor>cursor.text</cursor></param>
-			<theme name="renderer" ref="-input"/>
+			<theme name="renderer" ref="-input" />
 			<param name="autocompletion-height"><int>250</int></param>
 			<param name="minWidth"><int>278</int></param>
 		</theme>
 	</theme>
 
-	<!-- Trainer Card -->
+	
 	<theme name="trainercard" ref="tabbedframe">
 		<param name="fadeDurationShow"><int>200</int></param>
 		<param name="fadeDurationHide"><int>200</int></param>
@@ -1197,7 +1197,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<param name="border"><border>5</border></param>
 			<theme name="label" ref="-defaults" allowWildcard="true">
 				<param name="font"><font>main-border</font></param>
@@ -1251,7 +1251,7 @@
 	</theme>
 
 
-	<!-- FAQ -->
+	
 	<theme name="faq-frame" ref="base-frame">
 		<param name="fadeDurationShow"><int>200</int></param>
 		<param name="fadeDurationHide"><int>200</int></param>
@@ -1259,8 +1259,8 @@
 			<theme name="faq-content">
 				<param name="background"><image>none</image></param>
 				<param name="overlay"><image>none</image></param>
-				<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-				<theme name="vscrollbar" ref="vscrollbar-white"/>
+				<theme name="hscrollbar" ref="hscrollbar" />  
+				<theme name="vscrollbar" ref="vscrollbar-white" />
 				<param name="border"><border>5</border></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>100</int></param>
@@ -1278,7 +1278,7 @@
 						<param name="orange"><font>pb-dark</font></param>
 						<param name="link"><font>pb-dark-link</font></param>
 					</map></param>
-					<param name="classes"><map/></param>
+					<param name="classes"><map /></param>
 					<param name="images"><map>
 						<param name="title"><image>ui-popup.background</image></param>
 						<param name="link"><image>ui-popup.background</image></param>
@@ -1298,7 +1298,7 @@
 		</theme>
 	</theme>
 
-	<!-- change channel window -->
+	
 	<theme name="channelwidget" ref="-defaults">
 		<theme name="dialoglayout" ref="-defaults" allowWildcard="true">
 			<param name="background"><image>ui-popup.background</image></param>
@@ -1307,7 +1307,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 
 			<theme name="progressbar" ref="-defaults" allowWildcard="true">
 				<param name=""><image>progressbar.*</image></param>
@@ -1319,13 +1319,13 @@
 		</theme>
 	</theme>
 
-	<!-- move-relearner -->
+	
 	<theme name="movetutor" ref="base-frame-padded">
 		<theme name="monster-panel">
 			<param name="background"><image>frame-split.background</image></param>
 			<param name="border"><border>25</border></param>
-			<theme name="battlebutton" ref="battle-move-button"/>
-			<theme name="rbattle" ref="battle-button-return"/>
+			<theme name="battlebutton" ref="battle-move-button" />
+			<theme name="rbattle" ref="battle-button-return" />
 			<theme name="label" ref="label">
 				<param name="font"><font>pb-dark</font></param>
 			</theme>
@@ -1336,7 +1336,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<theme name="dialoglayout" ref="-defaults">
 				<param name="background"><image>none</image></param>
 				<param name="border"><border>10,5,10,5</border></param>
@@ -1347,7 +1347,7 @@
 				<param name="smallGap"><dimension>8,8</dimension></param>
 				<param name="mediumGap"><dimension>10,10</dimension></param>
 				<param name="largeGap"><dimension>15,15</dimension></param>
-				<param name="namedGaps"><map/></param>
+				<param name="namedGaps"><map /></param>
 				<theme name="dialoglayout" ref="-dialog">
 					<param name="defaultGap"><dimension>3,3</dimension></param>
 					<param name="border"><border>0</border></param>
@@ -1376,7 +1376,7 @@
 					<param name="smallGap"><dimension>8,8</dimension></param>
 					<param name="mediumGap"><dimension>10,10</dimension></param>
 					<param name="largeGap"><dimension>15,15</dimension></param>
-					<param name="namedGaps"><map/></param>
+					<param name="namedGaps"><map /></param>
 					<param name="border"><border>5,5,5,5</border></param>
 					<theme name="battlebutton" ref="button">
 						<param name="minHeight"><int>32</int></param>
@@ -1391,7 +1391,7 @@
 		</theme>
 	</theme>
 
-	<!-- Petition Frame -->
+	
 	<theme name="petitionframe" ref="base-frame">
 		<param name="minWidth"><int>500</int></param>
 		<theme name="dialoglayout" ref="dialoglayout">
@@ -1400,7 +1400,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<theme name="label" ref="label">
 				<param name="font"><font>pb-dark</font></param>
 				<param name="background"><image>ui-header.background</image></param>
@@ -1415,8 +1415,8 @@
 			<theme name="text-scrollpane">
 				<param name="background"><image>none</image></param>
 				<param name="overlay"><image>none</image></param>
-				<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-				<theme name="vscrollbar" ref="vscrollbar-white"/>
+				<theme name="hscrollbar" ref="hscrollbar" />  
+				<theme name="vscrollbar" ref="vscrollbar-white" />
 				<param name="border"><border>5</border></param>
 
 				<param name="minWidth"><int>0</int></param>
@@ -1443,7 +1443,7 @@
 						<param name="orange"><font>pb-dark-orange</font></param>
 						<param name="link"><font>main-blue</font></param>
 					</map></param>
-					<param name="classes"><map/></param>
+					<param name="classes"><map /></param>
 					<param name="images">
 					<map>
 						<param name="player"><image>ui-header.background</image></param>
@@ -1479,7 +1479,7 @@
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
 		<param name="largeGap"><dimension>15,15</dimension></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 
 		<param name="background"><image>label-bg-value4</image></param>
 		<param name="maxWidth"><int>400</int></param>
@@ -1492,7 +1492,7 @@
 		</theme>
 	</theme>
 
-	<!-- Login GUI - ChangeLog Widget -->
+	
 	<theme name="changelog-frame" ref="resizableframe">
 		<param name="background"><image>none</image></param>
     <theme name="button" ref="label">
@@ -1504,7 +1504,7 @@
     </theme>
 	</theme>
 
-	<!-- Edit Word Ping List -->
+	
 	<theme name="word-ping-window" ref="base-frame">
 		<theme name="dialoglayout" ref="-defaults" allowWildcard="true">
 			<param name="background"><image>none</image></param>
@@ -1513,14 +1513,14 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<param name="maxWidth"><int>150</int></param>
 			<param name="maxHeight"><int>150</int></param>
 			<theme name="scrollpane">
 				<param name="background"><image>ui-inputbox.background</image></param>
 				<param name="overlay"><image>none</image></param>
-				<theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-				<theme name="vscrollbar" ref="vscrollbar-white"/>
+				<theme name="hscrollbar" ref="hscrollbar" />  
+				<theme name="vscrollbar" ref="vscrollbar-white" />
 				<param name="border"><border>0,0,0,0</border></param>
 
 				<param name="minWidth"><int>150</int></param>
@@ -1550,7 +1550,7 @@
 		</theme>
 	</theme>
 
-	<!-- Labels and stuff -->
+	
 	<theme name="hr-1" ref="label">
 		<param name="minWidth"><int>60</int></param>
 		<param name="border"><border>5</border></param>
@@ -1626,14 +1626,14 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 		</theme>
 	</theme>
 
 	<theme name="effects-slot" ref="button">
 		<param name="defaultGap"><dimension>24,24</dimension></param>
 		<param name="border"><border>2</border></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<param name="fadeDurationShow"><int>0</int></param>
 		<param name="fadeDurationHide"><int>0</int></param>
 		<param name="fadeDurationActivate"><int>0</int></param>
@@ -1649,7 +1649,7 @@
 	<theme name="server-status-success" ref="label">
 		<param name="defaultGap"><dimension>24,24</dimension></param>
 		<param name="border"><border>10</border></param>
-		<param name="namedGaps"><map/></param>
+		<param name="namedGaps"><map /></param>
 		<param name="textAlignment"><enum type="alignment">CENTER</enum></param>
 		<param name="minWidth"><int>250</int></param>
 		<param name="minHeight"><int>30</int></param>

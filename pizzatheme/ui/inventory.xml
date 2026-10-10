@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <themes>
-	<!-- Inventory -->
+	
 	<theme name="inventory-tabbedframe" ref="resizableframe">
 		<param name="background"><image>ui-inner-frame-tab2.background</image></param>
 		<param name="titleAreaTop"><int>33</int></param>
@@ -24,13 +24,13 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 			<theme name="tabbedpane" ref="-defaults">
               <param name="minWidth">
                 <int>530</int>
               </param>
               <param name="minHeight">
-                <int>378</int>
+                <int>567</int>
               </param>
 
               <param name="border">
@@ -57,7 +57,7 @@
 					<param name="background"><image>none</image></param>
 					<theme name="dialoglayout" ref="-defaults">
 						<theme name="scrollpane" ref="scrollpane" allowWildcard="true">
-							<theme name="vscrollbar" ref="vscrollbar-white"/>
+							<theme name="vscrollbar" ref="vscrollbar-white" />
 							<theme name="dialoglayout" ref="-dialog">
 								<param name="border"><border>0</border></param>
 							</theme>
@@ -66,7 +66,7 @@
 						<param name="smallGap"><dimension>8,8</dimension></param>
 						<param name="mediumGap"><dimension>10,10</dimension></param>
 						<param name="largeGap"><dimension>5,5</dimension></param>
-						<param name="namedGaps"><map/></param>
+						<param name="namedGaps"><map /></param>
 					</theme>
 				</theme>
 				<param name="inputMap"><inputMapDef>
@@ -77,13 +77,13 @@
 		</theme>
 	</theme>
 
-	<!-- Inventory Tab Button -->
+	
 	<theme name="inventory-tab-empty" ref="-defaults" allowWildcard="true">
 		 <param name="background"><image>ui-tab-color.background</image></param>
 		 <param name="border"><border>20,0</border></param>
 	</theme>
 
-	<!-- Item Slot -->
+	
 	<theme name="inventory-button" ref="-defaults" allowWildcard="true">
 		<param name="background"><image>ui-inputbox-mixed.background</image></param>
 		<param name="font"><font>pb-dark</font></param>
@@ -113,7 +113,7 @@
 		<param name="minHeight"><int>50</int></param>
 	</theme>
 
-	<!-- TM Slot -->
+	
 	<theme name="tm-button" ref="-defaults" allowWildcard="true">
 		<param name="background"><image>ui-button.background</image></param>
 		<param name="border"><border>5,0,8,0</border></param>
@@ -147,8 +147,8 @@
 			<param name="textAlignment"><enum type="alignment">left</enum></param>
 			<param name="font"><font>main</font></param>
 		</theme>
-		<theme name="closeButton" ref="-defaults"/>
-		<theme name="resizeHandle" ref="-defaults"/>
+		<theme name="closeButton" ref="-defaults" />
+		<theme name="resizeHandle" ref="-defaults" />
 		<param name="border"><border>5,5,7,5</border></param>
 		<theme name="hotkeybar" ref="-defaults">
 			<param name="defaultGap"><dimension>5,5</dimension></param>
@@ -156,7 +156,7 @@
 			<param name="smallGap"><dimension>8,8</dimension></param>
 			<param name="mediumGap"><dimension>10,10</dimension></param>
 			<param name="largeGap"><dimension>15,15</dimension></param>
-			<param name="namedGaps"><map/></param>
+			<param name="namedGaps"><map /></param>
 
 			<theme name="item-slot" ref="-defaults">
 				<param name="background"><image>ui-button.background</image></param>
