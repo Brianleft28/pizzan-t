@@ -20,8 +20,16 @@ class ConfigController:
     def save(self, config: AppConfig) -> bool:
         self.config = config
         try:
+            existing = {}
+            if os.path.exists(self.config_path):
+                try:
+                    with open(self.config_path, "r", encoding="utf-8") as f:
+                        existing = json.load(f)
+                except Exception:
+                    existing = {}
+            existing.update(self.config.to_dict())
             with open(self.config_path, "w", encoding="utf-8") as f:
-                json.dump(self.config.to_dict(), f, indent=4)
+                json.dump(existing, f, indent=4)
             return True
         except Exception as e:
             print(f"[!] Error saving {self.config_path}: {e}")
