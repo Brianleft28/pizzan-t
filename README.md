@@ -6,7 +6,7 @@
   <!-- Badges -->
   <p>
     <a href="https://www.python.org/downloads/release/python-3100/"><img src="https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white" alt="Python"></a>
-    <a href="https://customtkinter.tomschimansky.com/"><img src="https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg" alt="CustomTkinter"></a>
+    <a href="https://doc.qt.io/qtforpython/"><img src="https://img.shields.io/badge/UI-PyQt6-green.svg?logo=qt&logoColor=white" alt="PyQt6"></a>
     <a href="https://jaided.ai/easyocr/"><img src="https://img.shields.io/badge/AI-EasyOCR-orange.svg" alt="EasyOCR"></a>
     <a href="https://python-mss.readthedocs.io/"><img src="https://img.shields.io/badge/Vision-MSS-yellow.svg" alt="MSS"></a>
     <a href="https://pyautogui.readthedocs.io/"><img src="https://img.shields.io/badge/Control-PyAutoGUI-red.svg" alt="PyAutoGUI"></a>
