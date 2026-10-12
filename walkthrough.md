@@ -1,40 +1,50 @@
-# Walkthrough: Migración a PyQt6 (MVC) y Blindaje del OCR
+# Walkthrough: Migración a PyQt6 (MVC), Blindaje del OCR y Reparación de Bugs
 
-Esta bitácora documenta la remodelación completa de la interfaz gráfica y la corrección crítica del guardado de coordenadas para el motor OCR.
+Esta bitácora documenta la remodelación de la interfaz gráfica, el blindaje de calibración OCR, la reparación del calibrador en segundo plano y la modernización del instalador orquestado.
 
 ## 📌 Contexto
-La interfaz monolítica de 1000 líneas en `CustomTkinter` presentaba bloqueos en el hilo principal durante el reconocimiento EasyOCR y el visor de código. Además, al guardar la configuración desde la interfaz, se sobrescribían ciegamente las coordenadas de calibración de regiones en `config.json`, dejando el bot incapacitado de leer la pantalla de PokeMMO.
+1. La interfaz monolítica de 1000 líneas en `CustomTkinter` fue migrada a **PyQt6 (MVC)** en hilos desacoplados.
+2. Al guardar la configuración se perdían las zonas de calibración en `config.json`.
+3. El calibrador de pantalla (`selector.py`) dependía del mainloop del antiguo CustomTkinter, fallando con errores de hilo en PyQt6.
+4. Las métricas de sesión (`session_encounters`) no se acumulaban en los modos Horda y Single, dejando el cálculo de ratio en 0.
+5. El instalador orquestado (`manage.py`) carecía de un flujo guiado "Todo en Uno", no sincronizaba la ruta del juego con el Patcher de UI y fallaba en ZIPs con `info.xml` en la raíz.
 
 ## 🔨 Cambios Realizados
 
-1. **Migración a PyQt6 con Arquitectura MVC (`src/ui/`):**
-   - **Vistas Modulares (`src/ui/views/`):** Desacople en componentes independientes:
-     - `header_bar.py`: Control de inicio/detención y selector de modo.
-     - `stats_bar.py`: Métricas en tiempo real.
-     - `logger_widget.py`: Consola reactiva con colores e historial.
-     - `brain_viewer.py`: Visor de código con `QSyntaxHighlighter` sin lag.
-     - `tabs/`: Pestañas organizadas (`tab_general.py`, `tab_horde.py`, `tab_ditto.py`, `tab_calib.py`).
-   - **Controlador en Segundo Plano (`src/ui/controllers/bot_controller.py`):**
-     - Aislamiento del bot en un `QThread` con señales `pyqtSignal`. Cero bloqueos de ventana.
-   - **Punto de Entrada (`main_gui.py`):** Reducido a ~15 líneas limpias. La versión anterior se preservó como `main_gui_legacy.py`.
+1. **Reparación del Calibrador (`selector.py`):**
+   - Transición de `tk.Toplevel` a una instancia autónoma de `tk.Tk()`.
+   - Incorporación de `self.close()` que ejecuta `root.quit()` y `root.destroy()` limpiamente.
+   - Ejecución mediante `root.mainloop()` para garantizar que los eventos de dibujo y teclas respondan con fluidez.
 
-2. **Blindaje de Regiones OCR (`src/ui/controllers/config_controller.py`):**
-   - Se ajustó el método `save()` para realizar un merge con el contenido previo en disco de `config.json`.
-   - Se garantiza la persistencia intacta de `slots`, `slot_single`, `button_run`, `hp_bar_region`, `status_slot_region`, `pp_slots`, `battle_msg_region` y `hunter_hp_region`.
+2. **Métricas de Sesión y Logs Estructurados (`src/modes/`):**
+   - `src/modes/horda.py` y `src/modes/single.py`: Se incrementa `session_encounters` en cada ciclo de escape/batalla.
+   - `src/modes/base.py`: Se delega `log()` directamente a `self.bot.log(message, category)` para preservar los colores (`BATTLE`, `PHASE`, `SUCCESS`) en la interfaz gráfica.
 
-3. **Entorno y Dependencias (`requirements.txt`):**
-   - Instalación y validación de `PyQt6>=6.5.0` en el entorno virtual (`venv`).
+3. **Orquestador e Instalador Unificado (`manage.py`, `pizza.bat`, `scripts/core/`):**
+   - **Opción 0 en `manage.py`:** Se añadió `0. Instalación Completa Guiada (Todo en Uno)` para ejecutar de forma secuencial la extracción de ROMs, instalación de temas, sincronización XML y aplicación de parches de UI.
+   - **Sincronización Patcher:** `manage.py` actualiza dinámicamente `patcher_config.json` con la ruta de instalación detectada de PokeMMO.
+   - **Extracción de Temas:** `extractor.py` ahora soporta temas empaquetados con `info.xml` tanto en subdirectorios como directamente en la raíz del archivo ZIP.
+   - **Estandarización de Identidad:** `pizza.bat` y `play.bat` actualizados a **PizzaHunter**.
+   - **Léxico Profesional:** Eliminado el término streamer de los mensajes de consola.
+
+4. **Acceso desde la Interfaz Gráfica (`src/ui/`):**
+   - El botón en `tab_general.py` se renombró a `📦 ABRIR INSTALADOR (CLI)`.
+   - Al presionarlo en `main_window.py`, se abre automáticamente una consola interactiva ejecutando `pizza.bat`.
 
 ## 🧪 Validación Realizada
-- **Test de importaciones:** `PyQt6`, `easyocr`, `mss`, `cv2` validados sin excepciones.
-- **Compilación de módulos:** Todos los archivos en `src/ui/` compilan sin errores.
-- **Prueba de preservación:** Guardado de `AppConfig` comprobado mediante script de testing sin pérdida de claves de calibración.
-- **Inicialización de interfaz:** `MainWindow` se instancia y arranca de manera limpia.
+- **Compilación de Sintaxis:** Todos los módulos modificados compilan con `py_compile`.
+- **Test de Selector:** Se validó que `TkSelector` abre, procesa eventos y cierra sin excepciones ni bloqueos.
+- **Importación de manage.py:** Orquestador CLI verificado sin dependencias faltantes ni fallos de importación.
+- **Flujo Git:** Cambios consolidados en `fix/installer-and-bot-bugs`, mergeados a `develop` y `main`, y sincronizados en GitHub.
 
-## 🚀 Cómo Ejecutar el Bot
+## 🚀 Cómo Ejecutar el Bot y el Instalador
 ```powershell
 cd C:\Users\7683\Desktop\workspace\pizza-dittos
 .\venv\Scripts\activate
+
+# Para abrir la interfaz gráfica:
 python main_gui.py
+
+# Para correr el instalador / orquestador:
+.\pizza
 ```
-O mediante el acceso rápido: `.\pizza` -> Opción 4 (`Arrancar el Bot`).
