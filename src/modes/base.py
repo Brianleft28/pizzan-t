@@ -12,8 +12,7 @@ class HuntingMode:
         self.log_callback = bot.log_callback
 
     def log(self, message, category="INFO"):
-        timer = self.bot.get_elapsed_time()
-        self.log_callback(f"[{timer}] [{category}] {message}")
+        self.bot.log(message, category)
 
     def execute(self, frame):
         """Método principal que debe ser implementado por cada modo"""

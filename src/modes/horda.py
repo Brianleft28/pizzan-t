@@ -60,8 +60,9 @@ class HordeMode(HuntingMode):
         self.controller.run_away()
         self._wait_for_map()
         self.bot.encounters += int(h_size)
+        self.bot.session_encounters += int(h_size)
         self.bot.save_progress()
-        self.log(f"💨 No shiny. Escaped. [Enc #{self.bot.encounters} | Horde +{h_size}]", "ACTION")
+        self.log(f"💨 No shiny. Escaped. [Enc #{self.bot.encounters} | Session: {self.bot.session_encounters} | Horde +{h_size}]", "ACTION")
         time.sleep(1.5)
 
     def _wait_for_map(self):

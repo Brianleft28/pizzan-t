@@ -43,7 +43,7 @@ class TabGeneral(QWidget):
         self.btn_save.clicked.connect(self.save_requested.emit)
         layout.addWidget(self.btn_save)
 
-        self.btn_roms = QPushButton("📦 INSTALAR ROMS (WIP)")
+        self.btn_roms = QPushButton("📦 ABRIR INSTALADOR (CLI)")
         self.btn_roms.setFixedHeight(36)
         self.btn_roms.setStyleSheet("background-color: #d29922; color: black; font-weight: bold;")
         self.btn_roms.clicked.connect(self.install_roms_clicked.emit)

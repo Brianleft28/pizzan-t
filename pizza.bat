@@ -1,5 +1,5 @@
 @echo off
-title Pizza-Dittos Orchestrator
+title PizzaHunter Orchestrator
 
 IF NOT EXIST ".\venv\Scripts\python.exe" (
     echo [ERROR] No se encontro el entorno virtual (venv).

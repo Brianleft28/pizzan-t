@@ -47,6 +47,7 @@ class SingleMode(HuntingMode):
         self.controller.run_away()
         self._wait_for_map()
         self.bot.encounters += 1
+        self.bot.session_encounters += 1
         self.bot.save_progress()
         self.log(f"💨 Not shiny ({target_name}). Escaped. [Enc #{self.bot.encounters} | Session: {self.bot.session_encounters}]", "ACTION")
         time.sleep(1.5)

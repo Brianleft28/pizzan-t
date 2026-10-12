@@ -12,8 +12,8 @@ class TkSelector:
     def __init__(self, mode, log_func):
         self.mode = mode
         self.log_func = log_func
-        self.root = tk.Toplevel()
-        self.root.title("SØREN Selector")
+        self.root = tk.Tk()
+        self.root.title("PizzaHunter Selector")
         self.root.attributes("-fullscreen", True)
         self.root.attributes("-topmost", True)
         self.root.config(cursor="cross")
@@ -26,7 +26,7 @@ class TkSelector:
                 self.img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
         except Exception as e:
             self.log_func(f"❌ Screen capture error: {e}")
-            self.root.destroy()
+            self.close()
             return
         
         self.tk_img = ImageTk.PhotoImage(self.img)
@@ -54,9 +54,19 @@ class TkSelector:
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
         self.canvas.bind("<B1-Motion>", self.on_move_press)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
-        self.root.bind("<Escape>", lambda e: self.root.destroy())
+        self.root.bind("<Escape>", lambda e: self.close())
 
         self.log_func(f"💡 [{mode.upper()} MODE] Draw {self.max_rects} rectangle(s) with your mouse.")
+
+    def close(self):
+        try:
+            self.root.quit()
+        except Exception:
+            pass
+        try:
+            self.root.destroy()
+        except Exception:
+            pass
 
     def on_button_press(self, event):
         self.start_x = event.x
@@ -150,13 +160,9 @@ class TkSelector:
         except Exception as e:
             self.log_func(f"❌ Error saving: {e}")
             
-        self.root.destroy()
+        self.close()
 
 def run_calibration(mode, log_func):
-    # Damos un pequeño respiro para que el usuario cambie de ventana
     time.sleep(1)
-    # Ejecutamos la clase de Tkinter
     selector = TkSelector(mode, log_func)
-    # No llamamos a mainloop() aquí porque ya hay uno corriendo en main_gui.py
-    # Pero root.wait_window() sirve para pausar el hilo hasta que se cierre
-    selector.root.wait_window()
+    selector.root.mainloop()

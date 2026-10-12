@@ -58,6 +58,8 @@ def install_pizza_theme():
 
     import shutil
     theme_source = os.path.join(base_dir, "PizzaTheme")
+    if not os.path.exists(theme_source):
+        theme_source = os.path.join(base_dir, "pizzatheme")
     theme_dest = os.path.join(client.get_themes_dir(), "PizzaTheme")
     
     if os.path.exists(theme_dest):
@@ -65,7 +67,7 @@ def install_pizza_theme():
     shutil.copytree(theme_source, theme_dest)
     
     client.force_theme("PizzaTheme")
-    console.print("[bold green][OK] PizzaTheme inyectado y forzado. Basadísimo.[/]")
+    console.print("[bold green][OK] PizzaTheme inyectado y forzado correctamente.[/]")
 
 def sync_xml_versions():
     client = _get_client()
@@ -80,6 +82,22 @@ def sync_xml_versions():
                     console.print(f"  [bold green][OK] Sincronizado: {xml_file.parent.name}[/]")
 
 def run_ui_patcher():
+    client = _get_client()
+    if client:
+        patcher_config_file = os.path.join(base_dir, "scripts", "patcher", "patcher_config.json")
+        if os.path.exists(patcher_config_file):
+            try:
+                import json
+                with open(patcher_config_file, "r", encoding="utf-8-sig") as f:
+                    pcfg = json.load(f)
+                pcfg["game_path"] = client.target_dir
+                if "PizzaTheme" not in pcfg.get("themes", []):
+                    pcfg.setdefault("themes", []).append("PizzaTheme")
+                with open(patcher_config_file, "w", encoding="utf-8") as f:
+                    json.dump(pcfg, f, indent=4)
+            except Exception as e:
+                console.print(f"[bold yellow][!] Aviso: No se pudo actualizar patcher_config.json: {e}[/]")
+
     patcher_main = os.path.join(base_dir, "scripts", "patcher", "main.py")
     if not os.path.exists(patcher_main):
         console.print("[bold red][ERR] No se encontró el patcher.[/]")
@@ -88,6 +106,26 @@ def run_ui_patcher():
         subprocess.run([sys.executable, patcher_main])
     except KeyboardInterrupt:
         pass
+
+def full_guided_install():
+    console.print(Panel("[bold green]Instalador Completo PizzaHunter (Todo en Uno)[/bold green]\n"
+                        "[white]Ejecutando detección, ROMs/Mods, PizzaTheme, Sync XML y Patcher...[/white]",
+                        border_style="green"))
+    client = _get_client()
+    if not client: return
+
+    console.print("\n[bold cyan]Paso 1: Extracción de ROMs y Mods[/bold cyan]")
+    install_roms_and_mods()
+    console.print("\n[bold cyan]Paso 2: Instalación de PizzaTheme[/bold cyan]")
+    install_pizza_theme()
+    console.print("\n[bold cyan]Paso 3: Sincronización XML[/bold cyan]")
+    sync_xml_versions()
+    console.print("\n[bold cyan]Paso 4: Patcher de Medidas de UI[/bold cyan]")
+    run_ui_patcher()
+
+    console.print(Panel("[bold green]¡Instalación completa finalizada con éxito![/bold green]\n"
+                        "[cyan]Ya podés abrir PokeMMO y arrancar el bot (Opción 4).[/cyan]",
+                        border_style="green"))
 
 def run_bot():
     bot_main = os.path.join(base_dir, "main_gui.py")
@@ -107,6 +145,7 @@ def main():
         console.print(Panel("[bold cyan]PizzaHunter CLI Orchestrator[/bold cyan]\n[italic]Seleccioná la herramienta que querés correr:[/italic]", border_style="blue"))
         
         choices = [
+            questionary.Choice("0. Instalación Completa Guiada (Todo en Uno)", "full_install"),
             questionary.Choice("1. Extraer ZIP de ROMs y Mods al juego", "extract_zip"),
             questionary.Choice("2. Instalar PizzaTheme", "install_pizza"),
             questionary.Choice("3. Modificar medidas de UI (Patcher)", "run_patcher"),
@@ -124,6 +163,8 @@ def main():
         if selection == "exit" or selection is None:
             console.print("[bold green]¡Nos vimos! Salu2.[/]")
             break
+        elif selection == "full_install":
+            full_guided_install()
         elif selection == "extract_zip":
             install_roms_and_mods()
         elif selection == "install_pizza":

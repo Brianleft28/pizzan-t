@@ -67,27 +67,29 @@ class ModpackExtractor:
                     else:
                         # Extraer archivos de Temas
                         for root in theme_roots:
-                            if file_info.filename.startswith(root + "/"):
-                                # Mantener la estructura del tema
-                                # Remover el path 'root' para que el tema quede limpio en themes/NombreTema/
-                                theme_name = os.path.basename(root)
-                                if not theme_name: # si el info.xml estaba en la raiz del zip
-                                    theme_name = "CustomTheme"
-                                    
+                            is_theme_file = False
+                            rel_path = ""
+                            if root and (file_info.filename.startswith(root + "/") or file_info.filename == root):
+                                is_theme_file = True
+                                theme_name = os.path.basename(root) or "PizzaTheme"
                                 rel_path = os.path.relpath(file_info.filename, root)
-                                if rel_path == ".": continue
-                                
+                            elif not root:
+                                is_theme_file = True
+                                theme_name = Path(zip_path).stem.replace("Release_", "") or "PizzaTheme"
+                                rel_path = file_info.filename
+
+                            if is_theme_file:
+                                if rel_path in (".", ""):
+                                    continue
                                 target_path = os.path.join(theme_dest, theme_name, rel_path)
-                                
                                 if file_info.is_dir():
                                     os.makedirs(target_path, exist_ok=True)
                                 else:
                                     os.makedirs(os.path.dirname(target_path), exist_ok=True)
                                     with zip_ref.open(file_info) as source, open(target_path, "wb") as target:
                                         shutil.copyfileobj(source, target)
-                                        
-                                # Solo sumamos +1 por cada archivo procesado de un tema, luego lo resumimos
                                 extracted_themes += 1
+                                break
 
             console.print(f"[bold green][OK] ZIP procesado:[/]")
             console.print(f"  - ROMs extraídas: {extracted_roms}")

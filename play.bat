@@ -1,9 +1,9 @@
 @echo off
-TITLE Pizzant - The Humanoid Hunter
+TITLE PizzaHunter - The Shiny & Ditto Hunter
 COLOR 0B
 
 echo ==============================================
-echo  INICIANDO REGLAS DE PLAY (PIZZANT)
+echo  INICIANDO REGLAS DE PLAY (PIZZAHUNTER)
 echo ==============================================
 
 :: Forzar codificacion UTF-8
@@ -21,7 +21,7 @@ if exist venv\Scripts\activate.bat (
 )
 
 :: Iniciar Bot
-echo [2/2] Levantando Pizzant (main_gui.py)...
+echo [2/2] Levantando PizzaHunter (main_gui.py)...
 python main_gui.py
 
 pause

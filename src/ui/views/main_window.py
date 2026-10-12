@@ -162,7 +162,12 @@ class MainWindow(QMainWindow):
         self.logger.append_log("⏹ Alarma silenciada.", "INFO")
 
     def _install_roms_wip(self):
-        self.logger.append_log("📦 [WIP] Utilizá 'manage.py' desde la terminal para instalar ROMs.", "ACTION")
+        try:
+            import subprocess
+            subprocess.Popen(["cmd.exe", "/c", "start", "pizza.bat"])
+            self.logger.append_log("📦 Abriendo Instalador CLI (pizza.bat) en ventana externa...", "SUCCESS")
+        except Exception as e:
+            self.logger.append_log(f"❌ Error al abrir instalador: {e}", "FATAL")
 
     def optimize_pokemmo_ui(self):
         paths = [
