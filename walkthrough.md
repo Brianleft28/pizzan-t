@@ -21,7 +21,10 @@ Esta bitácora documenta la remodelación de la interfaz gráfica, el blindaje d
    - `src/modes/base.py`: Se delega `log()` directamente a `self.bot.log(message, category)` para preservar los colores (`BATTLE`, `PHASE`, `SUCCESS`) en la interfaz gráfica.
 
 3. **Orquestador e Instalador Unificado (`manage.py`, `pizza.bat`, `scripts/core/`):**
-   - **Opción 0 en `manage.py`:** Se añadió `0. Instalación Completa Guiada (Todo en Uno)` para ejecutar de forma secuencial la extracción de ROMs, instalación de temas, sincronización XML y aplicación de parches de UI.
+   - **Opción 0 en `manage.py`:** Se añadió `0. Instalación Completa Guiada (Todo en Uno)` para ejecutar de forma secuencial la extracción de ROMs, instalación de temas, sincronización XML y aplicación de parches de UI. Se corrigió para reutilizar la instancia de `client` en cada paso sin re-preguntar la ruta.
+   - **Blindaje de `xml_sync.py`:** Se arregló la expresión regular que convertía erróneamente `<?xml version="1.0"?>` en `<?xml version="8"?>`, lo que causaba un `SAXParseException` en PokeMMO y hacía desaparecer el mod de la lista. Además, ahora valida la sintaxis con `xml.etree.ElementTree` antes de guardar y repara automáticamente cabeceras dañadas.
+   - **Identidad de Mod `PizzaTheme`:** Se ajustó `name="Pizza Theme"` en el `info.xml` del mod para que en el Administrador de Mods de PokeMMO se identifique claramente (y no como `Moonlyze99`).
+   - **Forzado de Tema:** Se aseguró que `client.ui.theme=PizzaTheme` quede persistido en `main.properties`.
    - **Sincronización Patcher:** `manage.py` actualiza dinámicamente `patcher_config.json` con la ruta de instalación detectada de PokeMMO.
    - **Extracción de Temas:** `extractor.py` ahora soporta temas empaquetados con `info.xml` tanto en subdirectorios como directamente en la raíz del archivo ZIP.
    - **Estandarización de Identidad:** `pizza.bat` y `play.bat` actualizados a **PizzaHunter**.
@@ -34,8 +37,9 @@ Esta bitácora documenta la remodelación de la interfaz gráfica, el blindaje d
 ## 🧪 Validación Realizada
 - **Compilación de Sintaxis:** Todos los módulos modificados compilan con `py_compile`.
 - **Test de Selector:** Se validó que `TkSelector` abre, procesa eventos y cierra sin excepciones ni bloqueos.
-- **Importación de manage.py:** Orquestador CLI verificado sin dependencias faltantes ni fallos de importación.
-- **Flujo Git:** Cambios consolidados en `fix/installer-and-bot-bugs`, mergeados a `develop` y `main`, y sincronizados en GitHub.
+- **Test de Sincronización XML:** Se ejecutaron pruebas unitarias sobre casos borde (mods corruptos, temas limpios, XMLs inválidos) confirmando que `sync_xml` no rompe la cabecera estándar XML.
+- **Verificación en PokeMMO:** Revisión de `mods.log` de PokeMMO confirmando que el error previo era `XML version "8" is not supported`. Con el XML reparado, el juego reconoce los metadatos.
+- **Flujo Git:** Cambios consolidados en `fix/xml-sync-and-orchestrator-client`, mergeados a `develop` y `main`, y sincronizados en GitHub.
 
 ## 🚀 Cómo Ejecutar el Bot y el Instalador
 ```powershell
