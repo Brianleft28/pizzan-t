@@ -34,8 +34,8 @@ def _get_client():
             return None
     return client
 
-def install_roms_and_mods():
-    client = _get_client()
+def install_roms_and_mods(client=None):
+    client = client or _get_client()
     if not client: return
 
     desktop = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
@@ -52,8 +52,8 @@ def install_roms_and_mods():
         console.print("[bold yellow][..] Extrayendo archivos mágicamente...[/]")
         extractor.extract_zip(rom_zip, console)
 
-def install_pizza_theme():
-    client = _get_client()
+def install_pizza_theme(client=None):
+    client = client or _get_client()
     if not client: return
 
     import shutil
@@ -69,8 +69,8 @@ def install_pizza_theme():
     client.force_theme("PizzaTheme")
     console.print("[bold green][OK] PizzaTheme inyectado y forzado correctamente.[/]")
 
-def sync_xml_versions():
-    client = _get_client()
+def sync_xml_versions(client=None):
+    client = client or _get_client()
     if not client: return
     
     console.print(f"[bold yellow][..] Sincronizando metadatos XML para PokeMMO Rev {client.game_ver}...[/]")
@@ -81,8 +81,8 @@ def sync_xml_versions():
                 if sync_xml(xml_file, client.game_ver):
                     console.print(f"  [bold green][OK] Sincronizado: {xml_file.parent.name}[/]")
 
-def run_ui_patcher():
-    client = _get_client()
+def run_ui_patcher(client=None):
+    client = client or _get_client()
     if client:
         patcher_config_file = os.path.join(base_dir, "scripts", "patcher", "patcher_config.json")
         if os.path.exists(patcher_config_file):
@@ -115,13 +115,13 @@ def full_guided_install():
     if not client: return
 
     console.print("\n[bold cyan]Paso 1: Extracción de ROMs y Mods[/bold cyan]")
-    install_roms_and_mods()
+    install_roms_and_mods(client)
     console.print("\n[bold cyan]Paso 2: Instalación de PizzaTheme[/bold cyan]")
-    install_pizza_theme()
+    install_pizza_theme(client)
     console.print("\n[bold cyan]Paso 3: Sincronización XML[/bold cyan]")
-    sync_xml_versions()
+    sync_xml_versions(client)
     console.print("\n[bold cyan]Paso 4: Patcher de Medidas de UI[/bold cyan]")
-    run_ui_patcher()
+    run_ui_patcher(client)
 
     console.print(Panel("[bold green]¡Instalación completa finalizada con éxito![/bold green]\n"
                         "[cyan]Ya podés abrir PokeMMO y arrancar el bot (Opción 4).[/cyan]",
