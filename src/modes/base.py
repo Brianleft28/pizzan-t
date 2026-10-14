@@ -101,9 +101,13 @@ class HuntingMode:
                 tracker_key = "swipe" if turn == 1 else "spore"
                 pp_curr = self.bot.pp_tracker.get_pp(tracker_key)
                 
-                if pp_curr <= 1: 
-                    leppas.add((mv_s, tracker_key))
-                    self.log(f"[💊] PP for {mv_n} is {pp_curr}. Adding to restoration queue.", "HEAL")
+                def_thresh = 5 if tracker_key == "spore" else 20
+                threshold = int(self.config.get(f"pp_threshold_{tracker_key}", def_thresh))
+                
+                if pp_curr <= threshold: 
+                    is_full = (tracker_key == "swipe")
+                    leppas.add((mv_s, tracker_key, is_full))
+                    self.log(f"[💊] PP for {mv_n} is {pp_curr} (<= {threshold}). Adding to restoration queue.", "HEAL")
 
                 if pp_curr == 0:
                     self.log(f"⚠️ {mv_n} has 0 PP! Switching to Ball.", "WARN")
@@ -147,7 +151,19 @@ class HuntingMode:
             self.bot.reset_activity_timer()
             self.log(f"Restoring {len(leppas)} move(s) from PP queue...", "HEAL")
             for slot_data in list(leppas):
-                self.controller.use_leppa_sequence_single(self.config.get("ditto_key_leppa", "4"), slot_data[0], True); self.bot.pp_tracker.restore_pp(slot_data[1])
+                slot_key = slot_data[0]
+                tracker_key = slot_data[1]
+                is_full = slot_data[2] if len(slot_data) > 2 else False
+                
+                self.controller.use_leppa_sequence_single(
+                    self.config.get("ditto_key_leppa", "4"),
+                    slot_key,
+                    full_restore=is_full
+                )
+                if is_full:
+                    self.bot.pp_tracker.restore_pp(tracker_key)
+                else:
+                    self.bot.pp_tracker.add_pp(tracker_key, 10)
                 time.sleep(1.0)
 
         # Limpieza final por si quedó algún diálogo abierto

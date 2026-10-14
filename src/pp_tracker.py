@@ -64,3 +64,20 @@ class PPTracker:
             self.current_pp[move_name] = self.max_pp[move_name]
             self.log(f"[PP Tracker] {move_name.upper()} restaurado a {self.max_pp[move_name]} PP.", "HEAL")
             self._save_state()
+
+    def add_pp(self, move_name, amount=10):
+        if move_name in self.current_pp:
+            self.current_pp[move_name] = min(self.max_pp[move_name], self.current_pp[move_name] + amount)
+            self.log(f"[PP Tracker] {move_name.upper()} recuperó {amount} PP ({self.current_pp[move_name]}/{self.max_pp[move_name]}).", "HEAL")
+            self._save_state()
+
+    def set_pp(self, move_name, amount):
+        if move_name in self.current_pp:
+            self.current_pp[move_name] = max(0, min(self.max_pp[move_name], int(amount)))
+            self._save_state()
+
+    def reset_all_to_max(self):
+        for move_name in self.max_pp:
+            self.current_pp[move_name] = self.max_pp[move_name]
+        self.log("[PP Tracker] Todos los PP restablecidos al máximo.", "HEAL")
+        self._save_state()

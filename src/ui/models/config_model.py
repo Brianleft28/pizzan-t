@@ -19,9 +19,11 @@ class AppConfig:
     ditto_key_attack: str = "2"
     ditto_name_attack: str = "False Swipe"
     pp_max_swipe: str = "40"
+    pp_threshold_swipe: int = 20
     ditto_key_sleep: str = "1"
     ditto_name_sleep: str = "Spore"
     pp_max_spore: str = "15"
+    pp_threshold_spore: int = 5
     ditto_key_ball: str = "5"
     ditto_key_potion: str = "6"
     ditto_key_leppa: str = "4"
