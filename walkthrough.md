@@ -34,12 +34,19 @@ Esta bitácora documenta la remodelación de la interfaz gráfica, el blindaje d
    - El botón en `tab_general.py` se renombró a `📦 ABRIR INSTALADOR (CLI)`.
    - Al presionarlo en `main_window.py`, se abre automáticamente una consola interactiva ejecutando `pizza.bat`.
 
+5. **Optimización de Curación de PP y Control en Vivo (`src/modes/base.py`, `src/pp_tracker.py`, `tab_ditto.py`):**
+   - **Espora (Spore):** Umbral fijado en `<= 5` PP. Se cura con **1 sola Baya Zanama** (`full_restore=False`), recuperando exactamente `+10` PP (`5 + 10 = 15`), eliminando el desperdicio previo de 2 bayas con "MAX".
+   - **Falso Tortazo (False Swipe):** Umbral fijado en `<= 20` PP. Se cura con **MAX** (`full_restore=True`), recuperando exactamente `+20` PP hasta los 40 tope sin esperar a gastar 39 turnos.
+   - **Tracker Robusto:** Nuevos métodos en `PPTracker` (`add_pp`, `set_pp`, `reset_all_to_max`) para dar soporte a recargas parciales y reseteos.
+   - **Pestaña Ditto (UI):** Incorporado visor de PP actuales en vivo, campos para ajustar umbrales y botón `🔄 Restablecer PP al Máximo` para sincronizar partida y bot en un clic.
+
 ## 🧪 Validación Realizada
 - **Compilación de Sintaxis:** Todos los módulos modificados compilan con `py_compile`.
+- **Test Unitario de PPTracker:** Comprobado que `add_pp` incrementa por lotes de 10 respetando topes, `restore_pp` restaura a 40, y `reset_all_to_max` persiste en disco.
 - **Test de Selector:** Se validó que `TkSelector` abre, procesa eventos y cierra sin excepciones ni bloqueos.
 - **Test de Sincronización XML:** Se ejecutaron pruebas unitarias sobre casos borde (mods corruptos, temas limpios, XMLs inválidos) confirmando que `sync_xml` no rompe la cabecera estándar XML.
 - **Verificación en PokeMMO:** Revisión de `mods.log` de PokeMMO confirmando que el error previo era `XML version "8" is not supported`. Con el XML reparado, el juego reconoce los metadatos.
-- **Flujo Git:** Cambios consolidados en `fix/xml-sync-and-orchestrator-client`, mergeados a `develop` y `main`, y sincronizados en GitHub.
+- **Flujo Git:** Cambios consolidados en `feat/pp-healing-efficiency`, mergeados a `develop` y `main`, y sincronizados en GitHub.
 
 ## 🚀 Cómo Ejecutar el Bot y el Instalador
 ```powershell
